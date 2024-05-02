@@ -1,0 +1,6 @@
+@CMS_back_HostAddress = http://localhost:5120
+
+GET {{CMS_back_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
