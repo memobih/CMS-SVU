@@ -6,10 +6,10 @@ namespace CMS_back.Reposatory.Models
 {
 	public enum UserType
 	{
-		MemberOfControl,
-		HeadOfControl,
-		FaculityAdministrator,
-		UniversityAdministrator
+		university_administrator,
+		faculity_administrator,
+		head_of_control,
+		member_of_control
 	}
 	public class ApplicationUser : IdentityUser
 	{

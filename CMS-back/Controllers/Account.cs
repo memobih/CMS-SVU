@@ -81,30 +81,25 @@ namespace CMS_back.Controllers
             }
             return Unauthorized();
         }
-        [HttpPost("register")]//api/account/register
+       
+        [HttpPost("register")]//account/register
         public async Task<IActionResult> Registration(RegisterUserDto userDto)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid == true)
             {
                 //save
-                ApplicationUser user = new ApplicationUser();
-                user.UserName = userDto.UserName;
-                user.Name = userDto.Name;
-                user.ScientificDegree = userDto.ScientificDegree;
-                user.Type = userDto.Type;
+                ApplicationUser user = new ApplicationUser
+                {
+                    UserName = userDto.UserName,
+                    Name = userDto.Name,
+                    ScientificDegree = userDto.ScientificDegree,
+                    Type = userDto.Type
+                };
                 IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)
                 {
-                    if (user.Type == UserType.HeadOfControl)
-                        await usermanger.AddToRoleAsync(user, UserType.HeadOfControl.ToString());
-                    else if (user.Type == UserType.FaculityAdministrator)
-                        await usermanger.AddToRoleAsync(user, UserType.FaculityAdministrator.ToString());
-                    else if (user.Type == UserType.MemberOfControl)
-                        await usermanger.AddToRoleAsync(user, UserType.MemberOfControl.ToString());
-                    else if (user.Type == UserType.UniversityAdministrator)
-                        await usermanger.AddToRoleAsync(user, UserType.UniversityAdministrator.ToString());
-                  
-                    return Ok("Account Add Success");
+                    //await usermanger.AddToRoleAsync(user, userDto.Type.ToString().ToLower());
+                    return Ok("User Added");
                 }
                 return BadRequest(result.Errors.FirstOrDefault());
             }

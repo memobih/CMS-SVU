@@ -37,7 +37,7 @@ namespace CMS_back.Controllers
             cfg=_cfg;
         }
 
-        [Authorize(Roles = "FaculityAdministrator")]
+        [Authorize(Roles = "faculity_administrator")]
         [HttpPost("create/{Fid:alpha}")]
         public async Task<IActionResult> createControl(ControlDTO controldto, string Fid)
         {
@@ -98,8 +98,8 @@ namespace CMS_back.Controllers
             return BadRequest("Faculty not found");
         }
 
-        [Authorize(Roles = "FaculityAdministrator")]
-        [HttpPost("edit/{Cid:alpha}")]
+        [Authorize(Roles = "faculity_administrator")]
+        [HttpPost("edit/{Cid}")]
         public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
         {
             Control? control = context.Controls.FirstOrDefault(c => c.ID == Cid);
