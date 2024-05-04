@@ -65,7 +65,7 @@ namespace CMS_back.Controllers
                         //Create token
                         JwtSecurityToken mytoken = new JwtSecurityToken(
                             issuer: config["JWT:ValidIssuer"],//url web api
-                                                              //audience: config["JWT:ValidAudiance"],//url consumer angular
+                            //audience: config["JWT:ValidAudiance"],//url consumer angular
                             claims: claims,
                             expires: DateTime.Now.AddHours(1),
                             signingCredentials: signincred
