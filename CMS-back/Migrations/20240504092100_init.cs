@@ -221,13 +221,13 @@ namespace CMS_back.Migrations
                         column: x => x.UserCreatorID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Control_Faculity_FaculityID",
                         column: x => x.FaculityID,
                         principalTable: "Faculity",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -401,7 +401,7 @@ namespace CMS_back.Migrations
                         column: x => x.SubjectID,
                         principalTable: "Subject",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(

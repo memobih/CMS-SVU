@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 
-namespace Business_Logic_Layer.Models
+namespace CMS_back.Reposatory.Models
 {
 	public enum UserType
 	{
@@ -11,33 +11,32 @@ namespace Business_Logic_Layer.Models
 		FaculityAdministrator,
 		UniversityAdministrator
 	}
-	public class ApplicationUserModel : IdentityUser
+	public class ApplicationUser : IdentityUser
 	{
 		public string Name { get; set; }
 		public string? UserImage { get; set; }
 		public string UserName { get; set; }
-		
 		public string UserPassword { get; set; }
 		public string ScientificDegree { get; set; }
 
 		public UserType Type { get; set; }
 
 		[InverseProperty("UserCreator")]
-		public virtual ICollection<ControlModel>? UserCreatorControls { get; } = new List<ControlModel>();
+		public virtual ICollection<Control>? UserCreatorControls { get; } = new List<Control>();
 
 		[ForeignKey("FaculityEmployee")]
 		public int? FaculityEmployeeID { get; set; }
-		public FaculityModel? FaculityEmployee { get; set; }
+		public Faculity? FaculityEmployee { get; set; }
 
 		[ForeignKey("MemberOfControl")]
 		public int? MemberOfControlID { get; set; }
-		public ControlModel? MemberOfControl { get; set; }
+		public Control? MemberOfControl { get; set; }
 
 		[InverseProperty("ControlManager")]
-		public virtual ICollection<ControlModel>? UserManagerControls { get; } = new List<ControlModel>();
+		public virtual ICollection<Control>? UserManagerControls { get; } = new List<Control>();
 
 	
 		public int? FaculityLeaderID {  get; set; }
-		public FaculityModel? FaculityLeader { get; set; }
+		public Faculity? FaculityLeader { get; set; }
 	}
 }

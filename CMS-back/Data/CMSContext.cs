@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Data_Access_Layer.Reposatory.Entities;
+using CMS_back.Reposatory.Models;
 
-namespace Data_Access_Layer.Data
+namespace CMS_back.Data
 {
 	public class CMSContext(DbContextOptions options) : IdentityDbContext<ApplicationUser>(options)
 	{

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Data_Access_Layer.Reposatory.Entities
+namespace CMS_back.Reposatory.Models
 {
 	public class Faculity_Node
 	{

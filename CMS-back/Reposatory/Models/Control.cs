@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Business_Logic_Layer.Models
+namespace CMS_back.Reposatory.Models
 {
-	public class ControlModel
+	public class Control
 	{
 		
 		public int ID { get; set; }
@@ -17,22 +17,22 @@ namespace Business_Logic_Layer.Models
 		[RegularExpression(pattern: @"^\d{4}\/\d{4}$",ErrorMessage = "Invalid ACAD_YEAR Format. Please use the format 'YYYY/YYYY'.\"")]
 		public string ACAD_YEAR { get; set; }
 
-		public ICollection<Control_AddressesModel> conrol_Addresses;
-		public ICollection<Control_TextModel> Texts { get; } = new List<Control_TextModel>();
+		public ICollection<Control_Addresses> conrol_Addresses;
+		public ICollection<Control_Text> Texts { get; } = new List<Control_Text>();
 		
 		[InverseProperty("MemberOfControl")]
-		public ICollection<ApplicationUserModel> Users { get; } = new List<ApplicationUserModel>();
+		public ICollection<ApplicationUser> Users { get; } = new List<ApplicationUser>();
 
 		[ForeignKey("UserCreator")]
 		public string UserCreatorID { get; set; }
-		public ApplicationUserModel UserCreator { get; set; }
+		public ApplicationUser UserCreator { get; set; }
 
 		public int FaculityID { get; set; }
-		public FaculityModel Faculity { get; set; }
+		public Faculity Faculity { get; set; }
 
 		[ForeignKey("ControlManager")]
 		public string ControlManagerID { get; set; }
-		public ApplicationUserModel ControlManager { get; set; }
-		public virtual ICollection<ControlSubjectModel> ControlSubjects { get; } = [];
+		public ApplicationUser ControlManager { get; set; }
+		public virtual ICollection<ControlSubject> ControlSubjects { get; } = [];
 	}
 }

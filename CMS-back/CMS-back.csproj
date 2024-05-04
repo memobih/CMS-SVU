@@ -19,13 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="DTO\" />
     <Folder Include="Migrations\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Business_Logic_Layer\Business_Logic_Layer.csproj" />
   </ItemGroup>
 
 </Project>

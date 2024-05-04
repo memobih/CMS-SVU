@@ -1,11 +1,11 @@
-﻿namespace Business_Logic_Layer.Models
+﻿namespace CMS_back.Reposatory.Models
 {
-	public enum TextType
+    public enum TextType
 	{
 		Note,
 		Task
 	}
-	public class Control_TextModel
+	public class Control_Text
 	{
 		public int ID { get; set; }
 		public string Description { get; set; }
@@ -17,7 +17,7 @@
 		public int CreateBy {  get; set; }
 
 		public int ControlID { get; set; }
-		public ControlModel Control { get; set; }
+		public Control Control { get; set; }
 
 	}
 }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Data_Access_Layer.Reposatory.Entities
-{
-	public enum FaculityType
+namespace CMS_back.Reposatory.Models
+{ 
+    public enum FaculityType
 	{
 		Affliate, // "انتساب"
 		Regular, // "انتظام"
