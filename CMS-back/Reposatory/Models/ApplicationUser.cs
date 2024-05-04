@@ -25,18 +25,18 @@ namespace CMS_back.Reposatory.Models
 		public virtual ICollection<Control>? UserCreatorControls { get; } = new List<Control>();
 
 		[ForeignKey("FaculityEmployee")]
-		public int? FaculityEmployeeID { get; set; }
+		public string? FaculityEmployeeID { get; set; }
 		public Faculity? FaculityEmployee { get; set; }
 
 		[ForeignKey("MemberOfControl")]
-		public int? MemberOfControlID { get; set; }
+		public string? MemberOfControlID { get; set; }
 		public Control? MemberOfControl { get; set; }
 
 		[InverseProperty("ControlManager")]
 		public virtual ICollection<Control>? UserManagerControls { get; } = new List<Control>();
 
 	
-		public int? FaculityLeaderID {  get; set; }
+		public string? FaculityLeaderID {  get; set; }
 		public Faculity? FaculityLeader { get; set; }
 	}
 }

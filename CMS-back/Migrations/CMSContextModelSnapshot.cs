@@ -34,6 +34,9 @@ namespace CMS_back.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Control_TextID")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -41,11 +44,11 @@ namespace CMS_back.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("FaculityEmployeeID")
-                        .HasColumnType("int");
+                    b.Property<string>("FaculityEmployeeID")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("FaculityLeaderID")
-                        .HasColumnType("int");
+                    b.Property<string>("FaculityLeaderID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -53,8 +56,8 @@ namespace CMS_back.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int?>("MemberOfControlID")
-                        .HasColumnType("int");
+                    b.Property<string>("MemberOfControlID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -99,6 +102,8 @@ namespace CMS_back.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Control_TextID");
+
                     b.HasIndex("FaculityEmployeeID");
 
                     b.HasIndex("MemberOfControlID");
@@ -116,11 +121,8 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Control", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ACAD_YEAR")
                         .IsRequired()
@@ -133,8 +135,9 @@ namespace CMS_back.Migrations
                     b.Property<DateOnly?>("End_Date")
                         .HasColumnType("date");
 
-                    b.Property<int>("FaculityID")
-                        .HasColumnType("int");
+                    b.Property<string>("FaculityID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Faculity_Node")
                         .HasColumnType("nvarchar(max)");
@@ -170,11 +173,11 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.ControlSubject", b =>
                 {
-                    b.Property<int>("ControlID")
-                        .HasColumnType("int");
+                    b.Property<string>("ControlID")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("SubjectID")
-                        .HasColumnType("int");
+                    b.Property<string>("SubjectID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ControlID", "SubjectID");
 
@@ -185,18 +188,16 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Control_Addresses", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ControlID")
-                        .HasColumnType("int");
+                    b.Property<string>("ControlID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
 
@@ -207,20 +208,16 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Control_Text", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.Property<string>("ControlID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("AssignTo")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ControlID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreateBy")
-                        .HasColumnType("int");
+                    b.Property<string>("CreateById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateOnly>("CreationDate")
                         .HasColumnType("date");
@@ -239,16 +236,15 @@ namespace CMS_back.Migrations
 
                     b.HasIndex("ControlID");
 
+                    b.HasIndex("CreateById");
+
                     b.ToTable("Control_Text", (string)null);
                 });
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -279,18 +275,16 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity_Node", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FaculityNodeID")
-                        .HasColumnType("int");
+                    b.Property<string>("FaculityNodeID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Level")
                         .IsRequired()
@@ -304,8 +298,8 @@ namespace CMS_back.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ParentID")
-                        .HasColumnType("int");
+                    b.Property<string>("ParentID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
 
@@ -318,18 +312,16 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity_Phases", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FaculityID")
-                        .HasColumnType("int");
+                    b.Property<string>("FaculityID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -348,18 +340,16 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity_Semester", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FaculityID")
-                        .HasColumnType("int");
+                    b.Property<string>("FaculityID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -378,11 +368,8 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Student", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -423,11 +410,11 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.StudentSubject", b =>
                 {
-                    b.Property<int>("StudentID")
-                        .HasColumnType("int");
+                    b.Property<string>("StudentID")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("SubjectID")
-                        .HasColumnType("int");
+                    b.Property<string>("SubjectID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("StudentID", "SubjectID");
 
@@ -438,11 +425,8 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Subject", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -451,17 +435,19 @@ namespace CMS_back.Migrations
                     b.Property<int>("Credit_Hours")
                         .HasColumnType("int");
 
-                    b.Property<int>("FaculityPhaseID")
-                        .HasColumnType("int");
+                    b.Property<string>("FaculityPhaseID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("FaculitySemesterID")
-                        .HasColumnType("int");
+                    b.Property<string>("FaculitySemesterID")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Faculity_PhasesID")
-                        .HasColumnType("int");
+                    b.Property<string>("Faculity_PhasesID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("Faculity_SemesterID")
-                        .HasColumnType("int");
+                    b.Property<string>("Faculity_SemesterID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("IsDone")
                         .HasColumnType("int");
@@ -484,11 +470,8 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Subject_Assess", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("MAX_Degree")
                         .HasColumnType("float");
@@ -496,8 +479,8 @@ namespace CMS_back.Migrations
                     b.Property<double>("MIN_Degree")
                         .HasColumnType("float");
 
-                    b.Property<int?>("SubjectID")
-                        .HasColumnType("int");
+                    b.Property<string>("SubjectID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
 
@@ -641,6 +624,10 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.ApplicationUser", b =>
                 {
+                    b.HasOne("CMS_back.Reposatory.Models.Control_Text", null)
+                        .WithMany("AssignTo")
+                        .HasForeignKey("Control_TextID");
+
                     b.HasOne("CMS_back.Reposatory.Models.Faculity", "FaculityEmployee")
                         .WithMany("Users")
                         .HasForeignKey("FaculityEmployeeID");
@@ -719,7 +706,15 @@ namespace CMS_back.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CMS_back.Reposatory.Models.ApplicationUser", "CreateBy")
+                        .WithMany()
+                        .HasForeignKey("CreateById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Control");
+
+                    b.Navigation("CreateBy");
                 });
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity", b =>
@@ -884,6 +879,11 @@ namespace CMS_back.Migrations
                     b.Navigation("Texts");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("CMS_back.Reposatory.Models.Control_Text", b =>
+                {
+                    b.Navigation("AssignTo");
                 });
 
             modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity", b =>

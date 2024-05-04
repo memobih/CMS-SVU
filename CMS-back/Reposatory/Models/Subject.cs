@@ -7,17 +7,17 @@
 	}
 	public class Subject
 	{
-		public int ID { get; set; }
+		public string ID { get; set; }
 		public string Name { get; set; }
 
 		public Question IsDone { get; set; }
 		public Question IsReview { get; set; }		
 		public string Code { get; set; }
 		public int Credit_Hours { get; set; }
-		public int? FaculitySemesterID { get; set; }
+		public string? FaculitySemesterID { get; set; }
 		public Faculity_Semester? Faculity_Semester { get; set; }
 
-		public int FaculityPhaseID { get; set; }
+		public string FaculityPhaseID { get; set; }
 		public Faculity_Phases Faculity_Phases { get; set; }
 
 		public virtual ICollection<Subject_Assess>? subject_Assesses { get; } = new List<Subject_Assess>();

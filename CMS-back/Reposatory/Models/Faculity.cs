@@ -11,7 +11,7 @@ namespace CMS_back.Reposatory.Models
 
 	public class Faculity
 	{
-		public int ID { get; set; }
+		public string ID { get; set; }
 		public string Name { get; set; }
 		public string Code { get; set; }
 		public string Order { get; set; }
