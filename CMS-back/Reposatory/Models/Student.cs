@@ -1,4 +1,5 @@
-﻿namespace CMS_back.Reposatory.Models
+﻿
+namespace CMS_back.Reposatory.Models
 {
 	public enum Gender
 	{
