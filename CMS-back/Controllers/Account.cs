@@ -95,6 +95,15 @@ namespace CMS_back.Controllers
                 IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)
                 {
+                    if (user.Type == UserType.HeadOfControl)
+                        await usermanger.AddToRoleAsync(user, UserType.HeadOfControl.ToString());
+                    else if (user.Type == UserType.FaculityAdministrator)
+                        await usermanger.AddToRoleAsync(user, UserType.FaculityAdministrator.ToString());
+                    else if (user.Type == UserType.MemberOfControl)
+                        await usermanger.AddToRoleAsync(user, UserType.MemberOfControl.ToString());
+                    else if (user.Type == UserType.UniversityAdministrator)
+                        await usermanger.AddToRoleAsync(user, UserType.UniversityAdministrator.ToString());
+                  
                     return Ok("Account Add Success");
                 }
                 return BadRequest(result.Errors.FirstOrDefault());

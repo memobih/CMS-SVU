@@ -19,7 +19,7 @@ namespace CMS_back.DTO
         [Required]
         public string ControlManagerID { get; set; }
         [Required]
-        public string ControlHeadID { get; set; }
+        public string ControlCreateID { get; set; }
         [Required]
         public virtual List<string> ControlSubjectsIDs { get; } = [];
         [Required]

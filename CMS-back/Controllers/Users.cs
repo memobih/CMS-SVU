@@ -1,11 +1,13 @@
 ﻿using CMS_back.Data;
 using CMS_back.Reposatory.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CMS_back.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class Users : ControllerBase
     {
 
@@ -16,6 +18,7 @@ namespace CMS_back.Controllers
 
 
         // get user for specfic faculty
+        [Authorize(Roles = "FaculityAdministrator")]
         [HttpGet("faculty/{id:alpha}")]
         public async Task<IActionResult> getUserForFaculty(string id)
         {

@@ -48,11 +48,10 @@ builder.Services.AddAuthentication(options =>
 {
     options.SaveToken = true;
     options.RequireHttpsMetadata = false;
-    string jwtSecret = builder.Configuration.GetSection("JWT:Secret").Value;
     options.TokenValidationParameters = new TokenValidationParameters()
     {
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtSecret))
+            Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT:Secret").Value)) 
     };
 });
 
@@ -76,7 +75,6 @@ app.UseCors("MyPolicy");
 app.UseRouting();
 
 app.UseAuthentication();//Check JWT token
-
 app.UseAuthorization();
 
 app.MapControllers();
