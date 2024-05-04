@@ -21,6 +21,10 @@ namespace CMS_back.DTO
         public string ScientificDegree { get; set; }
 
         [Required]
+        [Range(1,4)]
         public UserType Type { get; set; }
+
+        [Required]
+        public string FaculityName { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace CMS_back.Reposatory.Models
 	}
 	public class Student
 	{
-		public int ID { get; set; }
+		public string ID { get; set; }
 		public string Name { get; set; }
 		public DateOnly DateOfBirth { get; set; }
 		public string Email { get; set; }

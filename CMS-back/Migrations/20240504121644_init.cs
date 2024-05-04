@@ -29,8 +29,7 @@ namespace CMS_back.Migrations
                 name: "Student",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -123,9 +122,10 @@ namespace CMS_back.Migrations
                     UserImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ScientificDegree = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    FaculityEmployeeID = table.Column<int>(type: "int", nullable: true),
-                    MemberOfControlID = table.Column<int>(type: "int", nullable: true),
-                    FaculityLeaderID = table.Column<int>(type: "int", nullable: true),
+                    FaculityEmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    MemberOfControlID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    FaculityLeaderID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Control_TextID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -170,8 +170,7 @@ namespace CMS_back.Migrations
                 name: "Faculity",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Order = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -193,8 +192,7 @@ namespace CMS_back.Migrations
                 name: "Control",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Faculity_Phase = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Faculity_Node = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -203,7 +201,7 @@ namespace CMS_back.Migrations
                     End_Date = table.Column<DateOnly>(type: "date", nullable: true),
                     ACAD_YEAR = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserCreatorID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FaculityID = table.Column<int>(type: "int", nullable: false),
+                    FaculityID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ControlManagerID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -233,14 +231,13 @@ namespace CMS_back.Migrations
                 name: "Faculity_Node",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Order = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Level = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FaculityNodeID = table.Column<int>(type: "int", nullable: false),
-                    ParentID = table.Column<int>(type: "int", nullable: true)
+                    FaculityNodeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ParentID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -262,12 +259,11 @@ namespace CMS_back.Migrations
                 name: "Faculity_Phase",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Order = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FaculityID = table.Column<int>(type: "int", nullable: false)
+                    FaculityID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -284,12 +280,11 @@ namespace CMS_back.Migrations
                 name: "Faculity_Semester",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Order = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FaculityID = table.Column<int>(type: "int", nullable: false)
+                    FaculityID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -306,9 +301,8 @@ namespace CMS_back.Migrations
                 name: "Control_Addresse",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ControlID = table.Column<int>(type: "int", nullable: false),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ControlID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -326,42 +320,45 @@ namespace CMS_back.Migrations
                 name: "Control_Text",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDone = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     CreationDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    AssignTo = table.Column<int>(type: "int", nullable: false),
-                    CreateBy = table.Column<int>(type: "int", nullable: false),
-                    ControlID = table.Column<int>(type: "int", nullable: false)
+                    CreateById = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ControlID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Control_Text", x => x.ID);
                     table.ForeignKey(
+                        name: "FK_Control_Text_AspNetUsers_CreateById",
+                        column: x => x.CreateById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Control_Text_Control_ControlID",
                         column: x => x.ControlID,
                         principalTable: "Control",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Subject",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsDone = table.Column<int>(type: "int", nullable: false),
                     IsReview = table.Column<int>(type: "int", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Credit_Hours = table.Column<int>(type: "int", nullable: false),
-                    FaculitySemesterID = table.Column<int>(type: "int", nullable: true),
-                    Faculity_SemesterID = table.Column<int>(type: "int", nullable: true),
-                    FaculityPhaseID = table.Column<int>(type: "int", nullable: false),
-                    Faculity_PhasesID = table.Column<int>(type: "int", nullable: false)
+                    FaculitySemesterID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Faculity_SemesterID = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    FaculityPhaseID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Faculity_PhasesID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -383,8 +380,8 @@ namespace CMS_back.Migrations
                 name: "ControlSubject",
                 columns: table => new
                 {
-                    ControlID = table.Column<int>(type: "int", nullable: false),
-                    SubjectID = table.Column<int>(type: "int", nullable: false)
+                    ControlID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SubjectID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -407,8 +404,8 @@ namespace CMS_back.Migrations
                 name: "StudentSubject",
                 columns: table => new
                 {
-                    StudentID = table.Column<int>(type: "int", nullable: false),
-                    SubjectID = table.Column<int>(type: "int", nullable: false)
+                    StudentID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SubjectID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -431,11 +428,10 @@ namespace CMS_back.Migrations
                 name: "Subject_Assess",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MAX_Degree = table.Column<double>(type: "float", nullable: false),
                     MIN_Degree = table.Column<double>(type: "float", nullable: false),
-                    SubjectID = table.Column<int>(type: "int", nullable: true)
+                    SubjectID = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -480,6 +476,11 @@ namespace CMS_back.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Control_TextID",
+                table: "AspNetUsers",
+                column: "Control_TextID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_FaculityEmployeeID",
                 table: "AspNetUsers",
                 column: "FaculityEmployeeID");
@@ -520,6 +521,11 @@ namespace CMS_back.Migrations
                 name: "IX_Control_Text_ControlID",
                 table: "Control_Text",
                 column: "ControlID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Control_Text_CreateById",
+                table: "Control_Text",
+                column: "CreateById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ControlSubject_SubjectID",
@@ -604,6 +610,13 @@ namespace CMS_back.Migrations
                 principalColumn: "ID");
 
             migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUsers_Control_Text_Control_TextID",
+                table: "AspNetUsers",
+                column: "Control_TextID",
+                principalTable: "Control_Text",
+                principalColumn: "ID");
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_AspNetUsers_Faculity_FaculityEmployeeID",
                 table: "AspNetUsers",
                 column: "FaculityEmployeeID",
@@ -621,6 +634,10 @@ namespace CMS_back.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Control_AspNetUsers_UserCreatorID",
                 table: "Control");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Control_Text_AspNetUsers_CreateById",
+                table: "Control_Text");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Faculity_AspNetUsers_UserLeaderID",
@@ -643,9 +660,6 @@ namespace CMS_back.Migrations
 
             migrationBuilder.DropTable(
                 name: "Control_Addresse");
-
-            migrationBuilder.DropTable(
-                name: "Control_Text");
 
             migrationBuilder.DropTable(
                 name: "ControlSubject");
@@ -676,6 +690,9 @@ namespace CMS_back.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Control_Text");
 
             migrationBuilder.DropTable(
                 name: "Control");

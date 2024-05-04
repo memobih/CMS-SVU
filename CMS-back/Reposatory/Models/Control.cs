@@ -6,7 +6,7 @@ namespace CMS_back.Reposatory.Models
 	public class Control
 	{
 		
-		public int ID { get; set; }
+		public string ID { get; set; }
 		public string Name { get; set; }
 		public string? Faculity_Phase { get; set; }
 		public string? Faculity_Node { get; set; }
@@ -26,8 +26,7 @@ namespace CMS_back.Reposatory.Models
 		[ForeignKey("UserCreator")]
 		public string UserCreatorID { get; set; }
 		public ApplicationUser UserCreator { get; set; }
-
-		public int FaculityID { get; set; }
+		public string FaculityID { get; set; }
 		public Faculity Faculity { get; set; }
 
 		[ForeignKey("ControlManager")]

@@ -18,7 +18,7 @@ using System.Security.Principal;
 
 namespace CMS_back.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class Account : ControllerBase
     {
@@ -92,7 +92,6 @@ namespace CMS_back.Controllers
                 user.Name = userDto.Name;
                 user.ScientificDegree = userDto.ScientificDegree;
                 user.Type = userDto.Type;
-
                 IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)
                 {
@@ -102,5 +101,6 @@ namespace CMS_back.Controllers
             }
             return BadRequest(ModelState);
         }
+
     }
 }
