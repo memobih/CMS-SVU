@@ -19,6 +19,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using System.Net.Http.Headers;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace CMS_back.Controllers
@@ -155,5 +156,32 @@ namespace CMS_back.Controllers
 
             return Ok("Created Control");
         }
+        [HttpGet("allControllers")]
+        public async Task<IActionResult> index()
+        {
+            var controlles = await context.Controls.ToListAsync();
+            if (controlles == null) return BadRequest();
+            return Ok(controlles);
+        }
+        [HttpGet("detail/{id:alpha}")]
+        public async Task<IActionResult> detail(string id)
+        {
+            var controle = await context.Controls.SingleOrDefaultAsync(x => x.ID == id);
+            if (controle == null) return BadRequest();
+            else return Ok(controle);
+        }
+        [HttpGet("delete/{id:alpha}")]
+        public async Task<IActionResult> delete(string id)
+        {
+            var controle = await context.Controls.SingleOrDefaultAsync(x => x.ID == id);
+            if (controle == null) return BadRequest();
+            else
+            {
+                context.Remove(controle);
+                context.SaveChanges();
+                return Ok();
+            }
+        }
     }
+}
 }

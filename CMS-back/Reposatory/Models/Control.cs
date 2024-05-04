@@ -33,5 +33,10 @@ namespace CMS_back.Reposatory.Models
 		public string ControlManagerID { get; set; }
 		public ApplicationUser ControlManager { get; set; }
 		public virtual ICollection<ControlSubject> ControlSubjects { get; } = [];
-	}
+
+        internal void delete()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
