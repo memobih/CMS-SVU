@@ -18,21 +18,19 @@ using System.Security.Principal;
 
 namespace CMS_back.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class Account : ControllerBase
-    {
 
+    public class AccountController : ControllerBase
+    {
         private readonly UserManager<ApplicationUser> usermanger;
         private readonly IConfiguration config;
 
-
-        public Account(UserManager<ApplicationUser> usermanger, IConfiguration config)
+        public AccountController(UserManager<ApplicationUser> usermanger, IConfiguration config)
         {
             this.usermanger = usermanger;
             this.config = config;
         }
-
 
         [HttpPost("login")]
         public async Task<IActionResult> signin(LoginUserDto userDto)
@@ -50,12 +48,7 @@ namespace CMS_back.Controllers
                         claims.Add(new Claim(ClaimTypes.Name, user.UserName));
                         claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
                         claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-                        //get role
-                        var roles = await usermanger.GetRolesAsync(user);
-                        foreach (var itemRole in roles)
-                        {
-                            claims.Add(new Claim(ClaimTypes.Role, itemRole));
-                        }
+
                         SecurityKey securityKey =
                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT:Secret"]));
 
@@ -65,7 +58,7 @@ namespace CMS_back.Controllers
                         //Create token
                         JwtSecurityToken mytoken = new JwtSecurityToken(
                             issuer: config["JWT:ValidIssuer"],//url web api
-                            //audience: config["JWT:ValidAudiance"],//url consumer angular
+                            audience: config["JWT:ValidAudience"],//url consumer angular
                             claims: claims,
                             expires: DateTime.Now.AddHours(1),
                             signingCredentials: signincred
@@ -81,7 +74,7 @@ namespace CMS_back.Controllers
             }
             return Unauthorized();
         }
-       
+
         [HttpPost("register")]//account/register
         public async Task<IActionResult> Registration(RegisterUserDto userDto)
         {
@@ -92,6 +85,7 @@ namespace CMS_back.Controllers
                 {
                     UserName = userDto.UserName,
                     Name = userDto.Name,
+                    Email = userDto.Email,
                     ScientificDegree = userDto.ScientificDegree,
                     Type = userDto.Type
                 };

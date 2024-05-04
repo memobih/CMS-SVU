@@ -25,7 +25,7 @@ namespace CMS_back.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-
+    [Authorize]
     public class Controls : ControllerBase
     {
         public CMSContext context { get; }

@@ -6,17 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CMS_back.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class Users : ControllerBase
+    public class UsersController : ControllerBase
     {
 
         public CMSContext context { get; }
         public UserManager<ApplicationUser> Usermanager { get; }
         public IHttpContextAccessor ContextAccessor { get; }
 
-        public Users(CMSContext _context, UserManager<ApplicationUser> usermanager
+        public UsersController(CMSContext _context, UserManager<ApplicationUser> usermanager
             , IHttpContextAccessor contextAccessor) {
             context=_context;
             Usermanager=usermanager;

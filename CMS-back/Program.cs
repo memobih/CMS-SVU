@@ -19,8 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddCors(corsOptions =>
 {
     corsOptions.AddPolicy("MyPolicy",
-        corsPolicyBuilder => corsPolicyBuilder
-                                              .AllowAnyOrigin()
+        corsPolicyBuilder => corsPolicyBuilder.AllowAnyOrigin()
                                               .AllowAnyHeader()
                                               .AllowAnyMethod());
 });
@@ -34,8 +33,7 @@ builder => builder.EnableRetryOnFailure()));
 
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().
-    AddEntityFrameworkStores<CMSContext>().
-    AddDefaultTokenProviders();
+    AddEntityFrameworkStores<CMSContext>();
 
 
 //[Authoriz] used JWT Token in Chck Authantiaction
@@ -44,16 +42,24 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new TokenValidationParameters()
+    options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
+}
+    ).AddJwtBearer(o =>
     {
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT:Secret").Value)) 
-    };
-});
+        o.IncludeErrorDetails = true;
+        o.RequireHttpsMetadata = false;
+        o.SaveToken = false;
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidateLifetime = true,
+            ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+            ValidAudience = builder.Configuration["JWT:ValidAudience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+        };
+    });
 
 #region swagger
 builder.Services.AddSwaggerGen(c =>
