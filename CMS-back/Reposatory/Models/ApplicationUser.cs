@@ -15,8 +15,8 @@ namespace CMS_back.Reposatory.Models
 	{
 		public string Name { get; set; }
 		public string? UserImage { get; set; }
-		public string UserName { get; set; }
-		public string UserPassword { get; set; }
+		//public string UserName { get; set; }
+		//public string UserPassword { get; set; }
 		public string ScientificDegree { get; set; }
 
 		public UserType Type { get; set; }

@@ -33,7 +33,9 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("CMS"),
 builder => builder.EnableRetryOnFailure()));
 
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<CMSContext>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>().
+    AddEntityFrameworkStores<CMSContext>().
+    AddDefaultTokenProviders();
 
 
 //[Authoriz] used JWT Token in Chck Authantiaction

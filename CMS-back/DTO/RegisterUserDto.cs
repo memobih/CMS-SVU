@@ -1,9 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CMS_back.Reposatory.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace CMS_back.DTO
 {
     public class RegisterUserDto
     {
+        [Required]
+        public string Name { get; set; }
+
         [Required]
         public string UserName { get; set; }
 
@@ -13,5 +17,10 @@ namespace CMS_back.DTO
         [Required]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
+        [Required]
+        public string ScientificDegree { get; set; }
+
+        [Required]
+        public UserType Type { get; set; }
     }
 }

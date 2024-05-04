@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS_back.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    [Migration("20240504092100_init")]
+    [Migration("20240504103411_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -97,13 +97,8 @@ namespace CMS_back.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("UserPassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

@@ -20,23 +20,21 @@ namespace CMS_back.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Login : ControllerBase
+    public class Account : ControllerBase
     {
 
         private readonly UserManager<ApplicationUser> usermanger;
         private readonly IConfiguration config;
-        private readonly CMSContext context;
 
 
-        public Login(UserManager<ApplicationUser> usermanger, IConfiguration config,CMSContext _context)
+        public Account(UserManager<ApplicationUser> usermanger, IConfiguration config)
         {
             this.usermanger = usermanger;
             this.config = config;
-            context = _context;
         }
 
 
-        [HttpPost]
+        [HttpPost("login")]
         public async Task<IActionResult> signin(LoginUserDto userDto)
         {
             if (ModelState.IsValid == true)
@@ -82,6 +80,27 @@ namespace CMS_back.Controllers
                 return Unauthorized();
             }
             return Unauthorized();
+        }
+        [HttpPost("register")]//api/account/register
+        public async Task<IActionResult> Registration(RegisterUserDto userDto)
+        {
+            if (ModelState.IsValid)
+            {
+                //save
+                ApplicationUser user = new ApplicationUser();
+                user.UserName = userDto.UserName;
+                user.Name = userDto.Name;
+                user.ScientificDegree = userDto.ScientificDegree;
+                user.Type = userDto.Type;
+
+                IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
+                if (result.Succeeded)
+                {
+                    return Ok("Account Add Success");
+                }
+                return BadRequest(result.Errors.FirstOrDefault());
+            }
+            return BadRequest(ModelState);
         }
     }
 }
