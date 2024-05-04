@@ -25,7 +25,7 @@ namespace CMS_back.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+
     public class Controls : ControllerBase
     {
         public CMSContext context { get; }
@@ -37,8 +37,7 @@ namespace CMS_back.Controllers
             cfg=_cfg;
         }
 
-        [Authorize(Roles = "faculity_administrator")]
-        [HttpPost("create/{Fid:alpha}")]
+        [HttpPost("create")]
         public async Task<IActionResult> createControl(ControlDTO controldto, string Fid)
         {
             
@@ -98,8 +97,7 @@ namespace CMS_back.Controllers
             return BadRequest("Faculty not found");
         }
 
-        [Authorize(Roles = "faculity_administrator")]
-        [HttpPost("edit/{Cid}")]
+        [HttpPost("edit/{Cid:alpha}")]
         public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
         {
             Control? control = context.Controls.FirstOrDefault(c => c.ID == Cid);
@@ -157,6 +155,5 @@ namespace CMS_back.Controllers
 
             return Ok("Created Control");
         }
-
     }
 }

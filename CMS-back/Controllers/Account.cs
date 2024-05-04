@@ -105,6 +105,5 @@ namespace CMS_back.Controllers
             }
             return BadRequest(ModelState);
         }
-
     }
 }
