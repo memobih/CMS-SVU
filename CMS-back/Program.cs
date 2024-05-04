@@ -58,8 +58,8 @@ builder.Services.AddAuthentication(options =>
             ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
             ValidAudience = builder.Configuration["JWT:ValidAudience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
-        };
-    });
+        };
+    });
 
 #region swagger
 builder.Services.AddSwaggerGen(c =>

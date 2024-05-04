@@ -26,18 +26,18 @@ namespace CMS_back.Controllers
     [Route("[controller]")]
     [ApiController]
     [Authorize]
-    public class Controls : ControllerBase
+    public class ControlsController : ControllerBase
     {
         public CMSContext context { get; }
         public IConfiguration cfg { get; }
 
-        public Controls(CMSContext _context,IConfiguration _cfg)
+        public ControlsController(CMSContext _context,IConfiguration _cfg)
         {
             context=_context;
             cfg=_cfg;
         }
 
-        [HttpPost("create")]
+        [HttpPost("create/{Fid:alpha}")]
         public async Task<IActionResult> createControl(ControlDTO controldto, string Fid)
         {
             

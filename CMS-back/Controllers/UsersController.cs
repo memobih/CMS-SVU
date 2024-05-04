@@ -25,8 +25,8 @@ namespace CMS_back.Controllers
 
 
         // get user for specfic faculty
-        [Authorize(Roles = "FaculityAdministrator")]
-        [HttpGet("faculty/{id:alpha}")]
+        //[Authorize(Roles = "FaculityAdministrator")]
+        [HttpGet("faculty/{id}")]
         public async Task<IActionResult> getUserForFaculty(string id)
         {
             List<ApplicationUser>? users = context.Users.Where(u => u.FaculityEmployeeID == id).ToList();
