@@ -14,6 +14,7 @@
 		public DateOnly CreationDate { get; set; }
 
 		public int AssignTo { get; set; }
+
 		public int CreateBy {  get; set; }
 
 		public int ControlID { get; set; }

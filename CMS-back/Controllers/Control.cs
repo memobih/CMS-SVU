@@ -23,5 +23,6 @@ namespace CMS_back.Controllers
     [ApiController]
     public class Control : ControllerBase
     {
+
     }
 }
