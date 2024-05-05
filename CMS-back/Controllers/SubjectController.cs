@@ -14,12 +14,12 @@ namespace CMS_back.Controllers
     public class SubjectController : ControllerBase
     {
 
+        public CMSContext Context { get; }
         public SubjectController(CMSContext _context) 
         {
             Context=_context;
         }
 
-        public CMSContext Context { get; }
 
         [HttpGet("facult/{id}")]
         public async Task<IActionResult> getSubjectForFaculty(string id)

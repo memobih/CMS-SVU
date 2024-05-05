@@ -29,5 +29,6 @@ namespace CMS_back.Reposatory.Models
 
 		[InverseProperty("FaculityLeader")]
 		public ApplicationUser UserLeader { get; set; }
+
 	}
 }

@@ -76,10 +76,11 @@ namespace CMS_back.Controllers
                             expiration = mytoken.ValidTo
                         });
                     }
+                    return BadRequest("invalid password");
                 }
-                return Unauthorized();
+                return BadRequest("user not found");
             }
-            return Unauthorized();
+            return BadRequest("check to complete all fields");
         }
 
         [HttpPost("register")]//account/register
