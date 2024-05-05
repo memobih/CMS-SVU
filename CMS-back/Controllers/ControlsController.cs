@@ -57,14 +57,14 @@ namespace CMS_back.Controllers
                 control.Faculity = facultiy;
                 control.FaculityID = Fid;
 
-                control.ControlManagerID = control.ControlManagerID;
                 ApplicationUser? mamager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
                 if (mamager == null) return BadRequest("Invalid Head of control id");
+                control.ControlManagerID = mamager.Id;
                 control.ControlManager = mamager;
 
-                control.UserCreatorID = controldto.ControlCreateID;
                 ApplicationUser? creator = context.Users.FirstOrDefault(u => u.Id == controldto.ControlCreateID);
                 if (creator == null) return BadRequest("Invalid creator of control id");
+                control.UserCreatorID = creator.Id;
                 control.UserCreator = creator;
 
                 var usersIDs = controldto.ContorlUsersIDs;
@@ -116,14 +116,14 @@ namespace CMS_back.Controllers
             control.End_Date = controldto.End_Date;
             control.ACAD_YEAR = controldto.ACAD_YEAR;
 
-            control.ControlManagerID = control.ControlManagerID;
             ApplicationUser? mamager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
             if (mamager == null) return BadRequest("Invalid Head of control id");
+            control.ControlManagerID = controldto.ControlManagerID;
             control.ControlManager = mamager;
 
-            control.UserCreatorID = controldto.ControlCreateID;
             ApplicationUser? creator = context.Users.FirstOrDefault(u => u.Id == controldto.ControlCreateID);
             if (creator == null) return BadRequest("Invalid creator of control id");
+            control.UserCreatorID = controldto.ControlCreateID;
             control.UserCreator = creator;
 
             var usersIDs = controldto.ContorlUsersIDs;
@@ -156,7 +156,7 @@ namespace CMS_back.Controllers
 
             return Ok("Created Control");
         }
-       
+        
         [HttpGet("allControllers")]
         public async Task<IActionResult> index()
         {
@@ -184,6 +184,15 @@ namespace CMS_back.Controllers
                 context.SaveChanges();
                 return Ok();
             }
+        }
+
+        [HttpGet("{Fid:alpha}")]
+        public async Task<IActionResult> get(string Fid)
+        {
+            var faculty = context.Faculities.FirstOrDefault(x => x.ID == Fid);
+            if (faculty == null) return BadRequest("Faculty not found");
+            if (faculty.Controls == null) return BadRequest("Faculty not has controls");
+            return Ok(faculty.Controls);
         }
     }
 }

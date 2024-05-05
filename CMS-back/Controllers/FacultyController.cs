@@ -4,6 +4,7 @@ using CMS_back.Reposatory.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace CMS_back.Controllers
@@ -49,6 +50,20 @@ namespace CMS_back.Controllers
             return Ok("added faculty");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllfaculties()
+        {
+            var faculties = await context.Faculities.ToListAsync();
+            return Ok(faculties);
+        }
+
+        [HttpGet("{id:alpha}")]
+        public async Task<IActionResult> getfaculty(string id)
+        {
+            var faculty = await context.Faculities.Where(f => f.ID == id).ToListAsync();
+            if (faculty == null) return BadRequest("No found Facluty");
+            return Ok(faculty);
+        }
 
     }
 }

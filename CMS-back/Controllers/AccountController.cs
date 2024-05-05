@@ -50,6 +50,10 @@ namespace CMS_back.Controllers
                         var claims = new List<Claim>();
                         claims.Add(new Claim(ClaimTypes.Name, user.UserName));
                         claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
+                        
+                        if (user.FaculityLeaderID != null) 
+                            claims.Add(new Claim(ClaimTypes.Sid, user.FaculityLeaderID));
+                        
                         claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
 
                         SecurityKey securityKey =

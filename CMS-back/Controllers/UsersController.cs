@@ -3,6 +3,7 @@ using CMS_back.Reposatory.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CMS_back.Controllers
 {
@@ -29,7 +30,7 @@ namespace CMS_back.Controllers
         [HttpGet("faculty/{id}")]
         public async Task<IActionResult> getUserForFaculty(string id)
         {
-            List<ApplicationUser>? users = context.Users.Where(u => u.FaculityEmployeeID == id).ToList();
+            List<ApplicationUser>? users = await context.Users.Where(u => u.FaculityEmployeeID == id).ToListAsync();
             if (users == null) return Ok(new List<ApplicationUser>());
             return Ok(users);
         }
@@ -37,7 +38,7 @@ namespace CMS_back.Controllers
         [HttpGet("control/{id}")]
         public async Task<IActionResult> getUserForControl(string id)
         {
-            List<ApplicationUser>? users = context.Users.Where(u => u.MemberOfControlID == id).ToList();
+            List<ApplicationUser>? users = await context.Users.Where(u => u.MemberOfControlID == id).ToListAsync();
             if (users == null) return Ok(new List<ApplicationUser>());
             return Ok(users);
         }

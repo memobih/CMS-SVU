@@ -1,4 +1,5 @@
 ﻿using CMS_back.Data;
+using CMS_back.DTO;
 using CMS_back.Reposatory.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -40,6 +41,23 @@ namespace CMS_back.Controllers
                 subjects.Add(subject);
             }
             return Ok(subjects);
+        }
+
+        [HttpPost("add")]
+        public async Task<IActionResult> create(subjectDTO subjectdto)
+        {
+            var isExict = Context.Subjects.FirstOrDefault(s => s.Code == subjectdto.Code);
+            if (isExict != null) return BadRequest("Subject entered before");
+            Subject subject = new Subject()
+            {
+                Name = subjectdto.Name,
+                Code = subjectdto.Code,
+                Credit_Hours = subjectdto.Credit_Hours,
+                FaculityPhaseID = subjectdto.FaculityPhaseID,
+                FaculitySemesterID = subjectdto.FaculitySemesterID
+            };
+            await Context.SaveChangesAsync();
+            return Ok("subject Added");
         }
     }
 }
