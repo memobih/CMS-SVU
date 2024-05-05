@@ -98,7 +98,7 @@ namespace CMS_back.Controllers
             return BadRequest("Faculty not found");
         }
 
-        [HttpPost("edit/{Cid:alpha}")]
+        [HttpPut("edit/{Cid:alpha}")]
         public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
         {
             Control? control = context.Controls.FirstOrDefault(c => c.ID == Cid);
@@ -173,7 +173,7 @@ namespace CMS_back.Controllers
             else return Ok(controle);
         }
         
-        [HttpGet("delete/{id:alpha}")]
+        [HttpDelete("delete/{id:alpha}")]
         public async Task<IActionResult> delete(string id)
         {
             var controle = await context.Controls.SingleOrDefaultAsync(x => x.ID == id);
@@ -186,7 +186,7 @@ namespace CMS_back.Controllers
             }
         }
 
-        [HttpGet("get-control/{Fid}")]
+        [HttpGet("{Fid}")]
         public async Task<IActionResult> get (string Fid)
         {
             var faculty = context.Faculities.FirstOrDefault(x => x.ID == Fid);
@@ -195,6 +195,12 @@ namespace CMS_back.Controllers
             return Ok(faculty.Controls);
         }
 
-
+        [HttpGet("semeter/{Sid}/acadmec/{AY}")]
+        public async Task<IActionResult> GetControlBySemesterAndAcademcYear(string Sid,string AY)
+        {
+            var control = context.Controls.Where(c => c.ACAD_YEAR == AY && c.Faculity_Semester == Sid);
+            if (control == null) return BadRequest("Control not found");
+            return Ok(control);
+        }
     }
 }

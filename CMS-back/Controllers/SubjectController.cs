@@ -56,6 +56,7 @@ namespace CMS_back.Controllers
                 FaculityPhaseID = subjectdto.FaculityPhaseID,
                 FaculitySemesterID = subjectdto.FaculitySemesterID
             };
+            subject.ID = Guid.NewGuid().ToString();
             await Context.SaveChangesAsync();
             return Ok("subject Added");
         }
