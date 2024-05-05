@@ -17,8 +17,8 @@
 		public string? FaculitySemesterID { get; set; }
 		public Faculity_Semester? Faculity_Semester { get; set; }
 
-		public string FaculityPhaseID { get; set; }
-		public Faculity_Phases Faculity_Phases { get; set; }
+		public string? FaculityPhaseID { get; set; }
+		public Faculity_Phases? Faculity_Phases { get; set; }
 
 		public virtual ICollection<Subject_Assess>? subject_Assesses { get; } = new List<Subject_Assess>();
 

@@ -15,9 +15,9 @@ namespace CMS_back.DTO
         public int Credit_Hours { get; set; }
         
         [Required]
-        public string FaculitySemesterID { get; set; }
+        public string? FaculitySemesterID { get; set; }
         
         [Required]
-        public string FaculityPhaseID { get; set; }
+        public string? FaculityPhaseID { get; set; }
     }
 }

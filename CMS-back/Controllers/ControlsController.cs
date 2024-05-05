@@ -186,13 +186,15 @@ namespace CMS_back.Controllers
             }
         }
 
-        [HttpGet("{Fid:alpha}")]
-        public async Task<IActionResult> get(string Fid)
+        [HttpGet("get-control/{Fid}")]
+        public async Task<IActionResult> get (string Fid)
         {
             var faculty = context.Faculities.FirstOrDefault(x => x.ID == Fid);
             if (faculty == null) return BadRequest("Faculty not found");
             if (faculty.Controls == null) return BadRequest("Faculty not has controls");
             return Ok(faculty.Controls);
         }
+
+
     }
 }
