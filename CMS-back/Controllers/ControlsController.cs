@@ -24,9 +24,10 @@ namespace CMS_back.Controllers
             context=_context;
             cfg=_cfg;
             Usermanager=usermanager;
+            ContextAccessor=contextAccessor;
         }
 
-        [HttpPost("create/{Fid:alpha}")]
+        [HttpPost("create/{Fid}")]
         public async Task<IActionResult> createControl(ControlDTO controldto, string Fid)
         { 
             Faculity? facultiy = context.Faculity.FirstOrDefault(f => f.Id == Fid);
@@ -58,8 +59,9 @@ namespace CMS_back.Controllers
 
                 var creator = ContextAccessor.HttpContext.User;
                 if (creator == null) return BadRequest("Creator ID invalid");
-                control.UserCreator = await Usermanager.GetUserAsync(creator);
-
+                var userCreater = await Usermanager.GetUserAsync(creator);
+                control.UserCreator = userCreater;
+                control.UserCreatorID = userCreater.Id;
 
                 var usersIDs = controldto.ContorlUsersIDs;
                 foreach (var id in usersIDs)
@@ -101,15 +103,20 @@ namespace CMS_back.Controllers
             return BadRequest("Faculty not found");
         }
 
-        [HttpPut("edit/{Cid:alpha}")]
+        [HttpPut("edit/{Cid}")]
         public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
         {
+            var creator = ContextAccessor.HttpContext.User;
+            if (creator == null) return BadRequest("Creator ID invalid");
+            var userCreater = await Usermanager.GetUserAsync(creator);
+
             Control? control = context.Control.FirstOrDefault(c => c.Id == Cid);
             if (control == null) return BadRequest("inValid control id");
 
+            if(userCreater.Id != control.UserCreatorID) return BadRequest("inValid creater id");
+
             Faculity? faculity = context.Faculity.FirstOrDefault(f => f.Id == control.FaculityID);
             if (faculity == null) return BadRequest("Control not has faculty");
-            faculity.Controls.Remove(control);
 
             control.Name = controldto.Name;
             control.Faculity_Node = controldto.Faculity_Node;
@@ -119,17 +126,12 @@ namespace CMS_back.Controllers
             control.End_Date = controldto.End_Date;
             control.ACAD_YEAR = controldto.ACAD_YEAR;
 
+            ControlUsers controlUsers = context.ControlUsers.FirstOrDefault(c => c.ControlID == control.Id);
+            if (controlUsers == null) return BadRequest("Invalid control");
             ApplicationUser? mamager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
             if (mamager == null) return BadRequest("Invalid Head of control id");
-            ControlUsers userControl = new ControlUsers()
-            {
-                ControlID = control.Id,
-                Control = control,
-                UserID = mamager.Id,
-                User = mamager,
-                JobType = JobType.Head
-            };
-            context.ControlUsers.Add(userControl);
+            controlUsers.UserID = mamager.Id;
+            controlUsers.User = mamager;
 
 
             var usersIDs = controldto.ContorlUsersIDs;
@@ -175,36 +177,36 @@ namespace CMS_back.Controllers
         [HttpGet("allControllers")]
         public async Task<IActionResult> index()
         {
-            var controlles = await context.Control.ToListAsync();
+            var controlles = await context.Control.Include(c=>c.ControlSubjects).ToListAsync();
             if (controlles == null) return Ok(new List<Control>());
             return Ok(controlles);
         }
         
-        [HttpGet("detail/{id:alpha}")]
+        [HttpGet("detail/{id}")]
         public async Task<IActionResult> detail(string id)
         {
-            var controle = await context.Control.SingleOrDefaultAsync(x => x.Id == id);
+            var controle = await context.Control.Include(c=>c.ControlSubjects).SingleOrDefaultAsync(x => x.Id == id);
             if (controle == null) return BadRequest("Not Found");
-            else return Ok(controle);
+            return Ok(controle);
         }
         
-        [HttpDelete("delete/{id:alpha}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> delete(string id)
         {
             var controle = await context.Control.SingleOrDefaultAsync(x => x.Id == id);
             if (controle == null) return BadRequest("Not Found");
             else
             {
-                context.Remove(controle);
+                context.Control.Remove(controle);
                 context.SaveChanges();
-                return Ok();
+                return Ok("Deleted");
             }
         }
 
         [HttpGet("{Fid}")]
         public async Task<IActionResult> get (string Fid)
         {
-            var faculty = context.Faculity.FirstOrDefault(x => x.Id == Fid);
+            var faculty = context.Faculity.Include(f=>f.Controls).ThenInclude(c=>c.ControlSubjects).FirstOrDefault(x => x.Id == Fid);
             if (faculty == null) return BadRequest("Faculty not found");
             if (faculty.Controls == null) return BadRequest("Faculty not has controls");
             return Ok(faculty.Controls);
@@ -213,7 +215,7 @@ namespace CMS_back.Controllers
         [HttpGet("semeter/{Sid}/acadmec/{AY}")]
         public async Task<IActionResult> GetControlBySemesterAndAcademcYear(string Sid,string AY)
         {
-            var control = context.Control.Where(c => c.ACAD_YEAR == AY && c.Faculity_Semester == Sid);
+            var control = context.Control.Include(c => c.ControlSubjects).Where(c => c.ACAD_YEAR == AY && c.Faculity_Semester == Sid);
             if (control == null) return BadRequest("Control not found");
             return Ok(control);
         }

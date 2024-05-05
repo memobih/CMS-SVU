@@ -12,8 +12,8 @@ namespace CMS_back.Reposatory.Models
 		public string? Faculity_Phase { get; set; }
 		public string? Faculity_Node { get; set; }
 		public string? Faculity_Semester { get; set; }
-		public DateOnly? Start_Date { get; set; }
-		public DateOnly? End_Date { get; set; }
+		public DateTime Start_Date { get; set; }
+		public DateTime? End_Date { get; set; }
 
 		[RegularExpression(pattern: @"^\d{4}\/\d{4}$",ErrorMessage = "Invalid ACAD_YEAR Format. Please use the format 'YYYY/YYYY'.\"")]
 		public string? ACAD_YEAR { get; set; }
