@@ -4,8 +4,8 @@
 	{
 		public string ControlID { get; set; }
 		public Control Control { get; set; }
-		public string SubjectID { get; set; }
-		public Subject Subject { get; set; }
+		public string? SubjectID { get; set; }
+		public Subject? Subject { get; set; }
 
 	}
 }

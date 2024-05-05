@@ -24,24 +24,22 @@ namespace CMS_back.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> create(FacultyDTO facultyDTO)
         {
-            var isExict = context.Faculities.FirstOrDefault(f => f.Name == facultyDTO.Name);
+            var isExict = context.Faculity.FirstOrDefault(f => f.Name == facultyDTO.Name);
             if (isExict != null) return BadRequest("Faculty is exict");
             Faculity faculity = new Faculity()
             {
                 Name = facultyDTO.Name,
                 Code = facultyDTO.Code,
                 Order = facultyDTO.Order,
-                Type = facultyDTO.Type
             };
-            faculity.ID = Guid.NewGuid().ToString();
             var leader = context.Users.FirstOrDefault(u => u.Id == facultyDTO.UserLeaderID);
             if (leader == null) return BadRequest("Must enter Leader Faculty");
             faculity.UserLeader = leader;
             faculity.UserLeaderID = leader.Id;
 
-            context.Faculities.Add(faculity);
+            context.Faculity.Add(faculity);
 
-            leader.FaculityLeaderID = faculity.ID;
+            leader.FaculityLeaderID = faculity.Id;
             leader.FaculityLeader = faculity;
 
 
@@ -53,14 +51,14 @@ namespace CMS_back.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllfaculties()
         {
-            var faculties = await context.Faculities.ToListAsync();
+            var faculties = await context.Faculity.ToListAsync();
             return Ok(faculties);
         }
 
         [HttpGet("{id:alpha}")]
         public async Task<IActionResult> getfaculty(string id)
         {
-            var faculty = await context.Faculities.Where(f => f.ID == id).ToListAsync();
+            var faculty = await context.Faculity.Where(f => f.Id == id).ToListAsync();
             if (faculty == null) return BadRequest("No found Facluty");
             return Ok(faculty);
         }

@@ -37,9 +37,11 @@ namespace CMS_back.Controllers
         }
 
         [HttpGet("user-for-control/{id}")]
-        public async Task<IActionResult> GetUserForControl(string id)
+        public IActionResult GetUserForControl(string id)
         {
-            List<ApplicationUser>? users = await context.Users.Where(u => u.MemberOfControlID == id).ToListAsync();
+            var control = context.Control.FirstOrDefault(c => c.Id== id);
+            if (control == null) return BadRequest("Control not found");
+            List<ApplicationUser>? users = context.Users.Where(u => u.UserCreatorControls.Contains(control)).ToList();
             if (users == null) return Ok(new List<ApplicationUser>());
             return Ok(users);
         }

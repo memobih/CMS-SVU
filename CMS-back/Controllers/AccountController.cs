@@ -100,7 +100,7 @@ namespace CMS_back.Controllers
                 if(userDto.FaculityID != null)
                 {
                     user.FaculityEmployeeID = userDto.FaculityID;
-                    user.FaculityEmployee = context.Faculities.FirstOrDefault(f => f.ID == userDto.FaculityID);
+                    user.FaculityEmployee = context.Faculity.FirstOrDefault(f => f.Id == userDto.FaculityID);
                 }
                 IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)

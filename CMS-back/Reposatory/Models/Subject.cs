@@ -1,4 +1,6 @@
-﻿namespace CMS_back.Reposatory.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CMS_back.Reposatory.Models
 {
 	public enum Question
 	{
@@ -7,24 +9,26 @@
 	}
 	public class Subject
 	{
-		public string ID { get; set; }
-		public string Name { get; set; }
+		[Key]
+		public string Id { get; set; } = Guid.NewGuid().ToString();
+		public string? Name { get; set; }
+		public Question? IsDone { get; set; }
+		public Question? IsReview { get; set; }		
+		public string? Code { get; set; }
+		public int? Credit_Hours { get; set; }
+		public string FaculityNodeID { get; set; }
+		public Faculity_Semester FaculityNode { get; set; }
 
-		public Question IsDone { get; set; }
-		public Question IsReview { get; set; }		
-		public string Code { get; set; }
-		public int Credit_Hours { get; set; }
-		public string? FaculitySemesterID { get; set; }
-		public Faculity_Semester? Faculity_Semester { get; set; }
+		public string FaculityHierarycalID { get; set; }
+		public FaculityHierarycal FaculityHierarycal { get; set; }
 
-		public string? FaculityPhaseID { get; set; }
-		public Faculity_Phases? Faculity_Phases { get; set; }
+		public virtual ICollection<Subject_Assess>? subject_Assesses { get; } = [];
 
-		public virtual ICollection<Subject_Assess>? subject_Assesses { get; } = new List<Subject_Assess>();
+		public virtual ICollection<ControlSubject>? ControlSubjects { get; } = [];
 
-		public virtual ICollection<ControlSubject> ControlSubjects { get; } = [];
+		public virtual ICollection<Subject_Committees>? Subject_Committees { get; } = [];
 
-		public virtual ICollection<StudentSubject> StudentSubjects { get; } = [];
+
 
 	}
 }

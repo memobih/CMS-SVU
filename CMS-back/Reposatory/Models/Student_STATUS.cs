@@ -2,14 +2,16 @@
 
 namespace CMS_back.Reposatory.Models
 {
-	public class Control_Addresses
+	public enum StudentStatus
+	{
+		Remaining,
+		Freshman,
+		International
+	}
+	public class Student_STATUS
 	{
 		[Key]
 		public string Id { get; set; } = Guid.NewGuid().ToString();
-		public string ControlID { get; set; }
-		public Control Control { get; set; }
-		public string Address { get; set; }
-
-		
+		public StudentStatus? Student_Status { get; set; }
 	}
 }

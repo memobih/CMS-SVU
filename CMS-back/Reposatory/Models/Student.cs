@@ -1,4 +1,5 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations;
+
 namespace CMS_back.Reposatory.Models
 {
 	public enum Gender
@@ -6,25 +7,25 @@ namespace CMS_back.Reposatory.Models
 		Male,
 		Female
 	}
-	public enum StudentStatus
-	{
-		Remaining,
-		Freshman,
-		International
-	}
+
 	public class Student
 	{
-		public string ID { get; set; }
-		public string Name { get; set; }
-		public DateOnly DateOfBirth { get; set; }
-		public string Email { get; set; }
-		public string PhoneNumber { get; set; }
-		public string Address { get; set; }
-		public string NationalID { get; set; }
-		public int CityID { get; set; }
-		public Gender Gender { get; set; }
-		public StudentStatus Status { get; set; }
-		public virtual ICollection<StudentSubject> StudentSubjects { get; } = [];
+		[Key]
+		public string Id { get; set; } = Guid.NewGuid().ToString();
+		public string? Name { get; set; }
+		public DateOnly? DateOfBirth { get; set; }
+		public string? Email { get; set; }
+		public string? PhoneNumber { get; set; }
+		public string? Address { get; set; }
+		public string? NationalID { get; set; }
+		public int? CityID { get; set; }
+		public Gender? Gender { get; set; }
+
+		public string? FaculityID { get; set; }
+		public Faculity? Faculity { get; set; }
+
+		public virtual ICollection<StudentSemester>? Semesters { get; set; }	
+
 
 	}
 }
