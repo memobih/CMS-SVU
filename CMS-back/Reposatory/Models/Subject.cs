@@ -17,7 +17,7 @@ namespace CMS_back.Reposatory.Models
 		public string? Code { get; set; }
 		public int? Credit_Hours { get; set; }
 		public string FaculityNodeID { get; set; }
-		public Faculity_Semester FaculityNode { get; set; }
+		public Faculity_Node FaculityNode { get; set; }
 
 		public string FaculityHierarycalID { get; set; }
 		public FaculityHierarycal FaculityHierarycal { get; set; }

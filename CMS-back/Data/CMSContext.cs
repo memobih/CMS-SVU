@@ -26,7 +26,8 @@ namespace CMS_back.Data
 		public DbSet<Student_SemesterSubjects> Student_SemesterSubjects { get; set; }
 		public DbSet<Staff> Staff { get; set; }
 		public DbSet<FaculityType> FaculityType { get; set; }
-		public DbSet<FaculityHierarycal> FaculityHierarycal { get; set; }
+        public DbSet<Faculity_Node> Faculity_Nodes { get; set; }
+        public DbSet<FaculityHierarycal> FaculityHierarycal { get; set; }
 		public DbSet<ControlUsers> ControlUsers { get; set; }
 		public DbSet<Control_Note> Control_Note { get; set; }
 		public DbSet<Control_UserTasks> Control_UserTasks { get; set; }

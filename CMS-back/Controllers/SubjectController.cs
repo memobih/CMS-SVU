@@ -24,7 +24,14 @@ namespace CMS_back.Controllers
         [HttpGet("facult/{id}")]
         public async Task<IActionResult> getSubjectForFaculty(string id)
         {
-            List<Subject>? subjects = Context.Subject.Where(s => s.Id == id).ToList();
+            var facultyNode = Context.Faculity_Nodes.Where(x => x.FaculityNodeID == id).ToList();
+            List<Subject>? subjects = new List<Subject>();
+            foreach(var  faculty_node in facultyNode)
+            {
+                var subject_Node = Context.Subject.Where(s => s.FaculityNodeID == faculty_node.Id);
+                foreach(var subject in subject_Node)
+                    subjects.Add(subject);
+            }
             if (subjects == null) return Ok(new List<Subject>());
             return Ok(subjects);
         }
@@ -53,8 +60,10 @@ namespace CMS_back.Controllers
                 Name = subjectdto.Name,
                 Code = subjectdto.Code,
                 Credit_Hours = subjectdto.Credit_Hours,
+                FaculityNodeID = subjectdto.FaculityNodeID,
             };
             Context.Subject.Add(subject);
+            
             await Context.SaveChangesAsync();
             return Ok("subject Added");
         }
