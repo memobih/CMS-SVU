@@ -37,6 +37,7 @@ namespace CMS_back.Controllers
             faculity.UserLeader = leader;
             faculity.UserLeaderID = leader.Id;
 
+
             context.Faculity.Add(faculity);
 
             leader.FaculityLeaderID = faculity.Id;

@@ -15,7 +15,7 @@ namespace CMS_back.Reposatory.Models
 		public Question? IsDone { get; set; }
 		public Question? IsReview { get; set; }		
 		public string? Code { get; set; }
-		public int? Credit_Hours { get; set; }
+		public int Credit_Hours { get; set; }
 		public string FaculityNodeID { get; set; }
 		public Faculity_Node FaculityNode { get; set; }
 
