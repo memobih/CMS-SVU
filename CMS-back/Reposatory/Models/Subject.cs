@@ -19,8 +19,8 @@ namespace CMS_back.Reposatory.Models
 		public string FaculityNodeID { get; set; }
 		public Faculity_Node FaculityNode { get; set; }
 
-		public string FaculityHierarycalID { get; set; }
-		public FaculityHierarycal FaculityHierarycal { get; set; }
+		public string? FaculityHierarycalID { get; set; }
+		public FaculityHierarycal? FaculityHierarycal { get; set; }
 
 		public virtual ICollection<Subject_Assess>? subject_Assesses { get; } = [];
 
