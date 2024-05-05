@@ -37,12 +37,15 @@ namespace CMS_back.Controllers
             if (leader == null) return BadRequest("Must enter Leader Faculty");
             faculity.UserLeader = leader;
             faculity.UserLeaderID = leader.Id;
-            leader.FaculityLeaderID = faculity.ID;
-            leader.FaculityLeader = faculity;
 
             context.Faculities.Add(faculity);
 
+            leader.FaculityLeaderID = faculity.ID;
+            leader.FaculityLeader = faculity;
+
+
             await context.SaveChangesAsync();
+
             return Ok("added faculty");
         }
 
