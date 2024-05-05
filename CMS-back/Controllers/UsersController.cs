@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CMS_back.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     [Authorize]
     public class UsersController : ControllerBase
@@ -34,10 +34,19 @@ namespace CMS_back.Controllers
             return Ok(users);
         }
 
-        [HttpGet]
+        [HttpGet("control/{id}")]
+        public async Task<IActionResult> getUserForControl(string id)
+        {
+            List<ApplicationUser>? users = context.Users.Where(u => u.MemberOfControlID == id).ToList();
+            if (users == null) return Ok(new List<ApplicationUser>());
+            return Ok(users);
+        }
+
+        [HttpGet("me")]
         public async Task<IActionResult> getUser()
         {
             var currentUser = ContextAccessor.HttpContext.User;
+            if (currentUser == null) return BadRequest("No user Login yet");
             return Ok(await Usermanager.GetUserAsync(currentUser));
         }
 

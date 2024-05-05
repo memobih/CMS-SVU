@@ -27,7 +27,6 @@ namespace CMS_back.DTO
         [Range(1,4)]
         public UserType Type { get; set; }
 
-        [Required]
-        public string FaculityName { get; set; }
+        public string? FaculityID { get; set; }
     }
 }

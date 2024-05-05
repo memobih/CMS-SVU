@@ -33,8 +33,6 @@ namespace CMS_back.Reposatory.Models
 
 		[InverseProperty("ControlManager")]
 		public virtual ICollection<Control>? UserManagerControls { get; } = new List<Control>();
-
-	
 		public string? FaculityLeaderID {  get; set; }
 		public Faculity? FaculityLeader { get; set; }
 	}

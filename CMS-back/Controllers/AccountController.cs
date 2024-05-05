@@ -18,7 +18,7 @@ using System.Security.Principal;
 
 namespace CMS_back.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
 
     public class AccountController : ControllerBase
@@ -26,10 +26,13 @@ namespace CMS_back.Controllers
         private readonly UserManager<ApplicationUser> usermanger;
         private readonly IConfiguration config;
 
-        public AccountController(UserManager<ApplicationUser> usermanger, IConfiguration config)
+        public CMSContext context { get; }
+
+        public AccountController(UserManager<ApplicationUser> usermanger, IConfiguration config, CMSContext _context)
         {
             this.usermanger = usermanger;
             this.config = config;
+            context=_context;
         }
 
         [HttpPost("login")]
@@ -89,6 +92,11 @@ namespace CMS_back.Controllers
                     ScientificDegree = userDto.ScientificDegree,
                     Type = userDto.Type
                 };
+                if(userDto.FaculityID != null)
+                {
+                    user.FaculityEmployeeID = userDto.FaculityID;
+                    user.FaculityEmployee = context.Faculities.FirstOrDefault(f => f.ID == userDto.FaculityID);
+                }
                 IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)
                 {

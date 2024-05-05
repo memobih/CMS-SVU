@@ -3,10 +3,11 @@ using CMS_back.Reposatory.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CMS_back.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     [Authorize]
     public class SubjectController : ControllerBase
@@ -27,7 +28,18 @@ namespace CMS_back.Controllers
             return Ok(subjects);
         }
 
-
-
+        [HttpGet("control/{id}")]
+        public async Task<IActionResult> getSubjectForControl(string id)
+        {
+            var control_subjects = Context.ControlSubjects.Where(cs => cs.ControlID == id).ToList();
+            List<Subject> subjects = new List<Subject>();
+            foreach (var cs in control_subjects)
+            {
+                var subject = Context.Subjects.FirstOrDefault(s => cs.SubjectID == s.ID);
+                if(subject == null) continue;
+                subjects.Add(subject);
+            }
+            return Ok(subjects);
+        }
     }
 }
