@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS_back.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    [Migration("20240506121530_init")]
+    [Migration("20240506162343_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -99,8 +99,9 @@ namespace CMS_back.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserImage")
                         .HasColumnType("nvarchar(max)");
@@ -255,8 +256,9 @@ namespace CMS_back.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("JobType")
-                        .HasColumnType("int");
+                    b.Property<string>("JobType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserID")
                         .HasColumnType("nvarchar(450)");
@@ -800,6 +802,26 @@ namespace CMS_back.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "22873f68-65e6-4c5f-bd6f-07e31b8d3c01",
+                            Name = "AdminUniversity",
+                            NormalizedName = "AdminUniversity"
+                        },
+                        new
+                        {
+                            Id = "5b99ba84-59ce-456c-a0d2-8ac0cb86f979",
+                            Name = "AdminFaculty",
+                            NormalizedName = "AdminFaculty"
+                        },
+                        new
+                        {
+                            Id = "3fb511f7-0d87-4607-81d3-cb3e7128a614",
+                            Name = "Staff",
+                            NormalizedName = "Staff"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
