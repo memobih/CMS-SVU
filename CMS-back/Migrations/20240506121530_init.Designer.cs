@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS_back.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    [Migration("20240505232903_init")]
+    [Migration("20240506121530_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -252,6 +252,7 @@ namespace CMS_back.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ControlID")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("JobType")
@@ -704,7 +705,6 @@ namespace CMS_back.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FaculityHierarycalID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FaculityNodeID")
@@ -981,7 +981,9 @@ namespace CMS_back.Migrations
                 {
                     b.HasOne("CMS_back.Models.Control", "Control")
                         .WithMany("ControlUsers")
-                        .HasForeignKey("ControlID");
+                        .HasForeignKey("ControlID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CMS_back.Models.ApplicationUser", "User")
                         .WithMany()
@@ -1041,7 +1043,8 @@ namespace CMS_back.Migrations
                 {
                     b.HasOne("CMS_back.Models.Control_Task", "Control_Task")
                         .WithMany("UserTasks")
-                        .HasForeignKey("Control_TaskID");
+                        .HasForeignKey("Control_TaskID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CMS_back.Models.ApplicationUser", "UserTask")
                         .WithMany()
@@ -1193,9 +1196,7 @@ namespace CMS_back.Migrations
                 {
                     b.HasOne("CMS_back.Models.FaculityHierarycal", "FaculityHierarycal")
                         .WithMany()
-                        .HasForeignKey("FaculityHierarycalID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FaculityHierarycalID");
 
                     b.HasOne("CMS_back.Models.Faculity_Node", "FaculityNode")
                         .WithMany("Subjects")
