@@ -2,15 +2,18 @@
 using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 
 namespace CMS_back.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ControlNotesController : ControllerBase
     {
 
@@ -42,12 +45,13 @@ namespace CMS_back.Controllers
             return Ok("Notes Created");
         }
 
-        [HttpGet]
+        [HttpGet("control/{Cid}")]
         public IActionResult get(string Cid)
         {
             var control_notes = Context.Control_Note.Include(c => c.WriteBy).Where(c => c.ControlID == Cid).ToList();
             var control_notes_result = Mapper.Map<List<ControlNotesResultDTO>>(control_notes);
             return Ok(control_notes_result);
         }
+
     }
 }

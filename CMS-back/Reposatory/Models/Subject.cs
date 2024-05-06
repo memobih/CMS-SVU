@@ -4,8 +4,8 @@ namespace CMS_back.Models
 {
 	public enum Question
 	{
-		Yes,
-		No
+		No,
+		Yes
 	}
 	public class Subject
 	{

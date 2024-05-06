@@ -4,6 +4,7 @@ using CMS_back.DTO;
 using CMS_back.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +17,17 @@ namespace CMS_back.Controllers
     {
 
         public CMSContext Context { get; }
+        public IHttpContextAccessor ContextAccessor { get; }
+        public UserManager<ApplicationUser> Usermanager { get; }
+
         private readonly IMapper _mapper;
-        public SubjectController(CMSContext _context, IMapper mappe) 
+        public SubjectController(CMSContext _context, IMapper mappe, IHttpContextAccessor contextAccessor,
+            UserManager<ApplicationUser> usermanager) 
         {
             Context=_context;
             _mapper=mappe;
+            ContextAccessor=contextAccessor;
+            Usermanager=usermanager;
         }
 
 
@@ -78,6 +85,33 @@ namespace CMS_back.Controllers
             
             await Context.SaveChangesAsync();
             return Ok("subject Added");
+        }
+
+        [HttpPut("isDone/{Sid}")]
+        public async Task<IActionResult> IsDone(string Sid)
+        {
+            var user = ContextAccessor.HttpContext.User;
+            var currentUser = await Usermanager.GetUserAsync(user);
+            var isHead = Context.ControlUsers.FirstOrDefault(u => u.UserID == currentUser.Id);
+            if (isHead == null || isHead.JobType != JobType.Head) return BadRequest("Head of control only has access");
+            var subject = Context.Subject.FirstOrDefault(s => s.Id == Sid);
+            if (subject == null) return BadRequest("Subject not found");
+            subject.IsDone = Question.Yes;
+            await Context.SaveChangesAsync();
+            return Ok("updated subejct");
+        }
+        [HttpPut("isReview/{Sid}")]
+        public async Task<IActionResult> IsReview(string Sid)
+        {
+            var user = ContextAccessor.HttpContext.User;
+            var currentUser = await Usermanager.GetUserAsync(user);
+            var isHead = Context.ControlUsers.FirstOrDefault(u => u.UserID == currentUser.Id);
+            if (isHead == null || isHead.JobType != JobType.Head) return BadRequest("Head of control only has access");
+            var subject = Context.Subject.FirstOrDefault(s => s.Id == Sid);
+            if (subject == null) return BadRequest("Subject not found");
+            subject.IsReview = Question.Yes;
+            await Context.SaveChangesAsync();
+            return Ok("updated subejct");
         }
     }
 }

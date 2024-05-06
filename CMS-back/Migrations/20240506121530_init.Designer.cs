@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS_back.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    [Migration("20240506073213_init")]
+    [Migration("20240506121530_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -1043,7 +1043,8 @@ namespace CMS_back.Migrations
                 {
                     b.HasOne("CMS_back.Models.Control_Task", "Control_Task")
                         .WithMany("UserTasks")
-                        .HasForeignKey("Control_TaskID");
+                        .HasForeignKey("Control_TaskID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CMS_back.Models.ApplicationUser", "UserTask")
                         .WithMany()

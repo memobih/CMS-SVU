@@ -1040,7 +1040,8 @@ namespace CMS_back.Migrations
                 {
                     b.HasOne("CMS_back.Models.Control_Task", "Control_Task")
                         .WithMany("UserTasks")
-                        .HasForeignKey("Control_TaskID");
+                        .HasForeignKey("Control_TaskID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CMS_back.Models.ApplicationUser", "UserTask")
                         .WithMany()

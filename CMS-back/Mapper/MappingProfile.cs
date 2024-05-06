@@ -14,6 +14,7 @@ namespace CMS_back.Mapper
             CreateMap<ApplicationUser, UserResultDto>();
             CreateMap<Control_Note, controlNoteDTO>().ReverseMap();
             CreateMap<Control_Note, ControlNotesResultDTO>().ReverseMap();
+            CreateMap<Control_Task, controlTaskDTO>().ReverseMap();
         }
     }
 }

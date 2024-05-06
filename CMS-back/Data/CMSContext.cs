@@ -61,11 +61,11 @@ namespace CMS_back.Data
 
 			base.OnModelCreating(modelBuilder);
 
-   //         modelBuilder.Entity<ControlUsers>()
-			//.HasOne(cu => cu.User)
-			//.WithMany()
-			//.HasForeignKey(cu => cu.UserID)
-			//.OnDelete(DeleteBehavior.Cascade); 
+            //         modelBuilder.Entity<ControlUsers>()
+            //.HasOne(cu => cu.User)
+            //.WithMany()
+            //.HasForeignKey(cu => cu.UserID)
+            //.OnDelete(DeleteBehavior.Cascade); 
 
             //modelBuilder.Entity<ControlUsers>()
             //    .HasOne(cu => cu.Control)
@@ -79,9 +79,15 @@ namespace CMS_back.Data
             .WithOne(cu => cu.Control)
             .HasForeignKey(cu => cu.ControlID) // Assuming ControlID is the foreign key property in ControlUser
             .OnDelete(DeleteBehavior.Cascade);
-        }
+
+			modelBuilder.Entity<Control_Task>()
+			.HasMany(c => c.UserTasks)
+			.WithOne(cu => cu.Control_Task)
+			.HasForeignKey(cu => cu.Control_TaskID) // Assuming ControlID is the foreign key property in ControlUser
+			.OnDelete(DeleteBehavior.Cascade);
+		}
 
 
 
-	}
+    }
 }
