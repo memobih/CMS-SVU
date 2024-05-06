@@ -1,21 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.HttpResults;
 using CMS_back.DTO;
 using CMS_back.Data;
-using System.Security.Principal;
 using CMS_back.Models;
 using CMS_back.Consts;
+using System.Net.Mail;
+using CMS_back.Mailing;
 
 namespace CMS_back.Controllers
 {
@@ -26,14 +20,17 @@ namespace CMS_back.Controllers
     {
         private readonly UserManager<ApplicationUser> usermanger;
         private readonly IConfiguration config;
+        private readonly IMailingService _mailingService;
 
         public CMSContext context { get; }
 
-        public AccountController(UserManager<ApplicationUser> usermanger, IConfiguration config, CMSContext _context)
+        public AccountController(UserManager<ApplicationUser> usermanger, IConfiguration config, CMSContext _context
+            , IMailingService mailingService)
         {
             this.usermanger = usermanger;
             this.config = config;
             context=_context;
+            _mailingService = mailingService;
         }
 
         [HttpPost("login")]
@@ -41,7 +38,7 @@ namespace CMS_back.Controllers
         {
             if (ModelState.IsValid == true)
             {
-                ApplicationUser? user = await usermanger.FindByNameAsync(userDto.UserName);
+                ApplicationUser user = await usermanger.FindByNameAsync(userDto.UserName);
                 if (user != null)
                 {
                     bool found = await usermanger.CheckPasswordAsync(user, userDto.Password);
@@ -71,6 +68,12 @@ namespace CMS_back.Controllers
                             expires: DateTime.Now.AddHours(1),
                             signingCredentials: signincred
                             );
+                        if(user.Email != null)
+                        {
+                            var message = new Mailing.MailMessage(new string[] { user.Email }, "login", "انت عملت لوجين يسطا خد بالك");
+                                _mailingService.SendMail(message);
+                        }
+                        
                         return Ok(new
                         {
                             token = new JwtSecurityTokenHandler().WriteToken(mytoken),
