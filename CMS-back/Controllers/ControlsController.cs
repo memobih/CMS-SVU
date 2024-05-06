@@ -8,6 +8,7 @@ using CMS_back.Models;
 using AutoMapper;
 using System;
 using CMS_back.Consts;
+using CMS_back.Mailing;
 
 
 namespace CMS_back.Controllers
@@ -21,15 +22,18 @@ namespace CMS_back.Controllers
         public IConfiguration cfg { get; }
         public UserManager<ApplicationUser> Usermanager { get; }
         public IHttpContextAccessor ContextAccessor { get; }
+        public IMailingService MailingService { get; }
+
         private readonly IMapper _mapper;
         public ControlsController(CMSContext _context,IConfiguration _cfg, 
-            UserManager<ApplicationUser> usermanager, IHttpContextAccessor contextAccessor,IMapper mapper)
+            UserManager<ApplicationUser> usermanager, IHttpContextAccessor contextAccessor,IMapper mapper, IMailingService mailingService)
         {
             context=_context;
             cfg=_cfg;
             Usermanager=usermanager;
             ContextAccessor=contextAccessor;
             _mapper = mapper;
+            MailingService=mailingService;
         }
 
         [HttpPost("create/{Fid}")]
@@ -61,6 +65,11 @@ namespace CMS_back.Controllers
                     User = mamager,
                     JobType = JobType.Head
                 };
+                if (mamager.Email != null)
+                {
+                    var message = new Mailing.MailMessage(new string[] { mamager.Email }, "Control System", "You are Head of new Control");
+                    MailingService.SendMail(message);
+                }
                 context.ControlUsers.Add(userControl);
 
                 var creator = ContextAccessor.HttpContext.User;
@@ -82,6 +91,11 @@ namespace CMS_back.Controllers
                         User = user,
                         JobType = JobType.Member
                     };
+                    if (user.Email != null)
+                    {
+                        var message = new Mailing.MailMessage(new string[] { user.Email }, "Control System", "You are Member in new Control");
+                        MailingService.SendMail(message);
+                    }
                     context.ControlUsers.Add(memberControl);
                 }
 
@@ -141,6 +155,11 @@ namespace CMS_back.Controllers
             ApplicationUser? manager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
             if (manager == null) return BadRequest("Invalid Head of control id");
             controlUsers.UserID = manager.Id;
+            if (manager.Email != null)
+            {
+                var message = new Mailing.MailMessage(new string[] { manager.Email }, "Control System", "You are Head of new Control");
+                MailingService.SendMail(message);
+            }
 
             // Update Control Members
             var usersIDs = controldto.ContorlUsersIDs;
@@ -154,6 +173,11 @@ namespace CMS_back.Controllers
                     UserID = user.Id,
                     JobType = JobType.Member
                 };
+                if (user.Email != null)
+                {
+                    var message = new Mailing.MailMessage(new string[] { user.Email }, "Control System", "You are Member in new Control");
+                    MailingService.SendMail(message);
+                }
                 context.ControlUsers.Add(memberControl);
             }
 

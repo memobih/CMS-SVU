@@ -68,11 +68,6 @@ namespace CMS_back.Controllers
                             expires: DateTime.Now.AddHours(1),
                             signingCredentials: signincred
                             );
-                        if(user.Email != null)
-                        {
-                            var message = new Mailing.MailMessage(new string[] { user.Email }, "login", "انت عملت لوجين يسطا خد بالك");
-                                _mailingService.SendMail(message);
-                        }
                         
                         return Ok(new
                         {
@@ -110,8 +105,12 @@ namespace CMS_back.Controllers
                 IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)
                 {
+                    if (user.Email != null)
+                    {
+                        var message = new Mailing.MailMessage(new string[] { user.Email }, "Control System", "You are register now");
+                        _mailingService.SendMail(message);
+                    }
                     await usermanger.AddToRoleAsync(user, userDto.Type);
-                    
                     return Ok("User Added");
                 }
                 return BadRequest(result.Errors.FirstOrDefault());
