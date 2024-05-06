@@ -74,8 +74,9 @@ namespace CMS_back.Controllers
                         return Ok(new
                         {
                             token = new JwtSecurityTokenHandler().WriteToken(mytoken),
-                            expiration = mytoken.ValidTo
-                        });
+                            expiration = mytoken.ValidTo,
+                            roles = await usermanger.GetRolesAsync(user)
+                        }) ;
                     }
                     return BadRequest("invalid password");
                 }
