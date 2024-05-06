@@ -32,30 +32,27 @@ namespace CMS_back.Controllers
         }
 
 
-        [HttpGet("subject-by-id")]
-        public async Task<IActionResult> GetSubjectForFaculty(string sId)
+        [HttpGet("faculty/{Fid}")]
+        public async Task<IActionResult> GetSubjectForFaculty(string Fid)
         {
-            //var facultyNode = Context.Faculity_Node.Where(x => x.FaculityNodeID == id).ToList();
-            //List<subjectResultDTO>? subjects = new List<subjectResultDTO>();
-            //foreach(var  faculty_node in facultyNode)
-            //{
-            //    var subject_Node = Context.Subject.Where(s => s.FaculityNodeID == faculty_node.Id);
-            //    foreach(var subject in subject_Node)
-            //    {
-            //        subjectResultDTO subjectdto = new subjectResultDTO()
-            //        {
-            //            id = subject.Id,
-            //            Name = subject.Name,
-            //            Code = subject.Code,
-            //            Credit_Hours = subject.Credit_Hours
-            //        };
-            //        subjects.Add(subjectdto);
-            //    }
-            //}
-            //if (subjects == null) return Ok(new List<Subject>());
-            var subject=Context.Subject.FirstOrDefault(x => x.Id==sId);
-            var subjectDto=_mapper.Map<subjectResultDTO>(subject);
-            return Ok(subjectDto);
+            var facultyNode = Context.Faculity_Node.Include(f => f.Subjects).Where(x => x.FaculityNodeID == Fid).ToList();
+            List<subjectResultDTO>? subjects = new List<subjectResultDTO>();
+            foreach (var faculty_node in facultyNode)
+            {
+                var subject_Node = Context.Subject.Where(s => s.FaculityNodeID == faculty_node.Id);
+                foreach (var subject in subject_Node)
+                {
+                    subjectResultDTO subjectdto = new subjectResultDTO()
+                    {
+                        id = subject.Id,
+                        Name = subject.Name,
+                        Code = subject.Code,
+                        Credit_Hours = subject.Credit_Hours
+                    };
+                    subjects.Add(subjectdto);
+                }
+            }
+            return Ok(subjects);
         }
 
         [HttpGet("subjects-of-control")]

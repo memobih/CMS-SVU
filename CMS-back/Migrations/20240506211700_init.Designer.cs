@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS_back.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    [Migration("20240506162343_init")]
+    [Migration("20240506211700_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -806,19 +806,19 @@ namespace CMS_back.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "22873f68-65e6-4c5f-bd6f-07e31b8d3c01",
+                            Id = "11b38618-8fcd-426a-8c3e-cd901f9ea4f4",
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
-                            Id = "5b99ba84-59ce-456c-a0d2-8ac0cb86f979",
+                            Id = "e264f8e6-762a-4047-a653-2f7b4e1855d2",
                             Name = "AdminFaculty",
                             NormalizedName = "AdminFaculty"
                         },
                         new
                         {
-                            Id = "3fb511f7-0d87-4607-81d3-cb3e7128a614",
+                            Id = "b9994fbc-4213-4acc-ac3b-c95e8296b31d",
                             Name = "Staff",
                             NormalizedName = "Staff"
                         });

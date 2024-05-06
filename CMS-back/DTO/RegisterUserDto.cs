@@ -23,6 +23,5 @@ namespace CMS_back.DTO
         [Required]
         public string ScientificDegree { get; set; }
 
-        public string? FaculityID { get; set; }
     }
 }

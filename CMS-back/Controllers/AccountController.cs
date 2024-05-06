@@ -54,7 +54,8 @@ namespace CMS_back.Controllers
                         var claims = new List<Claim>();
                         claims.Add(new Claim(ClaimTypes.Name, user.UserName));
                         claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
-                        
+                        claims.Add(new Claim(ClaimTypes.Role, user.Type));
+
                         if (user.FaculityLeaderID != null) 
                             claims.Add(new Claim(ClaimTypes.Sid, user.FaculityLeaderID));
                         
@@ -79,7 +80,7 @@ namespace CMS_back.Controllers
                         {
                             token = new JwtSecurityTokenHandler().WriteToken(mytoken),
                             expiration = mytoken.ValidTo,
-                            roles = await usermanger.GetRolesAsync(user)
+                            roles = user.Type
                         }) ;
                     }
                     return BadRequest("invalid password");
@@ -90,7 +91,6 @@ namespace CMS_back.Controllers
         }
 
         [HttpPost("register")]//account/register
-        [Authorize(Roles = ConstsRoles.AdminFaculty)]
         public async Task<IActionResult> Registration(RegisterUserDto userDto)
         {
             if (ModelState.IsValid == true)
@@ -107,11 +107,12 @@ namespace CMS_back.Controllers
                     ScientificDegree = userDto.ScientificDegree,
                 };
                 user.Type = ConstsRoles.Staff;
-                user.FaculityEmployeeID = currentUser.FaculityEmployeeID;
+                if(currentUser != null)
+                    user.FaculityEmployeeID = currentUser.FaculityEmployeeID;
                 IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)
                 {
-                    if (user.Email != null)
+                    if (user.Email != null && currentUser != null)
                     {
                         var message = new Mailing.MailMessage(new string[] { user.Email }, "Control System", $"User {currentUser.Name} register for you in site.");
                         _mailingService.SendMail(message);

@@ -803,27 +803,21 @@ namespace CMS_back.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e4b85f19-14ac-470f-8759-9c96ad78d476",
+                            Id = "11b38618-8fcd-426a-8c3e-cd901f9ea4f4",
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
-                            Id = "e1482f1c-859c-43a7-986c-5701caae63c7",
+                            Id = "e264f8e6-762a-4047-a653-2f7b4e1855d2",
                             Name = "AdminFaculty",
                             NormalizedName = "AdminFaculty"
                         },
                         new
                         {
-                            Id = "0f8cc8ad-e98e-48a7-ab19-56a24a6f9221",
-                            Name = "HeadControl",
-                            NormalizedName = "HeadControl"
-                        },
-                        new
-                        {
-                            Id = "9cc35d10-a489-4d65-8524-30d2445f893c",
-                            Name = "MemberControl",
-                            NormalizedName = "MemberControl"
+                            Id = "b9994fbc-4213-4acc-ac3b-c95e8296b31d",
+                            Name = "Staff",
+                            NormalizedName = "Staff"
                         });
                 });
 
