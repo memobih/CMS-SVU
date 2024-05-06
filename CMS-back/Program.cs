@@ -1,4 +1,5 @@
 using CMS_back.Data;
+using CMS_back.Mailing;
 using CMS_back.Mapper;
 using CMS_back.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,8 +36,10 @@ builder => builder.EnableRetryOnFailure()));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().
     AddEntityFrameworkStores<CMSContext>();
+builder.Services.AddScoped<IMailingService, MailingService>();
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("Mailing"));
+builder.Services.Configure<IdentityOptions>(opts => opts.SignIn.RequireConfirmedEmail = true);
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-
 //[Authoriz] used JWT Token in Chck Authantiaction
 builder.Services.AddAuthentication(options =>
 {

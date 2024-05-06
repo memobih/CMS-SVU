@@ -1,6 +1,4 @@
-﻿using System.Net.Mail;
-
-namespace CMS_back.Mailing
+﻿namespace CMS_back.Mailing
 {
     public interface IMailingService
     {

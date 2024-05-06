@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Options;
-using MimeKit;
+﻿
+
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Options;
+using MimeKit;
 
 namespace CMS_back.Mailing
 {
