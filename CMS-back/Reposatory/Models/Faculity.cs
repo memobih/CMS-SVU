@@ -19,7 +19,7 @@ namespace CMS_back.Models
 		public virtual ICollection<Faculity_Node>? Nodes { get; } = new List<Faculity_Node>();
 
 		[InverseProperty("FaculityEmployee")]
-		public virtual ICollection<ApplicationUser> Users { get; }= new List<ApplicationUser>();
+		public virtual ICollection<ApplicationUser> Users { get; set; }
 		public virtual ICollection<Control> Controls { get; }=new List<Control>();
 		public virtual ICollection<Staff>? Staff { get; }
 

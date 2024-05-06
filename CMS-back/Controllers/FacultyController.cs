@@ -1,4 +1,5 @@
-﻿using CMS_back.Data;
+﻿using AutoMapper;
+using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -15,10 +16,11 @@ namespace CMS_back.Controllers
     public class FacultyController : ControllerBase
     {
         public CMSContext context { get; set; }
-
-        public FacultyController(CMSContext context) 
+        private readonly IMapper _mapper;
+        public FacultyController(CMSContext context, IMapper mappe) 
         { 
             this.context = context;
+            _mapper = mappe;
         }
 
         [HttpPost("add")]
@@ -49,19 +51,21 @@ namespace CMS_back.Controllers
             return Ok("added faculty");
         }
 
-        [HttpGet]
+        [HttpGet("get-all-faculties")]
         public async Task<IActionResult> GetAllfaculties()
         {
             var faculties = await context.Faculity.ToListAsync();
-            return Ok(faculties);
+            var facultiesResult= faculties.Select(faculty => _mapper.Map<FacultyResultDto>(faculty)).ToList();
+            return Ok(facultiesResult);
         }
 
-        [HttpGet("{id:alpha}")]
-        public async Task<IActionResult> getfaculty(string id)
+        [HttpGet("get-faculty-by-id")]
+        public async Task<IActionResult> getfaculty(string fId)
         {
-            var faculty = await context.Faculity.Where(f => f.Id == id).ToListAsync();
+            var faculty = context.Faculity.FirstOrDefault(f => f.Id == fId);
             if (faculty == null) return BadRequest("No found Facluty");
-            return Ok(faculty);
+            var facultyDto = _mapper.Map<FacultyResultDto>(faculty);
+            return Ok(facultyDto);
         }
 
     }

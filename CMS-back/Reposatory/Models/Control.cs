@@ -18,9 +18,7 @@ namespace CMS_back.Models
 		[RegularExpression(pattern: @"^\d{4}\/\d{4}$",ErrorMessage = "Invalid ACAD_YEAR Format. Please use the format 'YYYY/YYYY'.\"")]
 		public string? ACAD_YEAR { get; set; }
 
-		public virtual  ICollection<Control_Addresses>? conrol_Addresses  { get;}
-
-
+		public virtual  ICollection<Control_Addresses>? conrol_Addresses  { get; set; }
 
 		[ForeignKey("UserCreator")]
 		public string UserCreatorID { get; set; }

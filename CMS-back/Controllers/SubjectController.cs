@@ -1,4 +1,5 @@
-﻿using CMS_back.Data;
+﻿using AutoMapper;
+using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -15,48 +16,47 @@ namespace CMS_back.Controllers
     {
 
         public CMSContext Context { get; }
-        public SubjectController(CMSContext _context) 
+        private readonly IMapper _mapper;
+        public SubjectController(CMSContext _context, IMapper mappe) 
         {
             Context=_context;
+            _mapper=mappe;
         }
 
 
-        [HttpGet("facult/{id}")]
-        public async Task<IActionResult> getSubjectForFaculty(string id)
+        [HttpGet("subject-by-id")]
+        public async Task<IActionResult> GetSubjectForFaculty(string sId)
         {
-            var facultyNode = Context.Faculity_Node.Where(x => x.FaculityNodeID == id).ToList();
-            List<subjectResultDTO>? subjects = new List<subjectResultDTO>();
-            foreach(var  faculty_node in facultyNode)
-            {
-                var subject_Node = Context.Subject.Where(s => s.FaculityNodeID == faculty_node.Id);
-                foreach(var subject in subject_Node)
-                {
-                    subjectResultDTO subjectdto = new subjectResultDTO()
-                    {
-                        id = subject.Id,
-                        Name = subject.Name,
-                        Code = subject.Code,
-                        Credit_Hours = subject.Credit_Hours
-                    };
-                    subjects.Add(subjectdto);
-                }
-            }
-            if (subjects == null) return Ok(new List<Subject>());
-            return Ok(subjects);
+            //var facultyNode = Context.Faculity_Node.Where(x => x.FaculityNodeID == id).ToList();
+            //List<subjectResultDTO>? subjects = new List<subjectResultDTO>();
+            //foreach(var  faculty_node in facultyNode)
+            //{
+            //    var subject_Node = Context.Subject.Where(s => s.FaculityNodeID == faculty_node.Id);
+            //    foreach(var subject in subject_Node)
+            //    {
+            //        subjectResultDTO subjectdto = new subjectResultDTO()
+            //        {
+            //            id = subject.Id,
+            //            Name = subject.Name,
+            //            Code = subject.Code,
+            //            Credit_Hours = subject.Credit_Hours
+            //        };
+            //        subjects.Add(subjectdto);
+            //    }
+            //}
+            //if (subjects == null) return Ok(new List<Subject>());
+            var subject=Context.Subject.FirstOrDefault(x => x.Id==sId);
+            var subjectDto=_mapper.Map<subjectResultDTO>(subject);
+            return Ok(subjectDto);
         }
 
-        [HttpGet("control/{id}")]
-        public async Task<IActionResult> getSubjectForControl(string id)
+        [HttpGet("subjects-of-control")]
+        public async Task<IActionResult> GetSubjectForControl(string controld)
         {
-            var control_subjects = Context.ControlSubject.Where(cs => cs.ControlID == id).ToList();
-            List<Subject> subjects = new List<Subject>();
-            foreach (var cs in control_subjects)
-            {
-                var subject = Context.Subject.FirstOrDefault(s => cs.SubjectID == s.Id);
-                if(subject == null) continue;
-                subjects.Add(subject);
-            }
-            return Ok(subjects);
+            var controlSubjects = Context.ControlSubject.Include(c=>c.Subject).Where(cs => cs.ControlID == controld).ToList();
+            var subjects=controlSubjects.Select(x=>x.Subject);
+            var subjectsResult= subjects.Select(subject => _mapper.Map<subjectResultDTO>(subject)).ToList();
+            return Ok(subjectsResult);
         }
 
         [HttpPost("add")]

@@ -1,4 +1,5 @@
-﻿using CMS_back.Data;
+﻿using AutoMapper;
+using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -17,33 +18,38 @@ namespace CMS_back.Controllers
         public CMSContext context { get; }
         public UserManager<ApplicationUser> Usermanager { get; }
         public IHttpContextAccessor ContextAccessor { get; }
+        private readonly IMapper _mapper;
 
         public UsersController(CMSContext _context, UserManager<ApplicationUser> usermanager
-            , IHttpContextAccessor contextAccessor) {
+            , IHttpContextAccessor contextAccessor, IMapper mapper) {
             context=_context;
             Usermanager=usermanager;
             ContextAccessor=contextAccessor;
+            _mapper = mapper;
         }
 
 
         // get user for specfic faculty
         //[Authorize(Roles = "FaculityAdministrator")]
-        [HttpGet("user-for-faculty/{id}")]
+        [HttpGet("user-for-faculty")]
         public async Task<IActionResult> GetUserForFaculty(string id)
         {
-            List<ApplicationUser>? users = await context.Users.Where(u => u.FaculityEmployeeID == id).ToListAsync();
+            var faculty = context.Faculity.Include(f=>f.Users).FirstOrDefault(f => f.Id == id);
+            var users=faculty.Users.ToList();
             if (users == null) return Ok(new List<ApplicationUser>());
-            return Ok(users);
+            var usersResult = users.Select(user => _mapper.Map<UserResultDto>(user));
+            return usersResult!= null? Ok(usersResult):BadRequest("ther is no users");
         }
 
-        [HttpGet("user-for-control/{id}")]
-        public IActionResult GetUserForControl(string id)
+        [HttpGet("user-for-control")]
+        public IActionResult GetUserForControl(string controlId)
         {
-            var control = context.Control.FirstOrDefault(c => c.Id== id);
-            if (control == null) return BadRequest("Control not found");
-            List<ApplicationUser>? users = context.Users.Where(u => u.UserCreatorControls.Contains(control)).ToList();
+            var controlsUser = context.ControlUsers.Include(c=>c.Control).Where(c => c.ControlID== controlId);
+            if (controlsUser == null) return BadRequest("Control not found");
+            List<ApplicationUser>? users = controlsUser.Select(c=>c.User).ToList();
             if (users == null) return Ok(new List<ApplicationUser>());
-            return Ok(users);
+            var usersResult=users.Select(user => _mapper.Map<UserResultDto>(user)).ToList();
+            return Ok(usersResult);
         }
 
         [HttpGet("current-user")]

@@ -1,4 +1,5 @@
 using CMS_back.Data;
+using CMS_back.Mapper;
 using CMS_back.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -34,7 +35,7 @@ builder => builder.EnableRetryOnFailure()));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().
     AddEntityFrameworkStores<CMSContext>();
-
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 //[Authoriz] used JWT Token in Chck Authantiaction
 builder.Services.AddAuthentication(options =>
