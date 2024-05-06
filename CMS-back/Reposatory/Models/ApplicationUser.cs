@@ -5,12 +5,12 @@ using System.Drawing;
 
 namespace CMS_back.Models
 {
-	public enum UserType
-	{
-		FaculityAdministrator,
-		UniversityAdministrator,
-		Staff
-	}
+	//public enum UserType
+	//{
+	//	FaculityAdministrator,
+	//	UniversityAdministrator,
+	//	Staff
+	//}
 
 	public class ApplicationUser : IdentityUser
 	{
@@ -19,7 +19,7 @@ namespace CMS_back.Models
 		public string? UserImage { get; set; }
 		public string? ScientificDegree { get; set; }
 
-		public UserType Type { get; set; }
+		public string Type { get; set; }
 
 		[InverseProperty("UserCreator")]
 		public virtual ICollection<Control>? UserCreatorControls { get; } = new Collection<Control>();

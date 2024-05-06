@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMS_back.Models
 {
-	public enum JobType
-	{
-		Member,
-		Head
-	}
+	//public enum JobType
+	//{
+	//	Member,
+	//	Head
+	//}
 	public class ControlUsers
 	{
 		[Key]
@@ -18,6 +18,6 @@ namespace CMS_back.Models
 		public string? UserID { get; set; }
 		public ApplicationUser? User { get; set; }
 		
-		public JobType JobType { get; set;}
+		public string JobType { get; set;}
 	}
 }
