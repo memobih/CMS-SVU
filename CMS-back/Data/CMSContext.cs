@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using CMS_back.Reposatory.Models;
+using CMS_back.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace CMS_back.Data
@@ -9,9 +9,9 @@ namespace CMS_back.Data
 
 		public DbSet<ApplicationUser> ApplicationUser { get; set; }
 		public DbSet<Faculity> Faculity { get; set; }
-		public DbSet<Faculity_Node> Node { get; set; }
-		public DbSet<Faculity_Phases> Phase { get; set; }
-		public DbSet<Faculity_Semester> Semester { get; set; }
+		public DbSet<Faculity_Node> Faculity_Node { get; set; }
+		public DbSet<Faculity_Phases> Faculity_Phase { get; set; }
+		public DbSet<Faculity_Semester> Faculity_Semester { get; set; }
 		public DbSet<Control> Control { get; set; }
 		public DbSet<ControlSubject> ControlSubject { get; set; }
 		public DbSet<Control_Task> Control_Task { get; set; }
@@ -26,8 +26,7 @@ namespace CMS_back.Data
 		public DbSet<Student_SemesterSubjects> Student_SemesterSubjects { get; set; }
 		public DbSet<Staff> Staff { get; set; }
 		public DbSet<FaculityType> FaculityType { get; set; }
-        public DbSet<Faculity_Node> Faculity_Nodes { get; set; }
-        public DbSet<FaculityHierarycal> FaculityHierarycal { get; set; }
+		public DbSet<FaculityHierarycal> FaculityHierarycal { get; set; }
 		public DbSet<ControlUsers> ControlUsers { get; set; }
 		public DbSet<Control_Note> Control_Note { get; set; }
 		public DbSet<Control_UserTasks> Control_UserTasks { get; set; }
@@ -52,10 +51,11 @@ namespace CMS_back.Data
 			//modelBuilder.Entity<Faculity_Phases>().ToTable("Faculity_Phase");
 			//modelBuilder.Entity<Faculity_Semester>().ToTable("Faculity_Semester");
 
-			modelBuilder.Entity<ControlSubject>().HasKey(e => new { e.ControlID, e.SubjectID });
-			modelBuilder.Entity<ControlUsers>().HasKey(e => new { e.ControlID, e.UserID });
-			modelBuilder.Entity<Control_UserTasks>().HasKey(e => new { e.UserTaskID, e.Control_TaskID });
-		
+			//modelBuilder.Entity<ControlSubject>().HasKey(e => new { e.ControlID, e.SubjectID });
+
+			//modelBuilder.Entity<ControlUsers>().HasKey(e => new { e.ControlID, e.UserID });
+			//modelBuilder.Entity<Control_UserTasks>().HasKey(e => new { e.UserTaskID, e.Control_TaskID });
+
 
 
 			base.OnModelCreating(modelBuilder);

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CMS_back.Reposatory.Models
+namespace CMS_back.Models
 {
 	public enum Question
 	{
@@ -15,12 +15,12 @@ namespace CMS_back.Reposatory.Models
 		public Question? IsDone { get; set; }
 		public Question? IsReview { get; set; }		
 		public string? Code { get; set; }
-		public int Credit_Hours { get; set; }
+		public int? Credit_Hours { get; set; }
 		public string FaculityNodeID { get; set; }
 		public Faculity_Node FaculityNode { get; set; }
 
-		public string? FaculityHierarycalID { get; set; }
-		public FaculityHierarycal? FaculityHierarycal { get; set; }
+		public string FaculityHierarycalID { get; set; }
+		public FaculityHierarycal FaculityHierarycal { get; set; }
 
 		public virtual ICollection<Subject_Assess>? subject_Assesses { get; } = [];
 

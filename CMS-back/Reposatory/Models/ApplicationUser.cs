@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 
-namespace CMS_back.Reposatory.Models
+namespace CMS_back.Models
 {
 	public enum UserType
 	{

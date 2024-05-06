@@ -1,6 +1,6 @@
 ﻿using CMS_back.Data;
 using CMS_back.DTO;
-using CMS_back.Reposatory.Models;
+using CMS_back.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,7 @@ namespace CMS_back.Controllers
         [HttpGet("facult/{id}")]
         public async Task<IActionResult> getSubjectForFaculty(string id)
         {
-            var facultyNode = Context.Faculity_Nodes.Where(x => x.FaculityNodeID == id).ToList();
+            var facultyNode = Context.Faculity_Node.Where(x => x.FaculityNodeID == id).ToList();
             List<subjectResultDTO>? subjects = new List<subjectResultDTO>();
             foreach(var  faculty_node in facultyNode)
             {
@@ -62,7 +62,7 @@ namespace CMS_back.Controllers
         [HttpPost("add")]
         public async Task<IActionResult> create(subjectDTO subjectdto)
         {
-            var fn = Context.Faculity_Nodes.FirstOrDefault(fc => fc.Id == subjectdto.FaculityNodeID);
+            var fn = Context.Faculity_Node.FirstOrDefault(fc => fc.Id == subjectdto.FaculityNodeID);
             if (fn == null) return BadRequest("Faculty node not found");
             var isExict = Context.Subject.FirstOrDefault(s => s.Code == subjectdto.Code);
             if (isExict != null) return BadRequest("Subject entered before");

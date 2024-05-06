@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CMS_back.Reposatory.Models
+namespace CMS_back.Models
 {
 	public class StudentSemester
 	{

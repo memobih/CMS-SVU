@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CMS_back.Reposatory.Models
+namespace CMS_back.Models
 {
 	public class Faculity
 	{

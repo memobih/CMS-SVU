@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CMS_back.Reposatory.Models
+namespace CMS_back.Models
 {
 	public class Faculity_Phases
 	{
@@ -12,6 +12,5 @@ namespace CMS_back.Reposatory.Models
 		public string? FaculityID { get; set; }
 		public Faculity? Faculity { get; set; }
 
-		public virtual ICollection<Subject>? Subjects { get; } = new List<Subject>();
 	}
 }

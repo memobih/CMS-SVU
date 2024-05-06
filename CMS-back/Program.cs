@@ -1,5 +1,5 @@
 using CMS_back.Data;
-using CMS_back.Reposatory.Models;
+using CMS_back.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;

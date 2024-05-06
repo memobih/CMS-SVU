@@ -1,6 +1,6 @@
 ﻿using CMS_back.Data;
 using CMS_back.DTO;
-using CMS_back.Reposatory.Models;
+using CMS_back.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

@@ -22,7 +22,7 @@ namespace CMS_back.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.ACAD_YEAR", b =>
+            modelBuilder.Entity("CMS_back.Models.ACAD_YEAR", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -35,7 +35,7 @@ namespace CMS_back.Migrations
                     b.ToTable("ACAD_YEAR");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.ApplicationUser", b =>
+            modelBuilder.Entity("CMS_back.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -121,7 +121,7 @@ namespace CMS_back.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Assess", b =>
+            modelBuilder.Entity("CMS_back.Models.Assess", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -134,7 +134,7 @@ namespace CMS_back.Migrations
                     b.ToTable("Assess");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.BYLAW", b =>
+            modelBuilder.Entity("CMS_back.Models.BYLAW", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -157,7 +157,7 @@ namespace CMS_back.Migrations
                     b.ToTable("BYLAW");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Committees", b =>
+            modelBuilder.Entity("CMS_back.Models.Committees", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -178,7 +178,7 @@ namespace CMS_back.Migrations
                     b.ToTable("Committees");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control", b =>
+            modelBuilder.Entity("CMS_back.Models.Control", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -186,8 +186,8 @@ namespace CMS_back.Migrations
                     b.Property<string>("ACAD_YEAR")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("End_Date")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("End_Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("FaculityID")
                         .IsRequired()
@@ -206,8 +206,8 @@ namespace CMS_back.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("Start_Date")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("Start_Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserCreatorID")
                         .IsRequired()
@@ -222,40 +222,51 @@ namespace CMS_back.Migrations
                     b.ToTable("Control");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.ControlSubject", b =>
+            modelBuilder.Entity("CMS_back.Models.ControlSubject", b =>
                 {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("ControlID")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SubjectID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ControlID", "SubjectID");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ControlID");
 
                     b.HasIndex("SubjectID");
 
                     b.ToTable("ControlSubject");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.ControlUsers", b =>
+            modelBuilder.Entity("CMS_back.Models.ControlUsers", b =>
                 {
-                    b.Property<string>("ControlID")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("UserID")
+                    b.Property<string>("ControlID")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("JobType")
                         .HasColumnType("int");
 
-                    b.HasKey("ControlID", "UserID");
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ControlID");
 
                     b.HasIndex("UserID");
 
                     b.ToTable("ControlUsers");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control_Addresses", b =>
+            modelBuilder.Entity("CMS_back.Models.Control_Addresses", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -275,13 +286,12 @@ namespace CMS_back.Migrations
                     b.ToTable("conrol_Addresse");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control_Note", b =>
+            modelBuilder.Entity("CMS_back.Models.Control_Note", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ControlID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
@@ -292,8 +302,8 @@ namespace CMS_back.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateOnly?>("WriteDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("WriteDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -304,21 +314,20 @@ namespace CMS_back.Migrations
                     b.ToTable("Control_Note");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control_Task", b =>
+            modelBuilder.Entity("CMS_back.Models.Control_Task", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ControlID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreateByID")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateOnly?>("CreationDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -336,22 +345,27 @@ namespace CMS_back.Migrations
                     b.ToTable("Control_Task");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control_UserTasks", b =>
+            modelBuilder.Entity("CMS_back.Models.Control_UserTasks", b =>
                 {
-                    b.Property<string>("UserTaskID")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Control_TaskID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("UserTaskID", "Control_TaskID");
+                    b.Property<string>("UserTaskID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("Control_TaskID");
+
+                    b.HasIndex("UserTaskID");
 
                     b.ToTable("Control_UserTasks");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity", b =>
+            modelBuilder.Entity("CMS_back.Models.Faculity", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -382,7 +396,7 @@ namespace CMS_back.Migrations
                     b.ToTable("Faculity");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.FaculityHierarycal", b =>
+            modelBuilder.Entity("CMS_back.Models.FaculityHierarycal", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -416,7 +430,7 @@ namespace CMS_back.Migrations
                     b.ToTable("FaculityHierarycal");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.FaculityType", b =>
+            modelBuilder.Entity("CMS_back.Models.FaculityType", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -429,7 +443,7 @@ namespace CMS_back.Migrations
                     b.ToTable("FaculityType");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity_Node", b =>
+            modelBuilder.Entity("CMS_back.Models.Faculity_Node", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -462,7 +476,7 @@ namespace CMS_back.Migrations
                     b.ToTable("Faculity_Node");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity_Phases", b =>
+            modelBuilder.Entity("CMS_back.Models.Faculity_Phases", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -483,10 +497,10 @@ namespace CMS_back.Migrations
 
                     b.HasIndex("FaculityID");
 
-                    b.ToTable("Phase");
+                    b.ToTable("Faculity_Phase");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity_Semester", b =>
+            modelBuilder.Entity("CMS_back.Models.Faculity_Semester", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -507,10 +521,10 @@ namespace CMS_back.Migrations
 
                     b.HasIndex("FaculityID");
 
-                    b.ToTable("Semester");
+                    b.ToTable("Faculity_Semester");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Staff", b =>
+            modelBuilder.Entity("CMS_back.Models.Staff", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -537,7 +551,7 @@ namespace CMS_back.Migrations
                     b.ToTable("Staff");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Student", b =>
+            modelBuilder.Entity("CMS_back.Models.Student", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -576,7 +590,7 @@ namespace CMS_back.Migrations
                     b.ToTable("Student");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.StudentSemester", b =>
+            modelBuilder.Entity("CMS_back.Models.StudentSemester", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -623,7 +637,7 @@ namespace CMS_back.Migrations
                     b.ToTable("StudentSemester");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Student_STATUS", b =>
+            modelBuilder.Entity("CMS_back.Models.Student_STATUS", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -636,7 +650,7 @@ namespace CMS_back.Migrations
                     b.ToTable("Student_STATUS");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Student_SemesterSubjects", b =>
+            modelBuilder.Entity("CMS_back.Models.Student_SemesterSubjects", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -662,7 +676,7 @@ namespace CMS_back.Migrations
                     b.ToTable("Student_SemesterSubjects");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Study_Method", b =>
+            modelBuilder.Entity("CMS_back.Models.Study_Method", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -675,7 +689,7 @@ namespace CMS_back.Migrations
                     b.ToTable("Study_Method");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Subject", b =>
+            modelBuilder.Entity("CMS_back.Models.Subject", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -687,13 +701,11 @@ namespace CMS_back.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FaculityHierarycalID")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FaculityNodeID")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Faculity_PhasesId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("IsDone")
@@ -711,12 +723,10 @@ namespace CMS_back.Migrations
 
                     b.HasIndex("FaculityNodeID");
 
-                    b.HasIndex("Faculity_PhasesId");
-
                     b.ToTable("Subject");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Subject_Assess", b =>
+            modelBuilder.Entity("CMS_back.Models.Subject_Assess", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -742,7 +752,7 @@ namespace CMS_back.Migrations
                     b.ToTable("SubjectAssesse");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Subject_Committees", b =>
+            modelBuilder.Entity("CMS_back.Models.Subject_Committees", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -895,22 +905,22 @@ namespace CMS_back.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.ApplicationUser", b =>
+            modelBuilder.Entity("CMS_back.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity", "FaculityEmployee")
+                    b.HasOne("CMS_back.Models.Faculity", "FaculityEmployee")
                         .WithMany("Users")
                         .HasForeignKey("FaculityEmployeeID");
 
                     b.Navigation("FaculityEmployee");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.BYLAW", b =>
+            modelBuilder.Entity("CMS_back.Models.BYLAW", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity", "Faculity")
+                    b.HasOne("CMS_back.Models.Faculity", "Faculity")
                         .WithMany()
                         .HasForeignKey("FaculityID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.Study_Method", "StudyMethod")
+                    b.HasOne("CMS_back.Models.Study_Method", "StudyMethod")
                         .WithMany()
                         .HasForeignKey("StudyMethodID");
 
@@ -919,24 +929,24 @@ namespace CMS_back.Migrations
                     b.Navigation("StudyMethod");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Committees", b =>
+            modelBuilder.Entity("CMS_back.Models.Committees", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity_Node", "FaculityNode")
+                    b.HasOne("CMS_back.Models.Faculity_Node", "FaculityNode")
                         .WithMany("Committees")
                         .HasForeignKey("FaculityNodeID");
 
                     b.Navigation("FaculityNode");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control", b =>
+            modelBuilder.Entity("CMS_back.Models.Control", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity", "Faculity")
+                    b.HasOne("CMS_back.Models.Faculity", "Faculity")
                         .WithMany("Controls")
                         .HasForeignKey("FaculityID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CMS_back.Reposatory.Models.ApplicationUser", "UserCreator")
+                    b.HasOne("CMS_back.Models.ApplicationUser", "UserCreator")
                         .WithMany("UserCreatorControls")
                         .HasForeignKey("UserCreatorID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -947,48 +957,42 @@ namespace CMS_back.Migrations
                     b.Navigation("UserCreator");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.ControlSubject", b =>
+            modelBuilder.Entity("CMS_back.Models.ControlSubject", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Control", "Control")
+                    b.HasOne("CMS_back.Models.Control", "Control")
                         .WithMany("ControlSubjects")
                         .HasForeignKey("ControlID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CMS_back.Reposatory.Models.Subject", "Subject")
+                    b.HasOne("CMS_back.Models.Subject", "Subject")
                         .WithMany("ControlSubjects")
-                        .HasForeignKey("SubjectID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectID");
 
                     b.Navigation("Control");
 
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.ControlUsers", b =>
+            modelBuilder.Entity("CMS_back.Models.ControlUsers", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Control", "Control")
-                        .WithMany()
-                        .HasForeignKey("ControlID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("CMS_back.Models.Control", "Control")
+                        .WithMany("ControlUsers")
+                        .HasForeignKey("ControlID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.ApplicationUser", "User")
+                    b.HasOne("CMS_back.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserID");
 
                     b.Navigation("Control");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control_Addresses", b =>
+            modelBuilder.Entity("CMS_back.Models.Control_Addresses", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Control", "Control")
-                        .WithMany()
+                    b.HasOne("CMS_back.Models.Control", "Control")
+                        .WithMany("conrol_Addresses")
                         .HasForeignKey("ControlID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -996,15 +1000,13 @@ namespace CMS_back.Migrations
                     b.Navigation("Control");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control_Note", b =>
+            modelBuilder.Entity("CMS_back.Models.Control_Note", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Control", "Control")
+                    b.HasOne("CMS_back.Models.Control", "Control")
                         .WithMany()
-                        .HasForeignKey("ControlID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ControlID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.ApplicationUser", "WriteBy")
+                    b.HasOne("CMS_back.Models.ApplicationUser", "WriteBy")
                         .WithMany()
                         .HasForeignKey("WriteByID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1015,15 +1017,13 @@ namespace CMS_back.Migrations
                     b.Navigation("WriteBy");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control_Task", b =>
+            modelBuilder.Entity("CMS_back.Models.Control_Task", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Control", "Control")
+                    b.HasOne("CMS_back.Models.Control", "Control")
                         .WithMany()
-                        .HasForeignKey("ControlID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ControlID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.ApplicationUser", "CreateBy")
+                    b.HasOne("CMS_back.Models.ApplicationUser", "CreateBy")
                         .WithMany()
                         .HasForeignKey("CreateByID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1034,51 +1034,47 @@ namespace CMS_back.Migrations
                     b.Navigation("CreateBy");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control_UserTasks", b =>
+            modelBuilder.Entity("CMS_back.Models.Control_UserTasks", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Control_Task", "Control_Task")
+                    b.HasOne("CMS_back.Models.Control_Task", "Control_Task")
                         .WithMany("UserTasks")
-                        .HasForeignKey("Control_TaskID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Control_TaskID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.ApplicationUser", "UserTask")
+                    b.HasOne("CMS_back.Models.ApplicationUser", "UserTask")
                         .WithMany()
-                        .HasForeignKey("UserTaskID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserTaskID");
 
                     b.Navigation("Control_Task");
 
                     b.Navigation("UserTask");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity", b =>
+            modelBuilder.Entity("CMS_back.Models.Faculity", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.FaculityType", "FaculityType")
+                    b.HasOne("CMS_back.Models.FaculityType", "FaculityType")
                         .WithMany()
                         .HasForeignKey("FaculityTypeID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.ApplicationUser", "UserLeader")
+                    b.HasOne("CMS_back.Models.ApplicationUser", "UserLeader")
                         .WithOne("FaculityLeader")
-                        .HasForeignKey("CMS_back.Reposatory.Models.Faculity", "UserLeaderID");
+                        .HasForeignKey("CMS_back.Models.Faculity", "UserLeaderID");
 
                     b.Navigation("FaculityType");
 
                     b.Navigation("UserLeader");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.FaculityHierarycal", b =>
+            modelBuilder.Entity("CMS_back.Models.FaculityHierarycal", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.BYLAW", "BYLAW")
+                    b.HasOne("CMS_back.Models.BYLAW", "BYLAW")
                         .WithMany()
                         .HasForeignKey("BYLAWId");
 
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity_Phases", "Phase")
+                    b.HasOne("CMS_back.Models.Faculity_Phases", "Phase")
                         .WithMany()
                         .HasForeignKey("PhaseID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity_Semester", "Semester")
+                    b.HasOne("CMS_back.Models.Faculity_Semester", "Semester")
                         .WithMany()
                         .HasForeignKey("SemesterID");
 
@@ -1089,15 +1085,15 @@ namespace CMS_back.Migrations
                     b.Navigation("Semester");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity_Node", b =>
+            modelBuilder.Entity("CMS_back.Models.Faculity_Node", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity", "FaculityNode")
+                    b.HasOne("CMS_back.Models.Faculity", "FaculityNode")
                         .WithMany("Nodes")
                         .HasForeignKey("FaculityNodeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity_Node", "Parent")
+                    b.HasOne("CMS_back.Models.Faculity_Node", "Parent")
                         .WithMany("Faculity_Nodes")
                         .HasForeignKey("ParentID");
 
@@ -1106,61 +1102,61 @@ namespace CMS_back.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity_Phases", b =>
+            modelBuilder.Entity("CMS_back.Models.Faculity_Phases", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity", "Faculity")
+                    b.HasOne("CMS_back.Models.Faculity", "Faculity")
                         .WithMany("Phases")
                         .HasForeignKey("FaculityID");
 
                     b.Navigation("Faculity");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity_Semester", b =>
+            modelBuilder.Entity("CMS_back.Models.Faculity_Semester", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity", "Faculity")
+                    b.HasOne("CMS_back.Models.Faculity", "Faculity")
                         .WithMany("Semesters")
                         .HasForeignKey("FaculityID");
 
                     b.Navigation("Faculity");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Staff", b =>
+            modelBuilder.Entity("CMS_back.Models.Staff", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity", "Faculity")
+                    b.HasOne("CMS_back.Models.Faculity", "Faculity")
                         .WithMany("Staff")
                         .HasForeignKey("FaculityID");
 
                     b.Navigation("Faculity");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Student", b =>
+            modelBuilder.Entity("CMS_back.Models.Student", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity", "Faculity")
+                    b.HasOne("CMS_back.Models.Faculity", "Faculity")
                         .WithMany()
                         .HasForeignKey("FaculityID");
 
                     b.Navigation("Faculity");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.StudentSemester", b =>
+            modelBuilder.Entity("CMS_back.Models.StudentSemester", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.ACAD_YEAR", "AcadYear")
+                    b.HasOne("CMS_back.Models.ACAD_YEAR", "AcadYear")
                         .WithMany("StudentSemesters")
                         .HasForeignKey("AcadYearID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.FaculityHierarycal", "FaculityHierarcal")
+                    b.HasOne("CMS_back.Models.FaculityHierarycal", "FaculityHierarcal")
                         .WithMany()
                         .HasForeignKey("FaculityHierarcalID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity_Node", "FaculityNode")
+                    b.HasOne("CMS_back.Models.Faculity_Node", "FaculityNode")
                         .WithMany("StudentSemesters")
                         .HasForeignKey("FaculityNodeID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.Student", "Student")
+                    b.HasOne("CMS_back.Models.Student", "Student")
                         .WithMany("Semesters")
                         .HasForeignKey("StudentID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.Student_STATUS", "StudentStatus")
+                    b.HasOne("CMS_back.Models.Student_STATUS", "StudentStatus")
                         .WithMany()
                         .HasForeignKey("StudentStatusID");
 
@@ -1175,13 +1171,13 @@ namespace CMS_back.Migrations
                     b.Navigation("StudentStatus");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Student_SemesterSubjects", b =>
+            modelBuilder.Entity("CMS_back.Models.Student_SemesterSubjects", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.StudentSemester", "StudentSemester")
+                    b.HasOne("CMS_back.Models.StudentSemester", "StudentSemester")
                         .WithMany()
                         .HasForeignKey("StudentSemesterID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.Subject", "Subject")
+                    b.HasOne("CMS_back.Models.Subject", "Subject")
                         .WithMany()
                         .HasForeignKey("SubjectID");
 
@@ -1190,34 +1186,32 @@ namespace CMS_back.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Subject", b =>
+            modelBuilder.Entity("CMS_back.Models.Subject", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.FaculityHierarycal", "FaculityHierarycal")
+                    b.HasOne("CMS_back.Models.FaculityHierarycal", "FaculityHierarycal")
                         .WithMany()
-                        .HasForeignKey("FaculityHierarycalID");
+                        .HasForeignKey("FaculityHierarycalID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity_Node", "FaculityNode")
+                    b.HasOne("CMS_back.Models.Faculity_Node", "FaculityNode")
                         .WithMany("Subjects")
                         .HasForeignKey("FaculityNodeID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("CMS_back.Reposatory.Models.Faculity_Phases", null)
-                        .WithMany("Subjects")
-                        .HasForeignKey("Faculity_PhasesId");
 
                     b.Navigation("FaculityHierarycal");
 
                     b.Navigation("FaculityNode");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Subject_Assess", b =>
+            modelBuilder.Entity("CMS_back.Models.Subject_Assess", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Assess", "Assess")
+                    b.HasOne("CMS_back.Models.Assess", "Assess")
                         .WithMany("Subject_Assesss")
                         .HasForeignKey("AssessID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.Subject", "Subject")
+                    b.HasOne("CMS_back.Models.Subject", "Subject")
                         .WithMany("subject_Assesses")
                         .HasForeignKey("SubjectID");
 
@@ -1226,13 +1220,13 @@ namespace CMS_back.Migrations
                     b.Navigation("Subject");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Subject_Committees", b =>
+            modelBuilder.Entity("CMS_back.Models.Subject_Committees", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.Committees", "Committee")
+                    b.HasOne("CMS_back.Models.Committees", "Committee")
                         .WithMany()
                         .HasForeignKey("CommitteeID");
 
-                    b.HasOne("CMS_back.Reposatory.Models.Subject", "Subject")
+                    b.HasOne("CMS_back.Models.Subject", "Subject")
                         .WithMany("Subject_Committees")
                         .HasForeignKey("SubjectID");
 
@@ -1252,7 +1246,7 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.ApplicationUser", null)
+                    b.HasOne("CMS_back.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1261,7 +1255,7 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.ApplicationUser", null)
+                    b.HasOne("CMS_back.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1276,7 +1270,7 @@ namespace CMS_back.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CMS_back.Reposatory.Models.ApplicationUser", null)
+                    b.HasOne("CMS_back.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1285,41 +1279,45 @@ namespace CMS_back.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("CMS_back.Reposatory.Models.ApplicationUser", null)
+                    b.HasOne("CMS_back.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.ACAD_YEAR", b =>
+            modelBuilder.Entity("CMS_back.Models.ACAD_YEAR", b =>
                 {
                     b.Navigation("StudentSemesters");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.ApplicationUser", b =>
+            modelBuilder.Entity("CMS_back.Models.ApplicationUser", b =>
                 {
                     b.Navigation("FaculityLeader");
 
                     b.Navigation("UserCreatorControls");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Assess", b =>
+            modelBuilder.Entity("CMS_back.Models.Assess", b =>
                 {
                     b.Navigation("Subject_Assesss");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control", b =>
+            modelBuilder.Entity("CMS_back.Models.Control", b =>
                 {
                     b.Navigation("ControlSubjects");
+
+                    b.Navigation("ControlUsers");
+
+                    b.Navigation("conrol_Addresses");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Control_Task", b =>
+            modelBuilder.Entity("CMS_back.Models.Control_Task", b =>
                 {
                     b.Navigation("UserTasks");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity", b =>
+            modelBuilder.Entity("CMS_back.Models.Faculity", b =>
                 {
                     b.Navigation("Controls");
 
@@ -1334,7 +1332,7 @@ namespace CMS_back.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity_Node", b =>
+            modelBuilder.Entity("CMS_back.Models.Faculity_Node", b =>
                 {
                     b.Navigation("Committees");
 
@@ -1345,17 +1343,12 @@ namespace CMS_back.Migrations
                     b.Navigation("Subjects");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Faculity_Phases", b =>
-                {
-                    b.Navigation("Subjects");
-                });
-
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Student", b =>
+            modelBuilder.Entity("CMS_back.Models.Student", b =>
                 {
                     b.Navigation("Semesters");
                 });
 
-            modelBuilder.Entity("CMS_back.Reposatory.Models.Subject", b =>
+            modelBuilder.Entity("CMS_back.Models.Subject", b =>
                 {
                     b.Navigation("ControlSubjects");
 

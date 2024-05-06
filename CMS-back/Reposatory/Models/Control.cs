@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CMS_back.Reposatory.Models
+namespace CMS_back.Models
 {
 	public class Control
 	{
@@ -12,22 +12,24 @@ namespace CMS_back.Reposatory.Models
 		public string? Faculity_Phase { get; set; }
 		public string? Faculity_Node { get; set; }
 		public string? Faculity_Semester { get; set; }
-		public DateTime Start_Date { get; set; }
+		public DateTime? Start_Date { get; set; }
 		public DateTime? End_Date { get; set; }
 
 		[RegularExpression(pattern: @"^\d{4}\/\d{4}$",ErrorMessage = "Invalid ACAD_YEAR Format. Please use the format 'YYYY/YYYY'.\"")]
 		public string? ACAD_YEAR { get; set; }
 
-		public ICollection<Control_Addresses>? conrol_Addresses;
-		//public ICollection<Control_Text>? Texts { get; } = new List<Control_Text>();
+		public virtual  ICollection<Control_Addresses>? conrol_Addresses  { get;} = [] ;
+
+
 
 		[ForeignKey("UserCreator")]
 		public string UserCreatorID { get; set; }
-		public ApplicationUser UserCreator { get; set; }
+		public virtual ApplicationUser UserCreator { get; set; }
 
 		public string FaculityID { get; set; }
 		public Faculity Faculity { get; set; }
 
 		public virtual ICollection<ControlSubject> ControlSubjects { get; } = [];
+		public virtual ICollection<ControlUsers> ControlUsers { get; } = [] ;
 	}
 }

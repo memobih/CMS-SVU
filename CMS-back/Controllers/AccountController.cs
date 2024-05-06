@@ -11,10 +11,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
-using CMS_back.Reposatory.Models;
 using CMS_back.DTO;
 using CMS_back.Data;
 using System.Security.Principal;
+using CMS_back.Models;
 
 namespace CMS_back.Controllers
 {
@@ -96,7 +96,7 @@ namespace CMS_back.Controllers
                     Email = userDto.Email,
                     ScientificDegree = userDto.ScientificDegree,
                     Type = userDto.Type
-                };
+                };  
                 if(userDto.FaculityID != null)
                 {
                     user.FaculityEmployeeID = userDto.FaculityID;

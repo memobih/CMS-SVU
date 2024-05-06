@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using CMS_back.Reposatory.Models;
 using CMS_back.DTO;
 using CMS_back.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using CMS_back.Models;
 
 
 namespace CMS_back.Controllers

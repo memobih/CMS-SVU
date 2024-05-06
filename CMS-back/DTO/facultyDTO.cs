@@ -1,5 +1,4 @@
-﻿using CMS_back.Reposatory.Models;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMS_back.DTO
 {

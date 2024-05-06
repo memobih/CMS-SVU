@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace CMS_back.Reposatory.Models
+namespace CMS_back.Models
 {
 	public class Faculity_Node
 	{
@@ -22,6 +22,5 @@ namespace CMS_back.Reposatory.Models
 		public virtual ICollection<Committees>? Committees { get; set; }
 		public virtual ICollection<StudentSemester>? StudentSemesters { get; set; }
 		public virtual ICollection<Subject>? Subjects { get; } = new List<Subject>();
-	
 	}
 }

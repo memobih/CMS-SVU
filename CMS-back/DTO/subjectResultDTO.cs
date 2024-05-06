@@ -13,6 +13,6 @@ namespace CMS_back.DTO
         public string Code { get; set; }
 
         [Required]
-        public int Credit_Hours { get; set; }
+        public int? Credit_Hours { get; set; }
     }
 }
