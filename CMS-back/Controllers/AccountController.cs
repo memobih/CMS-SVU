@@ -10,6 +10,7 @@ using CMS_back.Models;
 using CMS_back.Consts;
 using System.Net.Mail;
 using CMS_back.Mailing;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CMS_back.Controllers
 {
@@ -23,14 +24,19 @@ namespace CMS_back.Controllers
         private readonly IMailingService _mailingService;
 
         public CMSContext context { get; }
+        public UserManager<ApplicationUser> Usermanager { get; }
+        public IHttpContextAccessor ContextAccessor { get; }
 
         public AccountController(UserManager<ApplicationUser> usermanger, IConfiguration config, CMSContext _context
-            , IMailingService mailingService)
+            , IMailingService mailingService, UserManager<ApplicationUser> usermanager
+            , IHttpContextAccessor contextAccessor)
         {
             this.usermanger = usermanger;
             this.config = config;
             context=_context;
             _mailingService = mailingService;
+            Usermanager=usermanager;
+            ContextAccessor=contextAccessor;
         }
 
         [HttpPost("login")]
@@ -84,10 +90,14 @@ namespace CMS_back.Controllers
         }
 
         [HttpPost("register")]//account/register
+        [Authorize(Roles = ConstsRoles.AdminFaculty)]
         public async Task<IActionResult> Registration(RegisterUserDto userDto)
         {
             if (ModelState.IsValid == true)
             {
+                var curuser = ContextAccessor.HttpContext.User;
+                var currentUser = await Usermanager.GetUserAsync(curuser);
+
                 //save
                 ApplicationUser user = new ApplicationUser
                 {
@@ -97,17 +107,13 @@ namespace CMS_back.Controllers
                     ScientificDegree = userDto.ScientificDegree,
                 };
                 user.Type = ConstsRoles.Staff;
-                if(userDto.FaculityID != null)
-                {
-                    user.FaculityEmployeeID = userDto.FaculityID;
-                    user.FaculityEmployee = context.Faculity.FirstOrDefault(f => f.Id == userDto.FaculityID);
-                }
+                user.FaculityEmployeeID = currentUser.FaculityEmployeeID;
                 IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)
                 {
                     if (user.Email != null)
                     {
-                        var message = new Mailing.MailMessage(new string[] { user.Email }, "Control System", "You are register now");
+                        var message = new Mailing.MailMessage(new string[] { user.Email }, "Control System", $"User {currentUser.Name} register for you in site.");
                         _mailingService.SendMail(message);
                     }
                     await usermanger.AddToRoleAsync(user, ConstsRoles.Staff);
