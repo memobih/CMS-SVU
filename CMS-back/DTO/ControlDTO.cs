@@ -20,8 +20,8 @@ namespace CMS_back.DTO
         [Required]
         public string ControlCreateID { get; set; }
         [Required]
-        public virtual List<string> ControlSubjectsIDs { get; set; } = [];
+        public virtual List<string> ControlSubjectsIDs { get; set; }
         [Required]
-        public List<string> ContorlUsersIDs { get; set; } = [];
+        public List<string> ContorlUsersIDs { get; set; } 
     }
 }

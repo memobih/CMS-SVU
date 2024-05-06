@@ -22,11 +22,11 @@ namespace CMS_back.Models
 		public string FaculityHierarycalID { get; set; }
 		public FaculityHierarycal FaculityHierarycal { get; set; }
 
-		public virtual ICollection<Subject_Assess>? subject_Assesses { get; } = [];
+		public virtual ICollection<Subject_Assess>? subject_Assesses { get; } 
 
-		public virtual ICollection<ControlSubject>? ControlSubjects { get; } = [];
+		public virtual ICollection<ControlSubject>? ControlSubjects { get; }
 
-		public virtual ICollection<Subject_Committees>? Subject_Committees { get; } = [];
+		public virtual ICollection<Subject_Committees>? Subject_Committees { get; }
 
 
 

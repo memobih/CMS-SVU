@@ -35,7 +35,8 @@ namespace CMS_back.Data
 		public DbSet<Assess> Assess { get; set; }
 		public DbSet<ACAD_YEAR> ACAD_YEAR { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			//modelBuilder.Entity<ApplicationUser>().ToTable("User");
 			//modelBuilder.Entity<Control>().ToTable("Control");
@@ -53,13 +54,32 @@ namespace CMS_back.Data
 
 			//modelBuilder.Entity<ControlSubject>().HasKey(e => new { e.ControlID, e.SubjectID });
 
-			//modelBuilder.Entity<ControlUsers>().HasKey(e => new { e.ControlID, e.UserID });
+			//modelBuilder.Entity<ControlUsers>().HasOne(c=>c.ControlID).WithMany(c=>c)
 			//modelBuilder.Entity<Control_UserTasks>().HasKey(e => new { e.UserTaskID, e.Control_TaskID });
 
-
+			
 
 			base.OnModelCreating(modelBuilder);
-		}
+
+   //         modelBuilder.Entity<ControlUsers>()
+			//.HasOne(cu => cu.User)
+			//.WithMany()
+			//.HasForeignKey(cu => cu.UserID)
+			//.OnDelete(DeleteBehavior.Cascade); 
+
+            //modelBuilder.Entity<ControlUsers>()
+            //    .HasOne(cu => cu.Control)
+            //    .WithMany()
+            //    .HasForeignKey(cu => cu.ControlID)
+            //    .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<Control>()
+            .HasMany(c => c.ControlUsers)
+            .WithOne(cu => cu.Control)
+            .HasForeignKey(cu => cu.ControlID) // Assuming ControlID is the foreign key property in ControlUser
+            .OnDelete(DeleteBehavior.Cascade);
+        }
 
 
 

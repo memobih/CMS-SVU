@@ -42,7 +42,7 @@ namespace CMS_back.Controllers
                 control.End_Date = controldto.End_Date;
                 control.ACAD_YEAR = controldto.ACAD_YEAR;
 
-                control.Faculity = facultiy;
+                //control.Faculity = facultiy;
                 control.FaculityID = Fid;
 
                 ApplicationUser? mamager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
@@ -89,7 +89,7 @@ namespace CMS_back.Controllers
                     cs.SubjectID = subject.Id;
                     cs.Control = control;
                     cs.ControlID = control.Id;
-                    control.ControlSubjects.Add(cs);
+                    //control.ControlSubjects.Add(cs);
                     context.ControlSubject.Add(cs);
                 }
 
@@ -103,6 +103,77 @@ namespace CMS_back.Controllers
             return BadRequest("Faculty not found");
         }
 
+        //[HttpPut("edit/{Cid}")]
+        //public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
+        //{
+        //    var creator = ContextAccessor.HttpContext.User;
+        //    if (creator == null) return BadRequest("Creator ID invalid");
+        //    var userCreater = await Usermanager.GetUserAsync(creator);
+
+        //    Control? control = context.Control.FirstOrDefault(c => c.Id == Cid);
+        //    if (control == null) return BadRequest("inValid control id");
+
+        //    if(userCreater.Id != control.UserCreatorID) return BadRequest("inValid creater id");
+
+        //    Faculity? faculity = context.Faculity.FirstOrDefault(f => f.Id == control.FaculityID);
+        //    if (faculity == null) return BadRequest("Control not has faculty");
+
+        //    control.Name = controldto.Name;
+        //    control.Faculity_Node = controldto.Faculity_Node;
+        //    control.Faculity_Semester = controldto.Faculity_Semester;
+        //    control.Faculity_Phase = controldto.Faculity_Phase;
+        //    control.Start_Date = controldto.Start_Date;
+        //    control.End_Date = controldto.End_Date;
+        //    control.ACAD_YEAR = controldto.ACAD_YEAR;
+
+        //    ControlUsers controlUsers = context.ControlUsers.FirstOrDefault(c => c.ControlID == control.Id);
+        //    if (controlUsers == null) return BadRequest("Invalid control");
+        //    ApplicationUser? mamager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
+        //    if (mamager == null) return BadRequest("Invalid Head of control id");
+        //    controlUsers.UserID = mamager.Id;
+        //    //controlUsers.User = mamager;
+
+
+        //    var usersIDs = controldto.ContorlUsersIDs;
+        //    foreach (var id in usersIDs)
+        //    {
+        //        ApplicationUser? user = context.Users.FirstOrDefault(u => u.Id == id);
+        //        if (user == null) return BadRequest("invalid member id");
+        //        ControlUsers memberControl = new ControlUsers()
+        //        {
+        //            ControlID = control.Id,
+        //            //Control = control,
+        //            UserID = user.Id,
+        //            //User = user,
+        //            JobType = JobType.Member
+        //        };
+        //        context.ControlUsers.Add(memberControl);
+        //    }
+
+        //    var subjectIDs = controldto.ControlSubjectsIDs;
+        //    foreach (var id in subjectIDs)
+        //    {
+        //        Subject? subject = context.Subject.FirstOrDefault(u => u.Id == id);
+        //        if (subject == null) return BadRequest("invalid subjet id");
+        //        ControlSubject cs = new ControlSubject();
+        //        //cs.Subject = subject;
+        //        cs.SubjectID = subject.Id;
+        //        //cs.Control = control;
+        //        cs.ControlID = control.Id;
+        //        //control.ControlSubjects.Add(cs);
+        //        context.ControlSubject.Add(cs);
+        //    }
+
+        //    context.Control.Add(control);
+        //    //faculity.Controls.Add(control);
+
+
+        //    await context.SaveChangesAsync();
+
+
+        //    return Ok("Created Control");
+        //}
+
         [HttpPut("edit/{Cid}")]
         public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
         {
@@ -111,12 +182,12 @@ namespace CMS_back.Controllers
             var userCreater = await Usermanager.GetUserAsync(creator);
 
             Control? control = context.Control.FirstOrDefault(c => c.Id == Cid);
-            if (control == null) return BadRequest("inValid control id");
+            if (control == null) return BadRequest("Invalid control id");
 
-            if(userCreater.Id != control.UserCreatorID) return BadRequest("inValid creater id");
+            if (userCreater.Id != control.UserCreatorID) return BadRequest("Invalid creator id");
 
             Faculity? faculity = context.Faculity.FirstOrDefault(f => f.Id == control.FaculityID);
-            if (faculity == null) return BadRequest("Control not has faculty");
+            if (faculity == null) return BadRequest("Control does not have a faculty");
 
             control.Name = controldto.Name;
             control.Faculity_Node = controldto.Faculity_Node;
@@ -126,54 +197,46 @@ namespace CMS_back.Controllers
             control.End_Date = controldto.End_Date;
             control.ACAD_YEAR = controldto.ACAD_YEAR;
 
+            // Update Control Manager
             ControlUsers controlUsers = context.ControlUsers.FirstOrDefault(c => c.ControlID == control.Id);
             if (controlUsers == null) return BadRequest("Invalid control");
-            ApplicationUser? mamager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
-            if (mamager == null) return BadRequest("Invalid Head of control id");
-            controlUsers.UserID = mamager.Id;
-            controlUsers.User = mamager;
+            ApplicationUser? manager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
+            if (manager == null) return BadRequest("Invalid Head of control id");
+            controlUsers.UserID = manager.Id;
 
-
+            // Update Control Members
             var usersIDs = controldto.ContorlUsersIDs;
             foreach (var id in usersIDs)
             {
                 ApplicationUser? user = context.Users.FirstOrDefault(u => u.Id == id);
-                if (user == null) return BadRequest("invalid member id");
+                if (user == null) return BadRequest("Invalid member id");
                 ControlUsers memberControl = new ControlUsers()
                 {
                     ControlID = control.Id,
-                    Control = control,
                     UserID = user.Id,
-                    User = user,
                     JobType = JobType.Member
                 };
                 context.ControlUsers.Add(memberControl);
             }
 
+            // Update Control Subjects
             var subjectIDs = controldto.ControlSubjectsIDs;
             foreach (var id in subjectIDs)
             {
                 Subject? subject = context.Subject.FirstOrDefault(u => u.Id == id);
-                if (subject == null) return BadRequest("invalid subjet id");
+                if (subject == null) return BadRequest("Invalid subject id");
                 ControlSubject cs = new ControlSubject();
-                cs.Subject = subject;
                 cs.SubjectID = subject.Id;
-                cs.Control = control;
                 cs.ControlID = control.Id;
-                control.ControlSubjects.Add(cs);
                 context.ControlSubject.Add(cs);
             }
 
-            context.Control.Add(control);
-            faculity.Controls.Add(control);
-            
-
+            // Save changes to the database
             await context.SaveChangesAsync();
 
-
-            return Ok("Created Control");
+            return Ok("Updated Control");
         }
-        
+
         [HttpGet("allControllers")]
         public async Task<IActionResult> index()
         {
