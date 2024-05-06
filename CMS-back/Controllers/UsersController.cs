@@ -62,5 +62,13 @@ namespace CMS_back.Controllers
             return Ok(userDto);
         }
 
+        [HttpGet("controls/{Uid}")]
+        public async Task<IActionResult> getUserControlsAndRoles([FromRoute]string Uid)
+        {
+            var control_user = context.ControlUsers.Include(c => c.User).Include(c => c.Control).Where(uc => uc.UserID== Uid).ToList();
+            if (control_user == null) return BadRequest("User not register in any control");
+            var resultUser = _mapper.Map<List<UserWithHisControlDTO>>(control_user);
+            return Ok(resultUser);
+        }
     }
 }

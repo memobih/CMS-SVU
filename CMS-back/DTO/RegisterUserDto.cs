@@ -24,8 +24,7 @@ namespace CMS_back.DTO
         public string ScientificDegree { get; set; }
 
         [Required]
-        [Range(1,4)]
-        public UserType Type { get; set; }
+        public string Type { get; set; }
 
         public string? FaculityID { get; set; }
     }

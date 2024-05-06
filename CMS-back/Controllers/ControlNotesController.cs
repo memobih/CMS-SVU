@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CMS_back.Consts;
 using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.Models;
@@ -51,6 +52,44 @@ namespace CMS_back.Controllers
             var control_notes = Context.Control_Note.Include(c => c.WriteBy).Where(c => c.ControlID == Cid).ToList();
             var control_notes_result = Mapper.Map<List<ControlNotesResultDTO>>(control_notes);
             return Ok(control_notes_result);
+        }
+
+        [HttpGet("notetoheadcontrol/{Cid}")]
+        public IActionResult getNotesTOHeadControl([FromRoute] string Cid)
+        {
+            var allControlMember = Context.Control_Note.Include(c => c.WriteBy).Where(c => c.ControlID == Cid).ToList();
+            List<ControlNotesResultDTO>? controlNotesResultDTOs = new List<ControlNotesResultDTO>();
+            foreach (var users in allControlMember)
+            {
+                var member = Context.ControlUsers.FirstOrDefault(c => c.UserID == users.WriteByID);
+                if (member == null || member.JobType != JobType.Member) continue;
+                controlNotesResultDTOs.Add(new ControlNotesResultDTO()
+                {
+                    Description = users.Description,
+                    WriteDate = users.WriteDate,
+                    WriteBy = users.WriteBy,
+                });
+            }
+            return Ok(controlNotesResultDTOs);
+        }
+
+        [HttpGet("notetoheadfaculty/{Cid}")]
+        public IActionResult getNotesTOHeadFaculty([FromRoute] string Cid)
+        {
+            var allControlMember = Context.Control_Note.Include(c => c.WriteBy).Where(c => c.ControlID == Cid).ToList();
+            List<ControlNotesResultDTO>? controlNotesResultDTOs = new List<ControlNotesResultDTO>();
+            foreach (var users in allControlMember)
+            {
+                var member = Context.ControlUsers.FirstOrDefault(c => c.UserID == users.WriteByID);
+                if (member == null || member.JobType != JobType.Head) continue;
+                controlNotesResultDTOs.Add(new ControlNotesResultDTO()
+                {
+                    Description = users.Description,
+                    WriteDate = users.WriteDate,
+                    WriteBy = users.WriteBy,
+                });
+            }
+            return Ok(controlNotesResultDTOs);
         }
 
     }
