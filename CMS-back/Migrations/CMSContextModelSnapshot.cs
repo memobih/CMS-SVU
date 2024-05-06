@@ -702,7 +702,6 @@ namespace CMS_back.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FaculityHierarycalID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FaculityNodeID")
@@ -1193,9 +1192,7 @@ namespace CMS_back.Migrations
                 {
                     b.HasOne("CMS_back.Models.FaculityHierarycal", "FaculityHierarycal")
                         .WithMany()
-                        .HasForeignKey("FaculityHierarycalID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FaculityHierarycalID");
 
                     b.HasOne("CMS_back.Models.Faculity_Node", "FaculityNode")
                         .WithMany("Subjects")

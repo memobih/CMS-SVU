@@ -17,8 +17,7 @@ namespace CMS_back.DTO
         public string Faculity_Semester { get; set; }
         [Required]
         public string ControlManagerID { get; set; }
-        [Required]
-        public string ControlCreateID { get; set; }
+
         [Required]
         public virtual List<string> ControlSubjectsIDs { get; set; }
         [Required]
