@@ -2,6 +2,7 @@
 using CMS_back.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using CMS_back.Consts;
 
 namespace CMS_back.Data
 {
@@ -80,10 +81,7 @@ namespace CMS_back.Data
             .WithOne(cu => cu.Control)
             .HasForeignKey(cu => cu.ControlID) // Assuming ControlID is the foreign key property in ControlUser
             .OnDelete(DeleteBehavior.Cascade);
-<<<<<<< HEAD
             SeedRoles(modelBuilder);
-        }
-=======
 
 			modelBuilder.Entity<Control_Task>()
 			.HasMany(c => c.UserTasks)
@@ -91,16 +89,14 @@ namespace CMS_back.Data
 			.HasForeignKey(cu => cu.Control_TaskID) // Assuming ControlID is the foreign key property in ControlUser
 			.OnDelete(DeleteBehavior.Cascade);
 		}
->>>>>>> 6b6dae8bd6380873699161a3b3c4a4f156d39e78
 
         private void SeedRoles(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<IdentityRole>().HasData
                 (
-                  new IdentityRole() { Name = "AdminUniversity", NormalizedName = "AdminUniversity" },
-                  new IdentityRole() { Name = "AdminFaculty", NormalizedName = "AdminFaculty" },
-                  new IdentityRole() { Name = "HeadControl", NormalizedName = "HeadControl" },
-                  new IdentityRole() { Name = "MemberControl", NormalizedName = "MemberControl" }
+                  new IdentityRole() { Name = ConstsRoles.AdminUniversity, NormalizedName = ConstsRoles.AdminUniversity },
+                  new IdentityRole() { Name = ConstsRoles.AdminFaculty, NormalizedName = ConstsRoles.AdminFaculty },
+                  new IdentityRole() { Name = ConstsRoles.Staff, NormalizedName = ConstsRoles.Staff }
                 );
 
         }

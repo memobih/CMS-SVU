@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using CMS_back.Models;
 using AutoMapper;
 using System;
+using CMS_back.Consts;
 
 
 namespace CMS_back.Controllers
@@ -32,6 +33,7 @@ namespace CMS_back.Controllers
         }
 
         [HttpPost("create/{Fid}")]
+        [Authorize(Roles = ConstsRoles.AdminFaculty)]
         public async Task<IActionResult> createControl(ControlDTO controldto, string Fid)
         { 
             Faculity? facultiy = context.Faculity.FirstOrDefault(f => f.Id == Fid);
@@ -110,6 +112,7 @@ namespace CMS_back.Controllers
 
 
         [HttpPut("edit/{Cid}")]
+        [Authorize(Roles = ConstsRoles.AdminFaculty)]
         public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
         {
             var creator = ContextAccessor.HttpContext.User;
@@ -191,6 +194,7 @@ namespace CMS_back.Controllers
         }
         
         [HttpDelete("delete/{id}")]
+        [Authorize(Roles = ConstsRoles.AdminFaculty)]
         public async Task<IActionResult> delete(string id)
         {
             var controle = await context.Control.SingleOrDefaultAsync(x => x.Id == id);

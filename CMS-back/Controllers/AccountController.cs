@@ -112,7 +112,7 @@ namespace CMS_back.Controllers
                     if (userDto.Type == UserType.FaculityAdministrator)
                         await usermanger.AddToRoleAsync(user, ConstsRoles.AdminFaculty);
                     if (userDto.Type == UserType.Staff)
-                        await usermanger.AddToRoleAsync(user, ConstsRoles.HeadControl);
+                        await usermanger.AddToRoleAsync(user, ConstsRoles.Staff);
                     
                     return Ok("User Added");
                 }
