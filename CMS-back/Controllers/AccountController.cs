@@ -95,8 +95,8 @@ namespace CMS_back.Controllers
                     Name = userDto.Name,
                     Email = userDto.Email,
                     ScientificDegree = userDto.ScientificDegree,
-                    Type = userDto.Type
-                };  
+                };
+                user.Type = ConstsRoles.Staff;
                 if(userDto.FaculityID != null)
                 {
                     user.FaculityEmployeeID = userDto.FaculityID;
@@ -110,7 +110,7 @@ namespace CMS_back.Controllers
                         var message = new Mailing.MailMessage(new string[] { user.Email }, "Control System", "You are register now");
                         _mailingService.SendMail(message);
                     }
-                    await usermanger.AddToRoleAsync(user, userDto.Type);
+                    await usermanger.AddToRoleAsync(user, ConstsRoles.Staff);
                     return Ok("User Added");
                 }
                 return BadRequest(result.Errors.FirstOrDefault());
