@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using CMS_back.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace CMS_back.Data
 {
@@ -79,9 +80,20 @@ namespace CMS_back.Data
             .WithOne(cu => cu.Control)
             .HasForeignKey(cu => cu.ControlID) // Assuming ControlID is the foreign key property in ControlUser
             .OnDelete(DeleteBehavior.Cascade);
+            SeedRoles(modelBuilder);
         }
 
+        private void SeedRoles(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<IdentityRole>().HasData
+                (
+                  new IdentityRole() { Name = "AdminUniversity", NormalizedName = "AdminUniversity" },
+                  new IdentityRole() { Name = "AdminFaculty", NormalizedName = "AdminFaculty" },
+                  new IdentityRole() { Name = "HeadControl", NormalizedName = "HeadControl" },
+                  new IdentityRole() { Name = "MemberControl", NormalizedName = "MemberControl" }
+                );
 
+        }
 
-	}
+    }
 }
