@@ -1,4 +1,6 @@
-﻿namespace CMS_back.Mailing
+﻿using MimeKit;
+
+namespace CMS_back.Mailing
 {
     public class MailMessage
     {
