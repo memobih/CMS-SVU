@@ -15,6 +15,7 @@ using CMS_back.DTO;
 using CMS_back.Data;
 using System.Security.Principal;
 using CMS_back.Models;
+using CMS_back.Consts;
 
 namespace CMS_back.Controllers
 {
@@ -105,7 +106,14 @@ namespace CMS_back.Controllers
                 IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)
                 {
-                    //await usermanger.AddToRoleAsync(user, userDto.Type.ToString().ToLower());
+                    if(userDto.Type== UserType.UniversityAdministrator)
+                        await usermanger.AddToRoleAsync(user, ConstsRoles.AdminUniversity);
+                    if (userDto.Type == UserType.FaculityAdministrator)
+                        await usermanger.AddToRoleAsync(user, ConstsRoles.AdminFaculty);
+                    if (userDto.Type == UserType.HeadControl)
+                        await usermanger.AddToRoleAsync(user, ConstsRoles.HeadControl);
+                    if (userDto.Type == UserType.MemberControl)
+                        await usermanger.AddToRoleAsync(user, ConstsRoles.MemberControl);
                     return Ok("User Added");
                 }
                 return BadRequest(result.Errors.FirstOrDefault());

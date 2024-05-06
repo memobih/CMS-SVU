@@ -9,7 +9,8 @@ namespace CMS_back.Models
 	{
 		FaculityAdministrator,
 		UniversityAdministrator,
-		Staff
+		HeadControl,
+		MemberControl
 	}
 
 	public class ApplicationUser : IdentityUser
