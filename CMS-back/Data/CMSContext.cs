@@ -62,11 +62,11 @@ namespace CMS_back.Data
 
 			base.OnModelCreating(modelBuilder);
 
-   //         modelBuilder.Entity<ControlUsers>()
-			//.HasOne(cu => cu.User)
-			//.WithMany()
-			//.HasForeignKey(cu => cu.UserID)
-			//.OnDelete(DeleteBehavior.Cascade); 
+            //         modelBuilder.Entity<ControlUsers>()
+            //.HasOne(cu => cu.User)
+            //.WithMany()
+            //.HasForeignKey(cu => cu.UserID)
+            //.OnDelete(DeleteBehavior.Cascade); 
 
             //modelBuilder.Entity<ControlUsers>()
             //    .HasOne(cu => cu.Control)
@@ -80,8 +80,18 @@ namespace CMS_back.Data
             .WithOne(cu => cu.Control)
             .HasForeignKey(cu => cu.ControlID) // Assuming ControlID is the foreign key property in ControlUser
             .OnDelete(DeleteBehavior.Cascade);
+<<<<<<< HEAD
             SeedRoles(modelBuilder);
         }
+=======
+
+			modelBuilder.Entity<Control_Task>()
+			.HasMany(c => c.UserTasks)
+			.WithOne(cu => cu.Control_Task)
+			.HasForeignKey(cu => cu.Control_TaskID) // Assuming ControlID is the foreign key property in ControlUser
+			.OnDelete(DeleteBehavior.Cascade);
+		}
+>>>>>>> 6b6dae8bd6380873699161a3b3c4a4f156d39e78
 
         private void SeedRoles(ModelBuilder modelBuilder)
         {
