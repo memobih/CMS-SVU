@@ -8,6 +8,7 @@ using CMS_back.Models;
 using AutoMapper;
 using System;
 using CMS_back.Consts;
+using CMS_back.Mailing;
 
 
 namespace CMS_back.Controllers
@@ -21,15 +22,18 @@ namespace CMS_back.Controllers
         public IConfiguration cfg { get; }
         public UserManager<ApplicationUser> Usermanager { get; }
         public IHttpContextAccessor ContextAccessor { get; }
+        public IMailingService MailingService { get; }
+
         private readonly IMapper _mapper;
         public ControlsController(CMSContext _context,IConfiguration _cfg, 
-            UserManager<ApplicationUser> usermanager, IHttpContextAccessor contextAccessor,IMapper mapper)
+            UserManager<ApplicationUser> usermanager, IHttpContextAccessor contextAccessor,IMapper mapper, IMailingService mailingService)
         {
             context=_context;
             cfg=_cfg;
             Usermanager=usermanager;
             ContextAccessor=contextAccessor;
             _mapper = mapper;
+            MailingService=mailingService;
         }
 
         [HttpPost("create/{Fid}")]
@@ -61,6 +65,11 @@ namespace CMS_back.Controllers
                     User = mamager,
                     JobType = JobType.Head
                 };
+                if (mamager.Email != null)
+                {
+                    var message = new Mailing.MailMessage(new string[] { mamager.Email }, "Control System", "You are Head of new Control");
+                    MailingService.SendMail(message);
+                }
                 context.ControlUsers.Add(userControl);
 
                 var creator = ContextAccessor.HttpContext.User;
@@ -82,6 +91,11 @@ namespace CMS_back.Controllers
                         User = user,
                         JobType = JobType.Member
                     };
+                    if (user.Email != null)
+                    {
+                        var message = new Mailing.MailMessage(new string[] { user.Email }, "Control System", "You are Member in new Control");
+                        MailingService.SendMail(message);
+                    }
                     context.ControlUsers.Add(memberControl);
                 }
 
@@ -137,11 +151,11 @@ namespace CMS_back.Controllers
             control.ACAD_YEAR = controldto.ACAD_YEAR;
             controlUser.UserID = controldto.ControlManagerID;
             // Update Control Manager
-            //ControlUsers controlUsers = context.ControlUsers.FirstOrDefault(c => c.ControlID == control.Id);
-            //if (controlUsers == null) return BadRequest("Invalid control");
-            //ApplicationUser? manager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
-            //if (manager == null) return BadRequest("Invalid Head of control id");
-            //controlUsers.UserID = manager.Id;
+            ControlUsers controlUsers = context.ControlUsers.FirstOrDefault(c => c.ControlID == control.Id);
+            if (controlUsers == null) return BadRequest("Invalid control");
+            ApplicationUser? manager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
+            if (manager == null) return BadRequest("Invalid Head of control id");
+            controlUsers.UserID = manager.Id;
 
             // Update Control Members
             var usersIDs = controldto.ContorlUsersIDs;
@@ -155,7 +169,7 @@ namespace CMS_back.Controllers
                     UserID = user.Id,
                     JobType = JobType.Member
                 };
-                context.ControlUsers.Update(memberControl);
+                context.ControlUsers.Add(memberControl);
             }
 
             // Update Control Subjects
@@ -188,7 +202,7 @@ namespace CMS_back.Controllers
         [HttpGet("detail/{id}")]
         public async Task<IActionResult> detail(string id)
         {
-            var control = await context.Control.Include(c=>c.ControlSubjects).SingleOrDefaultAsync(x => x.Id == id);
+            var control = await context.Control.Include(c=>c.ControlSubjects).Include(c => c.ControlUsers).SingleOrDefaultAsync(x => x.Id == id);
             if (control == null) return BadRequest("Not Found");
             var controlResult=_mapper.Map<ControlResultDto>(control);
             return Ok(controlResult);
@@ -211,7 +225,7 @@ namespace CMS_back.Controllers
         [HttpGet("{Fid}")]
         public async Task<IActionResult> get (string Fid)
         {
-            var faculty = context.Faculity.Include(f=>f.Controls).ThenInclude(c=>c.ControlSubjects).FirstOrDefault(x => x.Id == Fid);
+            var faculty = context.Faculity.Include(f=>f.Controls).ThenInclude(c=> new{c.ControlUsers, c.ControlSubjects}).FirstOrDefault(x => x.Id == Fid);
             if (faculty == null) return BadRequest("Faculty not found");
             if (faculty.Controls == null) return BadRequest("Faculty not has controls");
             var controlsResultDto=faculty.Controls.Select(control => _mapper.Map<ControlResultDto>(control)).ToList();
