@@ -10,6 +10,7 @@ using CMS_back.Models;
 using CMS_back.Consts;
 using System.Net.Mail;
 using CMS_back.Mailing;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CMS_back.Controllers
 {
@@ -23,14 +24,19 @@ namespace CMS_back.Controllers
         private readonly IMailingService _mailingService;
 
         public CMSContext context { get; }
+        public UserManager<ApplicationUser> Usermanager { get; }
+        public IHttpContextAccessor ContextAccessor { get; }
 
         public AccountController(UserManager<ApplicationUser> usermanger, IConfiguration config, CMSContext _context
-            , IMailingService mailingService)
+            , IMailingService mailingService, UserManager<ApplicationUser> usermanager
+            , IHttpContextAccessor contextAccessor)
         {
             this.usermanger = usermanger;
             this.config = config;
             context=_context;
             _mailingService = mailingService;
+            Usermanager=usermanager;
+            ContextAccessor=contextAccessor;
         }
 
         [HttpPost("login")]
@@ -48,7 +54,8 @@ namespace CMS_back.Controllers
                         var claims = new List<Claim>();
                         claims.Add(new Claim(ClaimTypes.Name, user.UserName));
                         claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
-                        
+                        claims.Add(new Claim(ClaimTypes.Role, user.Type));
+
                         if (user.FaculityLeaderID != null) 
                             claims.Add(new Claim(ClaimTypes.Sid, user.FaculityLeaderID));
                         
@@ -68,17 +75,12 @@ namespace CMS_back.Controllers
                             expires: DateTime.Now.AddHours(1),
                             signingCredentials: signincred
                             );
-                        if(user.Email != null)
-                        {
-                            var message = new Mailing.MailMessage(new string[] { user.Email }, "login", "انت عملت لوجين يسطا خد بالك");
-                                _mailingService.SendMail(message);
-                        }
                         
                         return Ok(new
                         {
                             token = new JwtSecurityTokenHandler().WriteToken(mytoken),
                             expiration = mytoken.ValidTo,
-                            roles = await usermanger.GetRolesAsync(user)
+                            roles = user.Type
                         }) ;
                     }
                     return BadRequest("invalid password");
@@ -93,6 +95,9 @@ namespace CMS_back.Controllers
         {
             if (ModelState.IsValid == true)
             {
+                var curuser = ContextAccessor.HttpContext.User;
+                var currentUser = await Usermanager.GetUserAsync(curuser);
+
                 //save
                 ApplicationUser user = new ApplicationUser
                 {
@@ -100,18 +105,19 @@ namespace CMS_back.Controllers
                     Name = userDto.Name,
                     Email = userDto.Email,
                     ScientificDegree = userDto.ScientificDegree,
-                    Type = userDto.Type
-                };  
-                if(userDto.FaculityID != null)
-                {
-                    user.FaculityEmployeeID = userDto.FaculityID;
-                    user.FaculityEmployee = context.Faculity.FirstOrDefault(f => f.Id == userDto.FaculityID);
-                }
+                };
+                user.Type = ConstsRoles.Staff;
+                if(currentUser != null)
+                    user.FaculityEmployeeID = currentUser.FaculityLeaderID;
                 IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)
                 {
-                    await usermanger.AddToRoleAsync(user, userDto.Type);
-                    
+                    if (user.Email != null && currentUser != null)
+                    {
+                        var message = new Mailing.MailMessage(new string[] { user.Email }, "Control System", $"User {currentUser.Name} register for you in site.");
+                        _mailingService.SendMail(message);
+                    }
+                    await usermanger.AddToRoleAsync(user, ConstsRoles.Staff);
                     return Ok("User Added");
                 }
                 return BadRequest(result.Errors.FirstOrDefault());

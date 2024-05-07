@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CMS_back.Consts;
 using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.Models;
@@ -24,6 +25,7 @@ namespace CMS_back.Controllers
         }
 
         [HttpPost("add")]
+        [Authorize(Roles = ConstsRoles.AdminUniversity)]
         public async Task<IActionResult> create(FacultyDTO facultyDTO)
         {
             var isExict = context.Faculity.FirstOrDefault(f => f.Name == facultyDTO.Name);
@@ -42,6 +44,7 @@ namespace CMS_back.Controllers
 
             context.Faculity.Add(faculity);
 
+            leader.Type = ConstsRoles.AdminFaculty;
             leader.FaculityLeaderID = faculity.Id;
             leader.FaculityLeader = faculity;
 
@@ -54,7 +57,7 @@ namespace CMS_back.Controllers
         [HttpGet("get-all-faculties")]
         public async Task<IActionResult> GetAllfaculties()
         {
-            var faculties = await context.Faculity.ToListAsync();
+            var faculties = await context.Faculity.Include(f => f.Controls).ThenInclude(c => c.UserCreator).ToListAsync();
             var facultiesResult= faculties.Select(faculty => _mapper.Map<FacultyResultDto>(faculty)).ToList();
             return Ok(facultiesResult);
         }
@@ -62,11 +65,18 @@ namespace CMS_back.Controllers
         [HttpGet("get-faculty-by-id")]
         public async Task<IActionResult> getfaculty(string fId)
         {
-            var faculty = context.Faculity.FirstOrDefault(f => f.Id == fId);
+            var faculty = context.Faculity.Include(f => f.Controls).FirstOrDefault(f => f.Id == fId);
             if (faculty == null) return BadRequest("No found Facluty");
             var facultyDto = _mapper.Map<FacultyResultDto>(faculty);
             return Ok(facultyDto);
         }
 
+        [HttpGet("node/{Fid}")]
+        public IActionResult getfacultynode([FromRoute]string Fid)
+        {
+            var nodes = context.Faculity_Node.Where(fn => fn.FaculityNodeID == Fid).ToList();
+            var facultyNode = _mapper.Map<List<FacultyNodeDTO>>(nodes);
+            return Ok(facultyNode);
+        }
     }
 }

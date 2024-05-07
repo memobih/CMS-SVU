@@ -1,4 +1,6 @@
-﻿namespace CMS_back.DTO
+﻿using CMS_back.Models;
+
+namespace CMS_back.DTO
 {
     public class FacultyResultDto
     {
@@ -7,5 +9,7 @@
         public string? Code { get; set; }
         public string? Order { get; set; }
         public string? FaculityTypeID { get; set; }
+        
+        public List<ControlResultDto>? controls { get; set; }
     }
 }

@@ -96,8 +96,9 @@ namespace CMS_back.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserImage")
                         .HasColumnType("nvarchar(max)");
@@ -252,8 +253,9 @@ namespace CMS_back.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("JobType")
-                        .HasColumnType("int");
+                    b.Property<string>("JobType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserID")
                         .HasColumnType("nvarchar(450)");
@@ -801,19 +803,19 @@ namespace CMS_back.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "25a371ca-3fb0-4bc0-82de-0dddcdffc02b",
+                            Id = "11b38618-8fcd-426a-8c3e-cd901f9ea4f4",
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
-                            Id = "04081a5f-257b-49a5-abef-f97e40dbe47b",
+                            Id = "e264f8e6-762a-4047-a653-2f7b4e1855d2",
                             Name = "AdminFaculty",
                             NormalizedName = "AdminFaculty"
                         },
                         new
                         {
-                            Id = "defec704-ee91-4468-a82c-96c63a91a5d2",
+                            Id = "b9994fbc-4213-4acc-ac3b-c95e8296b31d",
                             Name = "Staff",
                             NormalizedName = "Staff"
                         });
