@@ -68,5 +68,11 @@ namespace CMS_back.Controllers
             return Ok(facultyDto);
         }
 
+        [HttpGet("node/{Fid}")]
+        public IActionResult getfacultynode([FromRoute]string Fid)
+        {
+            var nodes = context.Faculity_Node.Where(fn => fn.FaculityNodeID == Fid).ToList();
+            return Ok(nodes);
+        }
     }
 }
