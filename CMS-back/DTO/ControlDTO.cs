@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CMS_back.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMS_back.DTO
 {
@@ -17,10 +19,9 @@ namespace CMS_back.DTO
         public string Faculity_Semester { get; set; }
         [Required]
         public string ControlManagerID { get; set; }
-
-        [Required]
-        public virtual List<string> ControlSubjectsIDs { get; set; }
-        [Required]
-        public List<string> ContorlUsersIDs { get; set; } 
+        [NotMapped]
+        public  List<string> SubjectsIds { get; set; }
+        [NotMapped]
+        public  List<string>? UsersIds { get; set; }
     }
 }

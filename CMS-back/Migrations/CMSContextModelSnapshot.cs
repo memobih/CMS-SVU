@@ -803,19 +803,19 @@ namespace CMS_back.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "11b38618-8fcd-426a-8c3e-cd901f9ea4f4",
+                            Id = "94b6244e-7aea-40c6-a845-79d4dca1e743",
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
-                            Id = "e264f8e6-762a-4047-a653-2f7b4e1855d2",
+                            Id = "af153748-7009-4698-af3b-448b17fc07fb",
                             Name = "AdminFaculty",
                             NormalizedName = "AdminFaculty"
                         },
                         new
                         {
-                            Id = "b9994fbc-4213-4acc-ac3b-c95e8296b31d",
+                            Id = "452c4c0a-3c46-49e1-8f73-8eed29b38c42",
                             Name = "Staff",
                             NormalizedName = "Staff"
                         });
