@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CMS_back.Consts;
 using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.Models;
@@ -24,6 +25,7 @@ namespace CMS_back.Controllers
         }
 
         [HttpPost("add")]
+        [Authorize(Roles = ConstsRoles.AdminUniversity)]
         public async Task<IActionResult> create(FacultyDTO facultyDTO)
         {
             var isExict = context.Faculity.FirstOrDefault(f => f.Name == facultyDTO.Name);
@@ -42,6 +44,7 @@ namespace CMS_back.Controllers
 
             context.Faculity.Add(faculity);
 
+            leader.Type = ConstsRoles.AdminFaculty;
             leader.FaculityLeaderID = faculity.Id;
             leader.FaculityLeader = faculity;
 
@@ -72,7 +75,8 @@ namespace CMS_back.Controllers
         public IActionResult getfacultynode([FromRoute]string Fid)
         {
             var nodes = context.Faculity_Node.Where(fn => fn.FaculityNodeID == Fid).ToList();
-            return Ok(nodes);
+            var facultyNode = _mapper.Map<List<FacultyNodeDTO>>(nodes);
+            return Ok(facultyNode);
         }
     }
 }

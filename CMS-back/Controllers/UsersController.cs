@@ -58,7 +58,10 @@ namespace CMS_back.Controllers
             var user = ContextAccessor.HttpContext.User;
             if (user == null) return BadRequest("No user Login yet");
             var currentUser = await Usermanager.GetUserAsync(user);
-            var userDto=new UserResultDto { Id=currentUser.Id, Name=currentUser.Name };
+            string facultyid;
+            if (currentUser.FaculityLeaderID != null) facultyid = currentUser.FaculityLeaderID;
+            else facultyid = currentUser.FaculityEmployeeID;
+            var userDto=new UserResultDto { Id=currentUser.Id, Name=currentUser.Name, facultyID = facultyid};
             return Ok(userDto);
         }
 

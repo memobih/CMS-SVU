@@ -108,7 +108,7 @@ namespace CMS_back.Controllers
                 };
                 user.Type = ConstsRoles.Staff;
                 if(currentUser != null)
-                    user.FaculityEmployeeID = currentUser.FaculityEmployeeID;
+                    user.FaculityEmployeeID = currentUser.FaculityLeaderID;
                 IdentityResult result = await usermanger.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)
                 {
