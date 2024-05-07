@@ -119,13 +119,14 @@ namespace CMS_back.Controllers
             if (creator == null) return BadRequest("Creator ID invalid");
             var userCreater = await Usermanager.GetUserAsync(creator);
 
-            Control? control = context.Control.FirstOrDefault(c => c.Id == Cid);
+            Control? control = context.Control.Include(c=>c.ControlUsers).FirstOrDefault(c => c.Id == Cid);
             if (control == null) return BadRequest("Invalid control id");
 
             if (userCreater.Id != control.UserCreatorID) return BadRequest("Invalid creator id");
 
             Faculity? faculity = context.Faculity.FirstOrDefault(f => f.Id == control.FaculityID);
             if (faculity == null) return BadRequest("Control does not have a faculty");
+            var controlUser=control.ControlUsers.FirstOrDefault(c => c.ControlID == control.Id&&c.JobType==JobType.Head);
 
             control.Name = controldto.Name;
             control.Faculity_Node = controldto.Faculity_Node;
@@ -134,13 +135,13 @@ namespace CMS_back.Controllers
             control.Start_Date = controldto.Start_Date;
             control.End_Date = controldto.End_Date;
             control.ACAD_YEAR = controldto.ACAD_YEAR;
-
+            controlUser.UserID = controldto.ControlManagerID;
             // Update Control Manager
-            ControlUsers controlUsers = context.ControlUsers.FirstOrDefault(c => c.ControlID == control.Id);
-            if (controlUsers == null) return BadRequest("Invalid control");
-            ApplicationUser? manager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
-            if (manager == null) return BadRequest("Invalid Head of control id");
-            controlUsers.UserID = manager.Id;
+            //ControlUsers controlUsers = context.ControlUsers.FirstOrDefault(c => c.ControlID == control.Id);
+            //if (controlUsers == null) return BadRequest("Invalid control");
+            //ApplicationUser? manager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
+            //if (manager == null) return BadRequest("Invalid Head of control id");
+            //controlUsers.UserID = manager.Id;
 
             // Update Control Members
             var usersIDs = controldto.ContorlUsersIDs;
@@ -154,7 +155,7 @@ namespace CMS_back.Controllers
                     UserID = user.Id,
                     JobType = JobType.Member
                 };
-                context.ControlUsers.Add(memberControl);
+                context.ControlUsers.Update(memberControl);
             }
 
             // Update Control Subjects
