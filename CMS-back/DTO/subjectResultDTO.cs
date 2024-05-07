@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CMS_back.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace CMS_back.DTO
 {
@@ -14,5 +15,7 @@ namespace CMS_back.DTO
 
         [Required]
         public int? Credit_Hours { get; set; }
+        public Question? IsDone { get; set; }
+        public Question? IsReview { get; set; }
     }
 }
