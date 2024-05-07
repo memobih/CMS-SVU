@@ -211,7 +211,7 @@ namespace CMS_back.Controllers
         [HttpGet("detail/{id}")]
         public async Task<IActionResult> detail(string id)
         {
-            var control = await context.Control.Include(c=>c.ControlSubjects).SingleOrDefaultAsync(x => x.Id == id);
+            var control = await context.Control.Include(c=>c.ControlSubjects).Include(c => c.ControlUsers).SingleOrDefaultAsync(x => x.Id == id);
             if (control == null) return BadRequest("Not Found");
             var controlResult=_mapper.Map<ControlResultDto>(control);
             return Ok(controlResult);
@@ -234,7 +234,7 @@ namespace CMS_back.Controllers
         [HttpGet("{Fid}")]
         public async Task<IActionResult> get (string Fid)
         {
-            var faculty = context.Faculity.Include(f=>f.Controls).ThenInclude(c=>c.ControlSubjects).FirstOrDefault(x => x.Id == Fid);
+            var faculty = context.Faculity.Include(f=>f.Controls).ThenInclude(c=> new{c.ControlUsers, c.ControlSubjects}).FirstOrDefault(x => x.Id == Fid);
             if (faculty == null) return BadRequest("Faculty not found");
             if (faculty.Controls == null) return BadRequest("Faculty not has controls");
             var controlsResultDto=faculty.Controls.Select(control => _mapper.Map<ControlResultDto>(control)).ToList();

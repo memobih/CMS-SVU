@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CMS_back.Consts;
 using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.Models;
@@ -72,6 +73,14 @@ namespace CMS_back.Controllers
             if (control_user == null) return BadRequest("User not register in any control");
             var resultUser = _mapper.Map<List<UserWithHisControlDTO>>(control_user);
             return Ok(resultUser);
+        }
+
+        [HttpGet("headConrol/{Cid}")]
+        public IActionResult headOfControl (string Cid)
+        {
+            var controlHead = context.ControlUsers.Include(u => u.User).FirstOrDefault(c => c.ControlID == Cid && c.JobType == JobType.Head);
+            if (controlHead == null) return BadRequest("Not Found Head");
+            return Ok(controlHead);
         }
     }
 }

@@ -8,10 +8,10 @@ namespace CMS_back.Mapper
     {
         public MappingProfile()
         {
-            CreateMap<Faculity, FacultyResultDto>();
+            CreateMap<Faculity, FacultyResultDto>().ReverseMap();
             CreateMap<Control, ControlResultDto>().ReverseMap();
-            CreateMap<Subject, subjectResultDTO>();
-            CreateMap<ApplicationUser, UserResultDto>();
+            CreateMap<Subject, subjectResultDTO>().ReverseMap();
+            CreateMap<ApplicationUser, UserResultDto>().ReverseMap();
             CreateMap<Control_Note, controlNoteDTO>().ReverseMap();
             CreateMap<Control_Note, ControlNotesResultDTO>().ReverseMap();
             CreateMap<Control_Task, controlTaskDTO>().ReverseMap();

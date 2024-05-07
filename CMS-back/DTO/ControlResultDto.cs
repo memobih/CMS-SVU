@@ -15,5 +15,7 @@ namespace CMS_back.DTO
         [RegularExpression(pattern: @"^\d{4}\/\d{4}$",
             ErrorMessage = "Invalid ACAD_YEAR Format. Please use the format 'YYYY/YYYY'.\"")]
         public string? ACAD_YEAR { get; set; }
+
+        public UserResultDto UserCreator { get; set; }
     }
 }

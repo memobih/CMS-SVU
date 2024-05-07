@@ -57,7 +57,7 @@ namespace CMS_back.Controllers
         [HttpGet("get-all-faculties")]
         public async Task<IActionResult> GetAllfaculties()
         {
-            var faculties = await context.Faculity.ToListAsync();
+            var faculties = await context.Faculity.Include(f => f.Controls).ThenInclude(c => c.UserCreator).ToListAsync();
             var facultiesResult= faculties.Select(faculty => _mapper.Map<FacultyResultDto>(faculty)).ToList();
             return Ok(facultiesResult);
         }
@@ -65,7 +65,7 @@ namespace CMS_back.Controllers
         [HttpGet("get-faculty-by-id")]
         public async Task<IActionResult> getfaculty(string fId)
         {
-            var faculty = context.Faculity.FirstOrDefault(f => f.Id == fId);
+            var faculty = context.Faculity.Include(f => f.Controls).FirstOrDefault(f => f.Id == fId);
             if (faculty == null) return BadRequest("No found Facluty");
             var facultyDto = _mapper.Map<FacultyResultDto>(faculty);
             return Ok(facultyDto);
