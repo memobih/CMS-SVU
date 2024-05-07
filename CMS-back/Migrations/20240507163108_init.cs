@@ -750,9 +750,9 @@ namespace CMS_back.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "11b38618-8fcd-426a-8c3e-cd901f9ea4f4", null, "AdminUniversity", "AdminUniversity" },
-                    { "b9994fbc-4213-4acc-ac3b-c95e8296b31d", null, "Staff", "Staff" },
-                    { "e264f8e6-762a-4047-a653-2f7b4e1855d2", null, "AdminFaculty", "AdminFaculty" }
+                    { "452c4c0a-3c46-49e1-8f73-8eed29b38c42", null, "Staff", "Staff" },
+                    { "94b6244e-7aea-40c6-a845-79d4dca1e743", null, "AdminUniversity", "AdminUniversity" },
+                    { "af153748-7009-4698-af3b-448b17fc07fb", null, "AdminFaculty", "AdminFaculty" }
                 });
 
             migrationBuilder.CreateIndex(
