@@ -16,7 +16,7 @@ namespace CMS_back.Models
 		public string? ControlID { get; set; }
 		public Control? Control { get; set; }
 
-		public virtual ICollection<Control_UserTasks>? UserTasks { get; set; }
+		public virtual ICollection<Control_UserTasks> UserTasks { get; set; }
 
 	}
 }

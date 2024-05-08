@@ -28,6 +28,6 @@ namespace CMS_back.Models
 		public Faculity Faculity { get; set; }
 
 		public virtual ICollection<ControlSubject> ControlSubjects { get; set; } 
-		public virtual ICollection<ControlUsers>? ControlUsers { get; set; } 
-	}
+		public virtual ICollection<ControlUsers>? ControlUsers { get; set; }
+    }
 }
