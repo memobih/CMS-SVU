@@ -18,11 +18,11 @@ namespace CMS_back.Controllers
     [Authorize]
     public class ControlsController : ControllerBase
     {
-        public CMSContext context { get; }
-        public IConfiguration cfg { get; }
-        public UserManager<ApplicationUser> Usermanager { get; }
-        public IHttpContextAccessor ContextAccessor { get; }
-        public IMailingService MailingService { get; }
+        public CMSContext context;
+        public IConfiguration cfg;
+        public UserManager<ApplicationUser> Usermanager;
+        public IHttpContextAccessor ContextAccessor;
+        public IMailingService MailingService;
 
         private readonly IMapper _mapper;
         public ControlsController(CMSContext _context,IConfiguration _cfg, 
@@ -243,7 +243,7 @@ namespace CMS_back.Controllers
         [HttpGet("{Fid}")]
         public async Task<IActionResult> get (string Fid)
         {
-            var faculty = context.Faculity.Include(f=>f.Controls).ThenInclude(c=> new{c.ControlUsers, c.ControlSubjects}).FirstOrDefault(x => x.Id == Fid);
+            var faculty = context.Faculity.Include(f=>f.Controls).ThenInclude(c=> c.ControlSubjects).FirstOrDefault(x => x.Id == Fid);
             if (faculty == null) return BadRequest("Faculty not found");
             if (faculty.Controls == null) return BadRequest("Faculty not has controls");
             var controlsResultDto=faculty.Controls.Select(control => _mapper.Map<ControlResultDto>(control)).ToList();

@@ -17,11 +17,11 @@ namespace CMS_back.Controllers
     [Authorize]
     public class ControlTaskController : ControllerBase
     {
-        public CMSContext Context { get; set; }
-        public IMapper Mapper { get; }
-        public UserManager<ApplicationUser> Usermanager { get; }
-        public IHttpContextAccessor ContextAccessor { get; }
-        public IMailingService MailingService { get; }
+        public CMSContext Context;
+        public IMapper Mapper;
+        public UserManager<ApplicationUser> Usermanager;
+        public IHttpContextAccessor ContextAccessor;
+        public IMailingService MailingService;
 
         public ControlTaskController(CMSContext context, IMapper mapper, UserManager<ApplicationUser> usermanager
             , IHttpContextAccessor contextAccessor, IMailingService mailingService)
@@ -33,8 +33,8 @@ namespace CMS_back.Controllers
             MailingService=mailingService;
         }
 
-        [HttpPost("{Cid}")]
-        public async Task<IActionResult> create(controlTaskDTO controlTaskDTO, [FromRoute] string Cid)
+        [HttpPost("create-task")]
+        public async Task<IActionResult> create(controlTaskDTO controlTaskDTO, string Cid)
         {
             var user = ContextAccessor.HttpContext.User;
             var currentUser = await Usermanager.GetUserAsync(user);
@@ -69,28 +69,16 @@ namespace CMS_back.Controllers
             return Ok("Task created");
         }
 
-        [HttpGet("{Cid}")]
-        public async Task<IActionResult> get([FromRoute] string Cid)
+        [HttpGet("get-tasks-by-control-id")]
+        public async Task<IActionResult> GetTaskByControlId( string Cid)
         { 
-            var tasks = Context.Control_Task.Where(ct => ct.ControlID == Cid).ToList();
-            List<ControlTaskResultDTO> results = new List<ControlTaskResultDTO>();
-            foreach (var task in tasks)
-            {
-                var controlTask = Context.Control_UserTasks.Include(c => c.UserTask).Where(c => c.Control_TaskID == task.Id).ToList();
-                foreach (var ct in controlTask)
-                {
-                    results.Add(new ControlTaskResultDTO()
-                    {
-                        Description = task.Description,
-                        user = ct.UserTask
-                    });
-                }
-            }
+            var tasks = Context.Control_Task.Include(c=>c.UserTasks).ThenInclude(ut=>ut.UserTask).Where(ct => ct.ControlID == Cid);
+            var results = tasks.Select(task=>Mapper.Map<ControlTaskResultDTO>(task));
             return Ok(results);
         }
 
-        [HttpPut("{Tid}")]
-        public async Task<IActionResult> update(controlTaskDTO controlTaskDTO,[FromRoute]string Tid)
+        [HttpPut("update-task")]
+        public async Task<IActionResult> UpdateTask(controlTaskDTO controlTaskDTO,string Tid)
         {
             
             var task = Context.Control_Task.Include(c => c.Control).Include(c => c.CreateBy).FirstOrDefault(t => t.Id == Tid);
@@ -118,8 +106,8 @@ namespace CMS_back.Controllers
             return Ok("Update Data");
         }
 
-        [HttpDelete("{Tid}")]
-        public async Task<IActionResult> delete([FromRoute]string Tid)
+        [HttpDelete("delete-task")]
+        public async Task<IActionResult> DeleteTask(string Tid)
         {
             var user = ContextAccessor.HttpContext.User;
             var currentUser = await Usermanager.GetUserAsync(user);
