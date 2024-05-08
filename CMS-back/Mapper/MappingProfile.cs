@@ -23,6 +23,7 @@ namespace CMS_back.Mapper
                         .Select(ut => ut.UserTask)));
             CreateMap<ControlUsers, UserWithHisControlDTO>().ReverseMap();
             CreateMap<Faculity_Node, FacultyNodeDTO>().ReverseMap();
+            CreateMap<ControlUsers, ControlUserDTO>().ReverseMap();
         }
     }
 }

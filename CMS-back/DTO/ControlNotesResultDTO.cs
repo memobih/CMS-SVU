@@ -6,6 +6,6 @@ namespace CMS_back.DTO
     {
         public string Description { get; set; }
         public DateTime? WriteDate { get; set; }
-        public ApplicationUser WriteBy { get; set; }
+        public UserResultDto WriteBy { get; set; }
     }
 }
