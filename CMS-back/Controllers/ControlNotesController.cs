@@ -67,7 +67,7 @@ namespace CMS_back.Controllers
                 {
                     Description = users.Description,
                     WriteDate = users.WriteDate,
-                    WriteBy = users.WriteBy,
+                    WriteBy = Mapper.Map<UserResultDto>(users.WriteBy),
                 });
             }
             return Ok(controlNotesResultDTOs);
@@ -86,10 +86,20 @@ namespace CMS_back.Controllers
                 {
                     Description = users.Description,
                     WriteDate = users.WriteDate,
-                    WriteBy = users.WriteBy,
+                    WriteBy = Mapper.Map<UserResultDto>(users.WriteBy),
                 });
             }
             return Ok(controlNotesResultDTOs);
+        }
+
+        [HttpGet("notetoheadunivarsity/{Cid}")]
+        public IActionResult getNotesTOHeadUnivarsity([FromRoute] string Cid)
+        {
+            
+            var control=Context.Control.FirstOrDefault(c=>c.Id == Cid);
+            var notes = Context.Control_Note.Include(c => c.WriteBy).Where(n => n.WriteByID==control.UserCreatorID);
+            var notesResult=notes.Select(note=>Mapper.Map<ControlNotesResultDTO>(note)).ToList();
+            return Ok(notesResult);
         }
 
     }

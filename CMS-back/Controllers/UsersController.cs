@@ -45,11 +45,9 @@ namespace CMS_back.Controllers
         [HttpGet("user-for-control")]
         public IActionResult GetUserForControl(string controlId)
         {
-            var controlsUser = context.ControlUsers.Include(c=>c.Control).Where(c => c.ControlID== controlId);
+            var controlsUser = context.ControlUsers.Include(c => c.User).Where(c => c.ControlID== controlId);
             if (controlsUser == null) return BadRequest("Control not found");
-            List<ApplicationUser>? users = controlsUser.Select(c=>c.User).ToList();
-            if (users == null) return Ok(new List<ApplicationUser>());
-            var usersResult=users.Select(user => _mapper.Map<UserResultDto>(user)).ToList();
+            var usersResult= controlsUser.Select(cuser => _mapper.Map<ControlUserDTO>(cuser)).ToList();
             return Ok(usersResult);
         }
 
