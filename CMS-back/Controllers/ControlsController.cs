@@ -125,7 +125,7 @@ namespace CMS_back.Controllers
 
 
 
-        [HttpPost("edit")]
+        [HttpPut("edit")]
         [Authorize(Roles = ConstsRoles.AdminFaculty)]
         public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
         {
