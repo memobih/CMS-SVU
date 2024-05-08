@@ -72,7 +72,7 @@ namespace CMS_back.Controllers
                             issuer: config["JWT:ValidIssuer"],//url web api
                             audience: config["JWT:ValidAudience"],//url consumer angular
                             claims: claims,
-                            expires: DateTime.Now.AddHours(1),
+                            expires: DateTime.Now.AddDays(1),
                             signingCredentials: signincred
                             );
                         
