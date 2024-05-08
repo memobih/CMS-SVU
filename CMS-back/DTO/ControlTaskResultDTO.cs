@@ -5,9 +5,10 @@ namespace CMS_back.DTO
 {
     public class ControlTaskResultDTO
     {
-        [Required]
+        public string Id { get; set; }
         public string Description { get; set; }
-        [Required]
-        public ApplicationUser user { get; set; }
+        public Question IsDone { get; set; }
+        public DateTime CreationDate { get; set; }
+        public ICollection<UserResultForTaskDdto> Users { get; set; }
     }
 }

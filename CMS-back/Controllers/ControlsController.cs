@@ -18,11 +18,11 @@ namespace CMS_back.Controllers
     [Authorize]
     public class ControlsController : ControllerBase
     {
-        public CMSContext context { get; }
-        public IConfiguration cfg { get; }
-        public UserManager<ApplicationUser> Usermanager { get; }
-        public IHttpContextAccessor ContextAccessor { get; }
-        public IMailingService MailingService { get; }
+        public CMSContext context;
+        public IConfiguration cfg;
+        public UserManager<ApplicationUser> Usermanager;
+        public IHttpContextAccessor ContextAccessor;
+        public IMailingService MailingService;
 
         private readonly IMapper _mapper;
         public ControlsController(CMSContext _context,IConfiguration _cfg, 

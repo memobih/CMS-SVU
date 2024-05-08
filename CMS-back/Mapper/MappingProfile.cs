@@ -13,10 +13,15 @@ namespace CMS_back.Mapper
             CreateMap<Control, ControlDTO>().ReverseMap();
             CreateMap<Subject, subjectResultDTO>().ReverseMap();
             CreateMap<ApplicationUser, UserResultDto>().ReverseMap();
+            CreateMap<ApplicationUser, UserResultForTaskDdto>().ReverseMap();
             CreateMap<Control_Note, controlNoteDTO>().ReverseMap();
             CreateMap<Control_Note, ControlNotesResultDTO>().ReverseMap();
             CreateMap<Control_Task, controlTaskDTO>().ReverseMap();
-            CreateMap<ControlUsers,UserWithHisControlDTO>().ReverseMap();  
+            CreateMap<Control_Task, ControlTaskResultDTO>().ForMember
+                (dest => dest.Users, opt => opt.MapFrom(src =>src.UserTasks
+                        .Where(ut => ut.UserTask != null && ut.Control_TaskID == src.Id)
+                        .Select(ut => ut.UserTask)));
+            CreateMap<ControlUsers, UserWithHisControlDTO>().ReverseMap();
             CreateMap<Faculity_Node, FacultyNodeDTO>().ReverseMap();
         }
     }

@@ -11,6 +11,6 @@ namespace CMS_back.Models
 
 		public string? UserTaskID {  get; set; }
 
-		public ApplicationUser? UserTask {  get; set; }
+		public ApplicationUser UserTask {  get; set; }
 	}
 }
