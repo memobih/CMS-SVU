@@ -4,6 +4,7 @@ using CMS_back.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS_back.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    partial class CMSContextModelSnapshot : ModelSnapshot
+    [Migration("20240508223522_a")]
+    partial class a
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -805,31 +808,19 @@ namespace CMS_back.Migrations
                     b.HasData(
                         new
                         {
-<<<<<<< HEAD
-                            Id = "21ca0b45-3240-4b77-a097-055ebf485174",
-=======
                             Id = "b5fa104f-23b1-491b-b02b-b1253f603538",
->>>>>>> a90d4b4d1813ec24019dc7da7647f12f3e6903fa
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
-<<<<<<< HEAD
-                            Id = "237e41b4-ede6-48ff-8e75-3e10ebbeaa7e",
-=======
                             Id = "e927dc81-648e-44f9-bcef-dff54e978d05",
->>>>>>> a90d4b4d1813ec24019dc7da7647f12f3e6903fa
                             Name = "AdminFaculty",
                             NormalizedName = "AdminFaculty"
                         },
                         new
                         {
-<<<<<<< HEAD
-                            Id = "569aa3e0-eed2-4647-ae8f-61d088ccb034",
-=======
                             Id = "890e6dc1-41a0-4424-85dd-80ded0b06352",
->>>>>>> a90d4b4d1813ec24019dc7da7647f12f3e6903fa
                             Name = "Staff",
                             NormalizedName = "Staff"
                         });

@@ -18,7 +18,7 @@ namespace CMS_back.Controllers
     public class ControlTaskController : ControllerBase
     {
         public CMSContext Context;
-        public IMapper Mapper;
+        public IMapper _mapper;
         public UserManager<ApplicationUser> Usermanager;
         public IHttpContextAccessor ContextAccessor;
         public IMailingService MailingService;
@@ -27,7 +27,7 @@ namespace CMS_back.Controllers
             , IHttpContextAccessor contextAccessor, IMailingService mailingService)
         {
             Context=context;
-            Mapper=mapper;
+            _mapper=mapper;
             Usermanager=usermanager;
             ContextAccessor=contextAccessor;
             MailingService=mailingService;
@@ -43,7 +43,7 @@ namespace CMS_back.Controllers
 
             var control = Context.Control.FirstOrDefault(c => c.Id == Cid);
             if (control == null) return BadRequest("Controll not found");
-            Control_Task control_Task = Mapper.Map<Control_Task>(controlTaskDTO);
+            Control_Task control_Task = _mapper.Map<Control_Task>(controlTaskDTO);
             control_Task.CreationDate = DateTime.Now;
             control_Task.CreateBy = currentUser;
             control_Task.Control = control;
@@ -71,9 +71,13 @@ namespace CMS_back.Controllers
 
         [HttpGet("get-tasks-by-control-id")]
         public async Task<IActionResult> GetTaskByControlId( string Cid)
-        { 
-            var tasks = Context.Control_Task.Include(c=>c.UserTasks).ThenInclude(ut=>ut.UserTask).Where(ct => ct.ControlID == Cid);
-            var results = tasks.Select(task=>Mapper.Map<ControlTaskResultDTO>(task));
+        {
+            var user = ContextAccessor.HttpContext.User;
+            var currentUser = await Usermanager.GetUserAsync(user);
+            if (currentUser == null) return BadRequest("No user Login yet");
+            var tasks = Context.Control_Task.Include(c=>c.UserTasks.Where(u=>u.UserTaskID==currentUser.Id))
+                .ThenInclude(ut=>ut.UserTask).Where(ct => ct.ControlID == Cid);
+            var results = tasks.Select(task=>_mapper.Map<ControlTaskResultDTO>(task));
             return Ok(results);
         }
 

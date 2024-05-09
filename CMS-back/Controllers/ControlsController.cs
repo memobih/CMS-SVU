@@ -211,10 +211,12 @@ namespace CMS_back.Controllers
         [HttpGet("allControllers")]
         public async Task<IActionResult> index()
         {
-            var controlles = await context.Control.Include(c=>c.ControlSubjects).ToListAsync();
-            if (controlles == null) return Ok(new List<Control>());
-            var controlsResultDto=controlles.Select(control=>_mapper.Map<ControlResultDto>(control)).ToList();
-            return Ok(controlsResultDto);
+            var user = ContextAccessor.HttpContext.User;
+            var currentUser = await Usermanager.GetUserAsync(user);
+            if (currentUser == null) return BadRequest("No user Login yet");
+            var controls = context.ControlUsers.Include(c=>c.Control).Where(c=>c.UserID==currentUser.Id).Select(c=>c.Control);
+            var controlesResult=controls.Select(c=>_mapper.Map<ControlResultDto>(c)).ToList();
+            return Ok(controlesResult);
         }
         
         [HttpGet("detail/{id}")]
