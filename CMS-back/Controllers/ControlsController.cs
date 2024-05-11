@@ -132,18 +132,33 @@ namespace CMS_back.Controllers
             var creator = ContextAccessor.HttpContext.User;
             var userCreator = await Usermanager.GetUserAsync(creator);
             if (userCreator == null) return BadRequest("Creator ID invalid");
-
             Control? control = context.Control.FirstOrDefault(c => c.Id == Cid);
             if (control == null) return BadRequest("Invalid control id");
 
             if (userCreator.Id != control.UserCreatorID) return BadRequest("Invalid creator id");
             _mapper.Map(controldto, control);
             var subjects=new List<ControlSubject>();
-            foreach(var id in controldto.SubjectsIds)
+            var realtion = (List<ControlSubject>)control.ControlSubjects;
+            return Ok(realtion);
+            foreach (ControlSubject subject in realtion)
             {
-                var subject=context.ControlSubject.FirstOrDefault(c => c.ControlID==control.Id);
-                subjects.Add(subject);
+                context.ControlSubject.Remove(subject);
+                context.SaveChanges();
             }
+
+            var subjectIDs = controldto.SubjectsIds;
+            foreach (var id in subjectIDs)
+            {
+                Subject? subject = context.Subject.FirstOrDefault(u => u.Id == id);
+                ControlSubject cs = new ControlSubject();
+                cs.Subject = subject;
+                cs.SubjectID = subject.Id;
+                cs.Control = control;
+                cs.ControlID = control.Id;
+                //control.ControlSubjects.Add(cs);
+                subjects.Add(cs);
+            }
+      
 
             var users = new List<ControlUsers>();
             foreach (var id in controldto.UsersIds)

@@ -323,7 +323,6 @@ namespace CMS_back.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ControlID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreateByID")
@@ -358,7 +357,6 @@ namespace CMS_back.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserTaskID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -805,31 +803,19 @@ namespace CMS_back.Migrations
                     b.HasData(
                         new
                         {
-<<<<<<< HEAD
-                            Id = "21ca0b45-3240-4b77-a097-055ebf485174",
-=======
-                            Id = "b5fa104f-23b1-491b-b02b-b1253f603538",
->>>>>>> a90d4b4d1813ec24019dc7da7647f12f3e6903fa
+                            Id = "7fcaea34-bf16-48a6-a471-d1b14b66b321",
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
-<<<<<<< HEAD
-                            Id = "237e41b4-ede6-48ff-8e75-3e10ebbeaa7e",
-=======
-                            Id = "e927dc81-648e-44f9-bcef-dff54e978d05",
->>>>>>> a90d4b4d1813ec24019dc7da7647f12f3e6903fa
+                            Id = "ba15e18b-769f-479c-a7d0-6d6624114802",
                             Name = "AdminFaculty",
                             NormalizedName = "AdminFaculty"
                         },
                         new
                         {
-<<<<<<< HEAD
-                            Id = "569aa3e0-eed2-4647-ae8f-61d088ccb034",
-=======
-                            Id = "890e6dc1-41a0-4424-85dd-80ded0b06352",
->>>>>>> a90d4b4d1813ec24019dc7da7647f12f3e6903fa
+                            Id = "a8b0d448-4dd7-458f-a8d2-20b4abdac3ec",
                             Name = "Staff",
                             NormalizedName = "Staff"
                         });
@@ -1058,10 +1044,8 @@ namespace CMS_back.Migrations
             modelBuilder.Entity("CMS_back.Models.Control_Task", b =>
                 {
                     b.HasOne("CMS_back.Models.Control", "Control")
-                        .WithMany("ControlTask")
-                        .HasForeignKey("ControlID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("ControlID");
 
                     b.HasOne("CMS_back.Models.ApplicationUser", "CreateBy")
                         .WithMany()
@@ -1083,9 +1067,7 @@ namespace CMS_back.Migrations
 
                     b.HasOne("CMS_back.Models.ApplicationUser", "UserTask")
                         .WithMany()
-                        .HasForeignKey("UserTaskID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserTaskID");
 
                     b.Navigation("Control_Task");
 
@@ -1347,8 +1329,6 @@ namespace CMS_back.Migrations
             modelBuilder.Entity("CMS_back.Models.Control", b =>
                 {
                     b.Navigation("ControlSubjects");
-
-                    b.Navigation("ControlTask");
 
                     b.Navigation("ControlUsers");
 
