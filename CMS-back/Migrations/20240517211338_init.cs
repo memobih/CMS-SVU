@@ -267,7 +267,7 @@ namespace CMS_back.Migrations
                     Faculity_Semester = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Start_Date = table.Column<DateTime>(type: "datetime2", nullable: true),
                     End_Date = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ACAD_YEAR = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ACAD_YEAR = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserCreatorID = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FaculityID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -750,9 +750,9 @@ namespace CMS_back.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "7fcaea34-bf16-48a6-a471-d1b14b66b321", null, "AdminUniversity", "AdminUniversity" },
-                    { "a8b0d448-4dd7-458f-a8d2-20b4abdac3ec", null, "Staff", "Staff" },
-                    { "ba15e18b-769f-479c-a7d0-6d6624114802", null, "AdminFaculty", "AdminFaculty" }
+                    { "0f9dad15-9f18-40b9-a44e-d7531197cd9a", null, "AdminFaculty", "AdminFaculty" },
+                    { "1e7075fb-19af-412c-94f6-bc15cad7d9f7", null, "AdminUniversity", "AdminUniversity" },
+                    { "544c2964-cd33-40e2-bbc1-15ac9f2192da", null, "Staff", "Staff" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -40,25 +40,7 @@ namespace CMS_back.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			//modelBuilder.Entity<ApplicationUser>().ToTable("User");
-			//modelBuilder.Entity<Control>().ToTable("Control");
-			//modelBuilder.Entity<Subject>().ToTable("Subject");
-			//modelBuilder.Entity<Student>().ToTable("Student");
-			//modelBuilder.Entity<StudentSubject>().ToTable("StudentSubject");
-			//modelBuilder.Entity<Subject_Assess>().ToTable("Subject_Assess");
-			//modelBuilder.Entity<ControlSubject>().ToTable("ControlSubject");
-			//modelBuilder.Entity<Control_Task>().ToTable("Control_Text");
-			//modelBuilder.Entity<Control_Addresses>().ToTable("Control_Addresse");
-			//modelBuilder.Entity<Faculity>().ToTable("Faculity");
-			//modelBuilder.Entity<Faculity_Node>().ToTable("Faculity_Node");
-			//modelBuilder.Entity<Faculity_Phases>().ToTable("Faculity_Phase");
-			//modelBuilder.Entity<Faculity_Semester>().ToTable("Faculity_Semester");
-
-			//modelBuilder.Entity<ControlSubject>().HasKey(e => new { e.ControlID, e.SubjectID });
-
-			//modelBuilder.Entity<ControlUsers>().HasOne(c=>c.ControlID).WithMany(c=>c)
-			//modelBuilder.Entity<Control_UserTasks>().HasKey(e => new { e.UserTaskID, e.Control_TaskID });
-
+			
 			
 
 			base.OnModelCreating(modelBuilder);
@@ -86,7 +68,7 @@ namespace CMS_back.Data
 			modelBuilder.Entity<Control_Task>()
 			.HasMany(c => c.UserTasks)
 			.WithOne(cu => cu.Control_Task)
-			.HasForeignKey(cu => cu.Control_TaskID) // Assuming ControlID is the foreign key property in ControlUser
+			.HasForeignKey(cu => cu.Control_TaskID) // Assuming Control_TaskID is the foreign key property in UserTasks
 			.OnDelete(DeleteBehavior.Cascade);
 		}
 

@@ -185,6 +185,7 @@ namespace CMS_back.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ACAD_YEAR")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("End_Date")
@@ -803,19 +804,19 @@ namespace CMS_back.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7fcaea34-bf16-48a6-a471-d1b14b66b321",
+                            Id = "1e7075fb-19af-412c-94f6-bc15cad7d9f7",
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
-                            Id = "ba15e18b-769f-479c-a7d0-6d6624114802",
+                            Id = "0f9dad15-9f18-40b9-a44e-d7531197cd9a",
                             Name = "AdminFaculty",
                             NormalizedName = "AdminFaculty"
                         },
                         new
                         {
-                            Id = "a8b0d448-4dd7-458f-a8d2-20b4abdac3ec",
+                            Id = "544c2964-cd33-40e2-bbc1-15ac9f2192da",
                             Name = "Staff",
                             NormalizedName = "Staff"
                         });

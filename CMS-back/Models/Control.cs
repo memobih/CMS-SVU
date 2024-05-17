@@ -16,7 +16,7 @@ namespace CMS_back.Models
 		public DateTime? End_Date { get; set; }
 
 		[RegularExpression(pattern: @"^\d{4}\/\d{4}$",ErrorMessage = "Invalid ACAD_YEAR Format. Please use the format 'YYYY/YYYY'.\"")]
-		public string? ACAD_YEAR { get; set; }
+		public string ACAD_YEAR { get; set; }
 
 		public virtual  ICollection<Control_Addresses>? conrol_Addresses  { get; set; }
 
