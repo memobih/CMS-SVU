@@ -11,7 +11,6 @@ namespace CMS_back.Interfaces
         Task<IEnumerable<ControlResultDto>> GetAllAsync();
         Task AddAsync(Control entity);
         Task UpdateAsync(Control entity);
-        Task<IEnumerable<ControlResultDto>> FindAsync();
         Task<bool> DeleteAsync(string id);
         Task<IEnumerable<ControlResultDto>> GetControlsByAcadYearAsync(string AcadYear);
         Task<IEnumerable<ControlResultDto>> GetControlsByFaculityIdAsync(string FaculityId);

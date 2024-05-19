@@ -53,18 +53,14 @@ namespace CMS_back.Services
             //var controls = await _dbSet.ToListAsync();
             //var controlesResult = controls.Select(c => _mapper.Map<ControlResultDto>(c)).ToList();
             //return controlesResult;
-            return [];
-        }
-
-        public async Task<IEnumerable<ControlResultDto>> FindAsync()
-        {
             var user = _contextAccessor.HttpContext.User;
             var currentUser = await _usermanager.GetUserAsync(user);
             if (currentUser == null) throw new Exception("User Not Login in Any Control Yet");
 
-            var controlOfCurrentUsers =  _context.ControlUsers.Include(c => c.Control).Where(c => c.UserID == currentUser.Id);
+            var controlOfCurrentUsers = _context.ControlUsers.Include(c => c.Control).Where(c => c.UserID == currentUser.Id);
             var controlesResult = controlOfCurrentUsers.Select(c => _mapper.Map<ControlResultDto>(c)).ToList();
             return controlesResult;
+
         }
 
 
@@ -74,7 +70,7 @@ namespace CMS_back.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(ControlDTO controldto , string Cid)
+        public async Task UpdateAsync(ControlDTO controldto, string Cid)
         {
             var creator = _contextAccessor.HttpContext.User;
             var userCreator = await _usermanager.GetUserAsync(creator);
@@ -161,7 +157,7 @@ namespace CMS_back.Services
 
         public async Task<IEnumerable<ControlResultDto>> GetControlsByAcadYearAsync(string AcadYear)
         {
-            var controls = await _dbSet.Where(c => c.ACAD_YEAR == AcadYear).ToListAsync();
+            var controls = await _genericRepository.FindAsync(c => c.ACAD_YEAR == AcadYear);
             var controlsDTO = _mapper.Map<IEnumerable<ControlResultDto>>(controls);
             return controlsDTO;
         }
@@ -169,7 +165,7 @@ namespace CMS_back.Services
         public async Task<IEnumerable<ControlResultDto>> GetControlsByFaculityIdAsync(string FaculityId)
         {
 
-            var controls = await _dbSet.Where(c => c.FaculityID == FaculityId).ToListAsync();
+            var controls = await _genericRepository.FindAsync(c => c.FaculityID == FaculityId);
             var controlsDTO = _mapper.Map<IEnumerable<ControlResultDto>>(controls);
             return controlsDTO;
         }

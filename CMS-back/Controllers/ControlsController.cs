@@ -216,11 +216,11 @@ namespace CMS_back.Controllers
             //var controlesResult=controls.Select(c=>_mapper.Map<ControlResultDto>(c)).ToList();
             //return Ok(controlesResult);
 
-            var controls = await _repo.FindAsync();
+            var controls = await _repo.GetAllAsync();
             return Ok(controls);
         }
         
-        [HttpGet("detail/{id}")]
+        [HttpGet("detail")]
         public async Task<IActionResult> detail(string id)
         {
             var control = await _repo.GetByIdAsync(id);
@@ -230,15 +230,16 @@ namespace CMS_back.Controllers
             return Ok(control);
         }
         
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("delete")]
         [Authorize(Roles = ConstsRoles.AdminFaculty)]
         public async Task<IActionResult> delete(string id)
         {
             var result = await _repo.DeleteAsync(id);
-            return result ? Ok(result) : BadRequest("Can Not Delete This Control");
+            return result ? Ok("Deleted Successfuly") : BadRequest("Can Not Delete This Control");
         }
 
-        [HttpGet("{Fid}")]
+        //[HttpGet("{Fid}")]
+        [HttpGet("get-by-faculity-id")]
         public async Task<IActionResult> get (string Fid)
         {
             var controls = await _repo.GetControlsByFaculityIdAsync(Fid);
@@ -255,10 +256,10 @@ namespace CMS_back.Controllers
             return Ok(controls);
         }
 
-        [HttpGet("acadmec-year/{AcadYear}")]
+        [HttpGet("acadmec-year")]
         public async Task<IActionResult> GetControlsAcademcYear(string AcadYear)
         {
-            var controls = _repo.GetControlsByAcadYearAsync(AcadYear);
+            var controls = await _repo.GetControlsByAcadYearAsync(AcadYear);
             //if (control == null) return BadRequest("Control not found");
             //var controlsDTO = _mapper.Map<IEnumerable<ControlResultDto>>(control);
 

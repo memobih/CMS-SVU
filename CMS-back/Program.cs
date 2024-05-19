@@ -2,6 +2,8 @@ using CMS_back.Data;
 using CMS_back.Mailing;
 using CMS_back.Mapper;
 using CMS_back.Models;
+using CMS_back.GenericRepository;
+using CMS_back.IGenericRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-
+using CMS_back.Interfaces;
+using CMS_back.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,9 +40,14 @@ builder => builder.EnableRetryOnFailure()));
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().
     AddEntityFrameworkStores<CMSContext>();
 builder.Services.AddScoped<IMailingService, MailingService>();
+builder.Services.AddScoped<IControlRepository, ControlRepository>();
+
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); 
+
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("Mailing"));
 builder.Services.Configure<IdentityOptions>(opts => opts.SignIn.RequireConfirmedEmail = true);
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 //[Authoriz] used JWT Token in Chck Authantiaction
 builder.Services.AddAuthentication(options =>
 {
@@ -83,7 +91,8 @@ builder.Services.Configure<IdentityOptions>(options =>
     //User Settings
     options.User.AllowedUserNameCharacters =
      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.User.RequireUniqueEmail = false;
+    options.User.RequireUniqueEmail = true;
+
 });
 
 #region swagger

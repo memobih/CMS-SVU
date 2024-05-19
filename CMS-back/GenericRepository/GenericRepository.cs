@@ -51,5 +51,10 @@ namespace CMS_back.GenericRepository
         {
             context.Set<T>().RemoveRange(entities);
         }
+
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression)
+        {
+            return  context.Set<T>().Where(expression);
+        }
     }
 }
