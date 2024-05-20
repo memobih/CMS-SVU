@@ -133,8 +133,8 @@ namespace CMS_back.Services
             control.ControlSubjects = subjects;
             control.ControlUsers = controlUsers;
 
-            //_context.Attach(control);
-            //_context.Entry(control).State = EntityState.Modified;
+            _context.Attach(control);
+            _context.Entry(control).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
         }
@@ -170,10 +170,7 @@ namespace CMS_back.Services
             return controlsDTO;
         }
 
-        public Task UpdateAsync(Control entity)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 
 }

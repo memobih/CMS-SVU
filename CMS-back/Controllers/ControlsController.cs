@@ -28,18 +28,18 @@ namespace CMS_back.Controllers
         public IMailingService MailingService;
 
         private readonly IMapper _mapper;
-        public ControlsController(IControlRepository repo,/*IRepository<Subject> subjectrepository, IRepository<ControlSubject> controlsubjectrepository,*/ CMSContext _context,IConfiguration _cfg, 
-            UserManager<ApplicationUser> usermanager, IHttpContextAccessor contextAccessor,IMapper mapper, IMailingService mailingService)
+        public ControlsController(IControlRepository repo,/*IRepository<Subject> subjectrepository, IRepository<ControlSubject> controlsubjectrepository,*/ CMSContext _context, IConfiguration _cfg,
+            UserManager<ApplicationUser> usermanager, IHttpContextAccessor contextAccessor, IMapper mapper, IMailingService mailingService)
         {
             _repo = repo;
             //_Isubjectrepository = subjectrepository;
             //_Icontrolsubjectrepository = controlsubjectrepository;
-            context=_context;
-            cfg=_cfg;
-            Usermanager=usermanager;
-            ContextAccessor=contextAccessor;
+            context = _context;
+            cfg = _cfg;
+            Usermanager = usermanager;
+            ContextAccessor = contextAccessor;
             _mapper = mapper;
-            MailingService=mailingService;
+            MailingService = mailingService;
         }
 
         //[HttpPost("create/{Fid}")]
@@ -135,69 +135,11 @@ namespace CMS_back.Controllers
         [Authorize(Roles = ConstsRoles.AdminFaculty)]
         public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
         {
-            //{
-            //    var creator = ContextAccessor.HttpContext.User;
-            //    var userCreator = await Usermanager.GetUserAsync(creator);
-            //    if (userCreator == null) return BadRequest("Creator ID invalid");
 
-            //    //Control? control = context.Control.Include(c=>c.ControlSubjects).Include(u=>u.ControlUsers).ThenInclude(u=>u.User).FirstOrDefault(c => c.Id == Cid);
-            //    var control = await _repo.GetByIdAsync(Cid);
-
-            //    if (control == null) return BadRequest("Invalid control id");
-            //    if (userCreator.Id != control.UserCreatorID) return BadRequest("Creator ID Invalid");
-
-            //    control.ControlUsers.Clear();
-            //    control.ControlSubjects.Clear();
-            //    _mapper.Map(controldto, control);
-            //    var subjects = new List<ControlSubject>();
-
-            //    var subjectIDs = controldto.SubjectsIds;
-            //    foreach (var id in subjectIDs)
-            //    {
-            //        var subject = context.Subject.FirstOrDefault(u => u.Id == id);
-
-            //        ControlSubject cs = new ControlSubject();
-            //        cs.Subject = subject;
-            //        cs.SubjectID = subject.Id;
-            //        cs.Control = control;
-            //        cs.ControlID = control.Id;
-            //        subjects.Add(cs);
-
-            //    }
-            //    var controlUsers = new List<ControlUsers>();
-            //    foreach (var id in controldto.UsersIds)
-            //    {
-            //        var user = context.ApplicationUser.FirstOrDefault(c => c.Id == id);
-            //        ControlUsers c = new ControlUsers
-            //        {
-            //            JobType = JobType.Member,
-            //            ControlID = control.Id,
-            //            UserID = user.Id
-            //        };
-            //        controlUsers.Add(c);
-            //    }
-            //    ControlUsers cu = new ControlUsers
-            //    {
-            //        JobType = JobType.Head,
-            //        ControlID = control.Id,
-            //        UserID = controldto.ControlManagerID
-            //    };
-            //    controlUsers.Add(cu);
-            //    foreach (var id in subjectIDs)
-            //    {
-            //        var subject = _Irepository.GetByIdAsync(id);
-            //        ControlSubject cs = new ControlSubject();
-            //        cs.Subject = subject;
-            //        cs.SubjectID = subject.Id;
-            //        cs.Control = control;
-            //        cs.ControlID = control.Id;
-            //        subjects.Add(cs);
-            //    }
-            //    control.ControlSubjects = subjects;
-            //    control.ControlUsers = controlUsers;
-            //    context.Control.Update(control);
             var control = await _repo.GetByIdAsync(Cid);
             if (control == null) return BadRequest("Not Found");
+
+            _repo.UpdateAsync(controldto, Cid);
             return Ok("Updated Control");
         }
 
