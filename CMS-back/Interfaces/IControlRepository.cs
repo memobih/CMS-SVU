@@ -6,7 +6,6 @@ namespace CMS_back.Interfaces
 {
     public interface IControlRepository
     {
-
         Task<ControlResultDto> GetByIdAsync(string id);
         Task<IEnumerable<ControlResultDto>> GetAllAsync();
         Task AddAsync(Control entity);
