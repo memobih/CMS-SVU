@@ -57,11 +57,8 @@ namespace CMS_back.Controllers
         public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
         {
 
-            var control = await _repo.GetByIdAsync(Cid);
-            if (control == null) return BadRequest("Not Found");
-
-            _repo.UpdateAsync(controldto, Cid);
-            return Ok("Updated Control");
+            var result=await _repo.UpdateAsync(controldto, Cid);
+            return result ? Ok(result) : BadRequest("Invalid Control Data");
         }
 
 

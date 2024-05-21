@@ -66,7 +66,6 @@ namespace CMS_back.Services
             if (userCreater == null) return false;
             var facultiy = _genericRepository.FindFirstAsync(c=>c.FaculityID == Fid);
             if (facultiy == null) return false;
-
                 Control control = _mapper.Map<Control>(controldto);
                 control.FaculityID = Fid;
 
@@ -211,7 +210,7 @@ namespace CMS_back.Services
         //}
 
 
-        public async Task UpdateAsync(ControlDTO controldto, string Cid)
+        public async Task<bool> UpdateAsync(ControlDTO controldto, string Cid)
         {
             var userCreator = await _usermanager.GetUserAsync(_contextAccessor.HttpContext.User);
             if (userCreator == null)
@@ -248,7 +247,8 @@ namespace CMS_back.Services
                 control.ControlUsers.Add(new ControlUsers { JobType = JobType.Head, User = controlManager });
 
             _context.Update(control);
-            await _context.SaveChangesAsync();
+            if(await _context.SaveChangesAsync()>0)return true;
+            return false;   
         }
 
         public async Task<IEnumerable<ControlResultDto>> GetControlsByAcadYearAsync(string AcadYear)
