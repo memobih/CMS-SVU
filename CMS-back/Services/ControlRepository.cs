@@ -48,22 +48,13 @@ namespace CMS_back.Services
 
         public async Task<IEnumerable<ControlResultDto>> GetAllAsync()
         {
-            //var user = _contextAccessor.HttpContext.User;
-            //var currentUser = await _usermanager.GetUserAsync(user);
-            //if (currentUser == null) throw new Exception("User Not Login in Any Control Yet");
-
-
-            //var controlOfCurrentUsers = await _genericRepository.FindAsync(c => c. == currentUser.Id);
-            //var controls = await _dbSet.ToListAsync();
-            //var controlesResult = controls.Select(c => _mapper.Map<ControlResultDto>(c)).ToList();
-            //return controlesResult;
             var user = _contextAccessor.HttpContext.User;
             var currentUser = await _usermanager.GetUserAsync(user);
             if (currentUser == null) throw new Exception("User Not Login in Any Control Yet");
 
-            var controlOfCurrentUsers = _context.ControlUsers.Include(c => c.Control).Where(c => c.UserID == currentUser.Id);
-            var controlesResult = controlOfCurrentUsers.Select(c => _mapper.Map<ControlResultDto>(c)).ToList();
-            return controlesResult;
+            var controlOfCurrentUsers = await _genericRepository.FindAsync(c => c.UserCreatorID == currentUser.Id);
+            var controlsResult = controlOfCurrentUsers.Select(c => _mapper.Map<ControlResultDto>(c)).ToList();
+            return controlsResult;
 
         }
 
@@ -73,7 +64,7 @@ namespace CMS_back.Services
             var creator = _contextAccessor.HttpContext.User;
             var userCreater = await _usermanager.GetUserAsync(creator);
             if (userCreater == null) return false;
-            var facultiy = await _genericRepository.GetById(Fid);
+            var facultiy = _genericRepository.FindFirstAsync(c=>c.FaculityID == Fid);
             if (facultiy == null) return false;
 
                 Control control = _mapper.Map<Control>(controldto);

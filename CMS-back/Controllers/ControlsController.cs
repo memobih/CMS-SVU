@@ -47,7 +47,7 @@ namespace CMS_back.Controllers
         public async Task<IActionResult> createControl(ControlDTO controldto, string Fid)
         {
            var result =await _repo.AddAsync(controldto, Fid);
-            return result ?Ok(result) : BadRequest("احااااااا");
+            return result ?Ok(result) : BadRequest("Invalid Control Data");
         }
 
 
