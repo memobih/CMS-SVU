@@ -1,13 +1,11 @@
-﻿using CMS_back.DTO;
-using CMS_back.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Data_Access_Layer.Entities;
 
-namespace CMS_back.Interfaces
+namespace Data_Access_Layer.Interfaces
 {
     public interface IUserRepository
     {
-        Task<IdentityResult> AddAsync(ApplicationUser user, string password);
-        Task<ApplicationUser> GetUserByUsernameAndPasswordAsync(LoginUserDto user);
+        Task<ApplicationUser> AddAsync(ApplicationUser user, string password);
+        Task<ApplicationUser> GetUserByUsernameAndPasswordAsync(string username, string password);
         Task<IEnumerable<ApplicationUser>> GetFacultyUsers(string facultyId);
         Task<List<ApplicationUser>> GetControlUsers(string controlId);
         Task<ApplicationUser> GetCurrentUser();

@@ -24,6 +24,7 @@ namespace CMS_back.Mapper
             CreateMap<ControlUsers, UserWithHisControlDTO>().ReverseMap();
             CreateMap<Faculity_Node, FacultyNodeDTO>().ReverseMap();
             CreateMap<ControlUsers, ControlUserDTO>().ReverseMap();
+            CreateMap<ApplicationUser, RegisterUserDto>().ReverseMap();
         }
     }
 }

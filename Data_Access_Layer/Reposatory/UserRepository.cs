@@ -1,16 +1,15 @@
-﻿using AutoMapper;
-using CMS_back.Consts;
-using CMS_back.Data;
-using CMS_back.DTO;
-using CMS_back.IGenericRepository;
-using CMS_back.Interfaces;
-using CMS_back.Models;
+﻿using Data_Access_Layer.Consts;
+using Data_Access_Layer.Data;
+using Data_Access_Layer.IGenericRepository;
+using Data_Access_Layer.Interfaces;
+using Data_Access_Layer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
-using CMS_back.GenericRepository;
+using Microsoft.AspNetCore.Http;
+using Data_Access_Layer.GenericRepository;
 
-namespace CMS_back.Services
+namespace Data_Access_Layer.Services
 {
     public class UserRepository : IUserRepository
     {
@@ -19,33 +18,31 @@ namespace CMS_back.Services
         public IHttpContextAccessor contextAccessor { get; }
         public IGenericRepository<Faculity> _facultyRepository { get; }
         public IGenericRepository<ControlUsers> _controlUsersRepository { get; }
-        public IMapper _mapper { get; }
 
-        public UserRepository(CMSContext _context, UserManager<ApplicationUser> _userManager,
-            IHttpContextAccessor _contextAccessor,IMapper _mapper)
+        public UserRepository(CMSContext _context, UserManager<ApplicationUser> _userManager, IHttpContextAccessor _contextAccessor)
         {
             context=_context;
             userManager=_userManager;
             contextAccessor=_contextAccessor;
-            this._mapper=_mapper;
             _facultyRepository = new GenericRepository<Faculity>(_context);
             _controlUsersRepository= new GenericRepository<ControlUsers>(_context);
         }
-        public async Task<IdentityResult> AddAsync(ApplicationUser user,string password)
+        public async Task<ApplicationUser> AddAsync(ApplicationUser user,string password)
         {
             IdentityResult result = await userManager.CreateAsync(user, password);
             if(result.Succeeded)
             {
                 await userManager.AddToRoleAsync(user, user.Type);
+                return user;
             }
-            return result;
+            return null;
         }
-        public async Task<ApplicationUser> GetUserByUsernameAndPasswordAsync(LoginUserDto userDto)
+        public async Task<ApplicationUser> GetUserByUsernameAndPasswordAsync(string username, string password)
         {
-            ApplicationUser? user = await userManager.FindByNameAsync(userDto.UserName);
+            ApplicationUser? user = await userManager.FindByNameAsync(username);
             if (user != null)
             {
-                bool found = await userManager.CheckPasswordAsync(user, userDto.Password);
+                bool found = await userManager.CheckPasswordAsync(user, password);
                 if (found)
                 {
                     return user;
