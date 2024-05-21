@@ -9,7 +9,7 @@ namespace CMS_back.Interfaces
 
         Task<ControlResultDto> GetByIdAsync(string id);
         Task<IEnumerable<ControlResultDto>> GetAllAsync();
-        Task AddAsync(Control entity);
+        Task<bool> AddAsync(ControlDTO entity, string Fid);
         Task UpdateAsync(ControlDTO entity ,string id);
         Task<bool> DeleteAsync(string id);
         Task<IEnumerable<ControlResultDto>> GetControlsByAcadYearAsync(string AcadYear);

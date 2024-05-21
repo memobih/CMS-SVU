@@ -4,11 +4,14 @@ using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.IGenericRepository;
 using CMS_back.Interfaces;
+using CMS_back.Mailing;
 using CMS_back.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Crmf;
+using System;
 using System.Linq.Expressions;
+using System.Security.Cryptography;
 
 namespace CMS_back.Services
 {
@@ -22,10 +25,10 @@ namespace CMS_back.Services
         private readonly IGenericRepository<Subject> _subjectRepository;
         public IHttpContextAccessor _contextAccessor;
         public UserManager<ApplicationUser> _usermanager;
-
+        public IMailingService MailingService;
         public ControlRepository(CMSContext context, IMapper mapper, IGenericRepository<Control> genericRepository,
             IHttpContextAccessor contextAccessor, UserManager<ApplicationUser> usermanager
-            , IGenericRepository<Subject> subjectRepository)
+            , IGenericRepository<Subject> subjectRepository, IMailingService mailingService)
         {
             _mapper = mapper;
             _context = context;
@@ -34,6 +37,7 @@ namespace CMS_back.Services
             _contextAccessor = contextAccessor;
             _usermanager = usermanager;
             _subjectRepository = subjectRepository;
+            MailingService = mailingService;
         }
         public async Task<ControlResultDto> GetByIdAsync(string id)
         {
@@ -64,10 +68,70 @@ namespace CMS_back.Services
         }
 
 
-        public async Task AddAsync(Control control)
+        public async Task<bool> AddAsync(ControlDTO controldto, string Fid)
         {
-            await _dbSet.AddAsync(control);
-            await _context.SaveChangesAsync();
+            var creator = _contextAccessor.HttpContext.User;
+            var userCreater = await _usermanager.GetUserAsync(creator);
+            if (userCreater == null) return false;
+            var facultiy = await _genericRepository.GetById(Fid);
+            if (facultiy == null) return false;
+
+                Control control = _mapper.Map<Control>(controldto);
+                control.FaculityID = Fid;
+
+                ApplicationUser? manager = await _usermanager.FindByIdAsync(controldto.ControlManagerID);
+                if (manager == null) return false;
+                ControlUsers userControl = new ControlUsers()
+                {
+                    ControlID = control.Id,
+                    UserID = manager.Id,
+                    JobType = JobType.Head
+                };
+                if (manager.Email != null)
+                {
+                    var message = new MailMessage(new string[] { manager.Email }, "Control System", "You are Head of new Control");
+                    MailingService.SendMail(message);
+                }
+                _context.ControlUsers.Add(userControl);
+
+                
+                control.UserCreatorID = userCreater.Id;
+
+                
+                foreach (var id in controldto.UsersIds)
+                {
+                    ApplicationUser user = _context.Users.FirstOrDefault(u => u.Id == id);
+                    if (user == null) return false;
+                    ControlUsers memberControl = new ControlUsers()
+                    {
+                        ControlID = control.Id,
+                        UserID = user.Id,
+                        JobType = JobType.Member
+                    };
+                    if (user.Email != null)
+                    {
+                        var message = new MailMessage(new string[] { user.Email }, "Control System", "You are Member in new Control");
+                        MailingService.SendMail(message);
+                    }
+                    _context.ControlUsers.Add(memberControl);
+                }
+
+ 
+                foreach (var id in controldto.SubjectsIds)
+                {
+                    Subject subject = _context.Subject.FirstOrDefault(u => u.Id == id);
+                    if (subject == null) return false;
+                    ControlSubject cs = new ControlSubject();
+                    cs.SubjectID = subject.Id;
+                    cs.ControlID = control.Id;
+                    _context.ControlSubject.Add(cs);
+                }
+
+                _context.Control.Add(control);
+
+                if (await _context.SaveChangesAsync() > 0)
+                    return true;
+                return false;
         }
 
         public async Task UpdateAsync(ControlDTO controldto, string Cid)
