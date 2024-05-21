@@ -232,7 +232,7 @@ namespace CMS_back.Services
             foreach (var id in controldto.SubjectsIds)
             {
                 var subject = await _subjectRepository.GetById(id);
-                if (subject != null)
+                if (subject != null) 
                     control.ControlSubjects.Add(new ControlSubject { Subject = subject });
             }
 
