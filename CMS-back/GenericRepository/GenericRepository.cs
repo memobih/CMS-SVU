@@ -1,7 +1,9 @@
 ﻿using CMS_back.Data;
 using CMS_back.IGenericRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CMS_back.GenericRepository
 {
@@ -22,20 +24,46 @@ namespace CMS_back.GenericRepository
         }
 
 
-        public async Task<T> FindFirstAsync(Expression<Func<T, bool>> expression)
+        public async Task<T> FindFirstAsync(Expression<Func<T, bool>> expression,
+                    params string[] includeProperties)
         {
-            return await context.Set<T>().FirstOrDefaultAsync(expression);
-
+            IQueryable<T> query = context.Set<T>().Where(expression);
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return await query.FirstOrDefaultAsync();
+//            return await context.Set<T>().FirstOrDefaultAsync(expression);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(params string[] includeProperties)
         {
-            return context.Set<T>().ToList();
+            IQueryable<T> query = context.Set<T>();
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return await query.ToListAsync();
+            //return context.Set<T>().ToList();
         }
-        public T GetById(string id)
+        public async Task<T> GetById(string id, params string[] includeProperties)
         {
-
-            return context.Set<T>().Find(id);
+            IQueryable<T> query = context.Set<T>();
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return await query.SingleOrDefaultAsync(e => EF.Property<string>(e, "Id") == id);
+            // return context.Set<T>().Find(id);
         }
         public void Update(T entity)
         {
@@ -52,9 +80,19 @@ namespace CMS_back.GenericRepository
             context.Set<T>().RemoveRange(entities);
         }
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression)
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression,
+             params string[] includeProperties)
         {
-            return  context.Set<T>().Where(expression);
+            IQueryable<T> query = context.Set<T>().Where(expression);
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return await query.ToListAsync();
+            //return  context.Set<T>().Where(expression);
         }
     }
 }

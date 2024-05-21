@@ -122,7 +122,7 @@ namespace CMS_back.Services
             foreach (var id in subjectIDs)
             {
                 //var subject = _context.Subject.FirstOrDefault(id);
-                var subject = _subjectRepository.GetById(id);
+                var subject = await _subjectRepository.GetById(id);
                 ControlSubject cs = new ControlSubject();
                 cs.Subject = subject;
                 cs.SubjectID = subject.Id;
@@ -169,8 +169,6 @@ namespace CMS_back.Services
             var controlsDTO = _mapper.Map<IEnumerable<ControlResultDto>>(controls);
             return controlsDTO;
         }
-
-       
     }
 
 }
