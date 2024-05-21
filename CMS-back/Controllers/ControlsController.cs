@@ -46,87 +46,8 @@ namespace CMS_back.Controllers
         [Authorize(Roles = ConstsRoles.AdminFaculty)]
         public async Task<IActionResult> createControl(ControlDTO controldto, string Fid)
         {
-            var facultiy = await _repo.GetByIdAsync(Fid);
-            if (facultiy != null)
-            {
-                Control control = new Control();
-                control.Name = controldto.Name;
-                control.Faculity_Node = controldto.Faculity_Node;
-                control.Faculity_Semester = controldto.Faculity_Semester;
-                control.Faculity_Phase = controldto.Faculity_Phase;
-                control.Start_Date = controldto.Start_Date;
-                control.End_Date = controldto.End_Date;
-                control.ACAD_YEAR = controldto.ACAD_YEAR;
-
-                //control.Faculity = facultiy;
-                control.FaculityID = Fid;
-
-                ApplicationUser? manager = context.Users.FirstOrDefault(u => u.Id == controldto.ControlManagerID);
-                if (manager == null) return BadRequest("Invalid Head of control id");
-                ControlUsers userControl = new ControlUsers()
-                {
-                    ControlID = control.Id,
-                    Control = control,
-                    UserID = manager.Id,
-                    User = manager,
-                    JobType = JobType.Head
-                };
-                if (manager.Email != null)
-                {
-                    var message = new Mailing.MailMessage(new string[] { manager.Email }, "Control System", "You are Head of new Control");
-                    MailingService.SendMail(message);
-                }
-                context.ControlUsers.Add(userControl);
-
-                var creator = ContextAccessor.HttpContext.User;
-                if (creator == null) return BadRequest("Creator ID invalid");
-                var userCreater = await Usermanager.GetUserAsync(creator);
-                control.UserCreator = userCreater;
-                control.UserCreatorID = userCreater.Id;
-
-                var usersIDs = controldto.UsersIds;
-                foreach (var id in usersIDs)
-                {
-                    ApplicationUser? user = context.Users.FirstOrDefault(u => u.Id == id);
-                    if (user == null) return BadRequest("invalid member id");
-                    ControlUsers memberControl = new ControlUsers()
-                    {
-                        ControlID = control.Id,
-                        Control = control,
-                        UserID = user.Id,
-                        User = user,
-                        JobType = JobType.Member
-                    };
-                    if (user.Email != null)
-                    {
-                        var message = new Mailing.MailMessage(new string[] { user.Email }, "Control System", "You are Member in new Control");
-                        MailingService.SendMail(message);
-                    }
-                    context.ControlUsers.Add(memberControl);
-                }
-
-                var subjectIDs = controldto.SubjectsIds;
-                foreach (var id in subjectIDs)
-                {
-                    Subject? subject = context.Subject.FirstOrDefault(u => u.Id == id);
-                    if (subject == null) return BadRequest("invalid subjet id");
-                    ControlSubject cs = new ControlSubject();
-                    cs.Subject = subject;
-                    cs.SubjectID = subject.Id;
-                    cs.Control = control;
-                    cs.ControlID = control.Id;
-                    //control.ControlSubjects.Add(cs);
-                    context.ControlSubject.Add(cs);
-                }
-
-                context.Control.Add(control);
-                // facultiy.Controls.Add(control);
-
-                if (await context.SaveChangesAsync() > 0)
-                    return Ok("Created Control");
-                return BadRequest("Failed to add data");
-            }
-            return BadRequest("Faculty not found");
+           var result =await _repo.AddAsync(controldto, Fid);
+            return result ?Ok(result) : BadRequest("احااااااا");
         }
 
 
