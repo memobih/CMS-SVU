@@ -125,89 +125,130 @@ namespace CMS_back.Services
                 return false;
         }
 
+        //public async Task UpdateAsync(ControlDTO controldto, string Cid)
+        //{
+        //    var creator = _contextAccessor.HttpContext.User;
+        //    var userCreator = await _usermanager.GetUserAsync(creator);
+        //    if (userCreator == null) throw new Exception("Creator ID invalid");
+
+        //    var control = await _dbSet.FindAsync(Cid);
+        //    if (control == null) throw new Exception("Invalid control Id");
+        //    if (userCreator.Id != control.UserCreatorID) throw new Exception("Creator ID Invalid");
+
+        //    control.ControlSubjects.Clear();
+        //    control.ControlUsers.Clear();
+        //    _mapper.Map(controldto, control);
+
+        //    var subjects = new List<ControlSubject>();
+        //    var subjectIDs = controldto.SubjectsIds;
+        //    foreach (var id in subjectIDs)
+        //    {
+        //        var subject = _context.Subject.FirstOrDefault(u => u.Id == id);
+
+        //        ControlSubject cs = new ControlSubject();
+        //        cs.Subject = subject;
+        //        cs.SubjectID = subject.Id;
+        //        cs.Control = control;
+        //        cs.ControlID = control.Id;
+        //        subjects.Add(cs);
+
+        //    }
+        //    var controlUsers = new List<ControlUsers>();
+        //    foreach (var id in controldto.UsersIds)
+        //    {
+        //        var user = _context.ApplicationUser.FirstOrDefault(c => c.Id == id);
+        //        ControlUsers c = new ControlUsers
+        //        {
+        //            JobType = JobType.Member,
+        //            ControlID = control.Id,
+        //            UserID = user.Id
+        //        };
+        //        controlUsers.Add(c);
+        //    }
+
+        //    ControlUsers cu = new ControlUsers
+        //    {
+        //        JobType = JobType.Head,
+        //        ControlID = control.Id,
+        //        UserID = controldto.ControlManagerID
+        //    };
+        //    controlUsers.Add(cu);
+
+        //    foreach (var id in subjectIDs)
+        //    {
+        //        //var subject = _context.Subject.FirstOrDefault(id);
+        //        var subject = await _subjectRepository.GetById(id);
+        //        ControlSubject cs = new ControlSubject();
+        //        cs.Subject = subject;
+        //        cs.SubjectID = subject.Id;
+        //        cs.Control = control;
+        //        cs.ControlID = control.Id;
+        //        subjects.Add(cs);
+        //    }
+        //    control.ControlSubjects = subjects;
+        //    control.ControlUsers = controlUsers;
+
+        //    _context.Attach(control);
+        //    _context.Entry(control).State = EntityState.Modified;
+
+        //    await _context.SaveChangesAsync();
+        //}
+
+        //public async Task<bool> DeleteAsync(string id)
+        //{
+        //    var control = await _dbSet.FindAsync(id);
+
+        //    if (control == null)
+        //    {
+        //        return false;
+        //    }
+
+        //    _genericRepository.Remove(control);
+        //    if (await _context.SaveChangesAsync() > 0)
+        //        return true;
+
+        //    return false;
+        //}
+
+
         public async Task UpdateAsync(ControlDTO controldto, string Cid)
         {
-            var creator = _contextAccessor.HttpContext.User;
-            var userCreator = await _usermanager.GetUserAsync(creator);
-            if (userCreator == null) throw new Exception("Creator ID invalid");
+            var userCreator = await _usermanager.GetUserAsync(_contextAccessor.HttpContext.User);
+            if (userCreator == null)
+                throw new InvalidOperationException("Invalid creator ID.");
 
-            var control = await _dbSet.FindAsync(Cid);
-            if (control == null) throw new Exception("Invalid control Id");
-            if (userCreator.Id != control.UserCreatorID) throw new Exception("Creator ID Invalid");
+            var control = await _genericRepository.FindFirstAsync(c => c.Id == Cid);
+            if (control == null)
+                throw new ArgumentException("Invalid control ID.");
+
+            if (userCreator.Id != control.UserCreatorID)
+                throw new InvalidOperationException("Unauthorized operation: creator ID mismatch.");
 
             control.ControlSubjects.Clear();
             control.ControlUsers.Clear();
+
             _mapper.Map(controldto, control);
 
-            var subjects = new List<ControlSubject>();
-            var subjectIDs = controldto.SubjectsIds;
-            foreach (var id in subjectIDs)
+            foreach (var id in controldto.SubjectsIds)
             {
-                var subject = _context.Subject.FirstOrDefault(u => u.Id == id);
-
-                ControlSubject cs = new ControlSubject();
-                cs.Subject = subject;
-                cs.SubjectID = subject.Id;
-                cs.Control = control;
-                cs.ControlID = control.Id;
-                subjects.Add(cs);
-
+                var subject = await _subjectRepository.GetById(id);
+                if (subject != null)
+                    control.ControlSubjects.Add(new ControlSubject { Subject = subject });
             }
-            var controlUsers = new List<ControlUsers>();
+
             foreach (var id in controldto.UsersIds)
             {
-                var user = _context.ApplicationUser.FirstOrDefault(c => c.Id == id);
-                ControlUsers c = new ControlUsers
-                {
-                    JobType = JobType.Member,
-                    ControlID = control.Id,
-                    UserID = user.Id
-                };
-                controlUsers.Add(c);
+                var user = await _context.ApplicationUser.FirstOrDefaultAsync(c => c.Id == id);
+                if (user != null)
+                    control.ControlUsers.Add(new ControlUsers { JobType = JobType.Member, User = user });
             }
 
-            ControlUsers cu = new ControlUsers
-            {
-                JobType = JobType.Head,
-                ControlID = control.Id,
-                UserID = controldto.ControlManagerID
-            };
-            controlUsers.Add(cu);
+            var controlManager = await _context.ApplicationUser.FirstOrDefaultAsync(c => c.Id == controldto.ControlManagerID);
+            if (controlManager != null)
+                control.ControlUsers.Add(new ControlUsers { JobType = JobType.Head, User = controlManager });
 
-            foreach (var id in subjectIDs)
-            {
-                //var subject = _context.Subject.FirstOrDefault(id);
-                var subject = await _subjectRepository.GetById(id);
-                ControlSubject cs = new ControlSubject();
-                cs.Subject = subject;
-                cs.SubjectID = subject.Id;
-                cs.Control = control;
-                cs.ControlID = control.Id;
-                subjects.Add(cs);
-            }
-            control.ControlSubjects = subjects;
-            control.ControlUsers = controlUsers;
-
-            _context.Attach(control);
-            _context.Entry(control).State = EntityState.Modified;
-
+            _context.Update(control);
             await _context.SaveChangesAsync();
-        }
-
-        public async Task<bool> DeleteAsync(string id)
-        {
-            var control = await _dbSet.FindAsync(id);
-
-            if (control == null)
-            {
-                return false;
-            }
-
-            _genericRepository.Remove(control);
-            if (await _context.SaveChangesAsync() > 0)
-                return true;
-
-            return false;
         }
 
         public async Task<IEnumerable<ControlResultDto>> GetControlsByAcadYearAsync(string AcadYear)
