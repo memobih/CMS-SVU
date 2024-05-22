@@ -24,10 +24,19 @@ namespace CMS_back.GenericRepository
         }
 
 
-        public async Task<T> FindFirstAsync(Expression<Func<T, bool>> expression)
+        public async Task<T> FindFirstAsync(Expression<Func<T, bool>> expression,
+                     params string[] includeProperties)
         {
-            return await context.Set<T>().FirstOrDefaultAsync(expression);
-            
+            IQueryable<T> query = context.Set<T>().Where(expression);
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return await query.FirstOrDefaultAsync();
+            //            return await context.Set<T>().FirstOrDefaultAsync(expression);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(params string[] includeProperties)
@@ -56,6 +65,7 @@ namespace CMS_back.GenericRepository
         {
             context.Attach(entity);
             context.Entry<T>(entity).State = EntityState.Modified;
+            
         }
         public void Remove(T entity)
         {

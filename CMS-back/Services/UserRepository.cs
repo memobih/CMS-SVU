@@ -81,8 +81,7 @@ namespace CMS_back.Services
         }
         public async Task<ApplicationUser?> GetHeadOfControl(string controlId)
         {
-            var controlHead = await _controlUsersRepository.FindFirstAsync((c => c.ControlID == controlId && c.JobType == JobType.Head),
-                ["User"]);
+            var controlHead = await _controlUsersRepository.FindFirstAsync((c => c.ControlID == controlId && c.JobType == JobType.Head),["User"]); 
             if (controlHead == null) return null;
             return controlHead.User;
         }
