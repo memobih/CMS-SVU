@@ -39,7 +39,7 @@ namespace CMS_back.Controllers
             Usermanager=usermanger;
             ContextAccessor=contextAccessor;
             Mapper=mapper;
-            _repoUser = new UserRepository(_context,usermanger,contextAccessor,mapper);
+            _repoUser = new UserRepository(_context,usermanger,contextAccessor);
         }
 
         [HttpPost("login")]

@@ -19,15 +19,13 @@ namespace CMS_back.Services
         public IHttpContextAccessor contextAccessor { get; }
         public IGenericRepository<Faculity> _facultyRepository { get; }
         public IGenericRepository<ControlUsers> _controlUsersRepository { get; }
-        public IMapper _mapper { get; }
-
+        
         public UserRepository(CMSContext _context, UserManager<ApplicationUser> _userManager,
-            IHttpContextAccessor _contextAccessor,IMapper _mapper)
+            IHttpContextAccessor _contextAccessor)
         {
             context=_context;
             userManager=_userManager;
             contextAccessor=_contextAccessor;
-            this._mapper=_mapper;
             _facultyRepository = new GenericRepository<Faculity>(_context);
             _controlUsersRepository= new GenericRepository<ControlUsers>(_context);
         }
