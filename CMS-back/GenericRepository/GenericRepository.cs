@@ -25,7 +25,7 @@ namespace CMS_back.GenericRepository
 
 
         public async Task<T> FindFirstAsync(Expression<Func<T, bool>> expression,
-                    params string[] includeProperties)
+                     params string[] includeProperties)
         {
             IQueryable<T> query = context.Set<T>().Where(expression);
             if (includeProperties != null)
@@ -36,7 +36,7 @@ namespace CMS_back.GenericRepository
                 }
             }
             return await query.FirstOrDefaultAsync();
-//            return await context.Set<T>().FirstOrDefaultAsync(expression);
+            //            return await context.Set<T>().FirstOrDefaultAsync(expression);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(params string[] includeProperties)
@@ -55,20 +55,17 @@ namespace CMS_back.GenericRepository
         public async Task<T> GetById(string id, params string[] includeProperties)
         {
             IQueryable<T> query = context.Set<T>();
-            if (includeProperties != null)
+            foreach (var includeProperty in includeProperties)
             {
-                foreach (var includeProperty in includeProperties)
-                {
-                    query = query.Include(includeProperty);
-                }
+                query = query.Include(includeProperty);
             }
-            return await query.SingleOrDefaultAsync(e => EF.Property<string>(e, "Id") == id);
-            // return context.Set<T>().Find(id);
+            return await query.FirstOrDefaultAsync(e => EF.Property<string>(e, "Id") == id);
         }
         public void Update(T entity)
         {
             context.Attach(entity);
             context.Entry<T>(entity).State = EntityState.Modified;
+            
         }
         public void Remove(T entity)
         {
@@ -80,8 +77,7 @@ namespace CMS_back.GenericRepository
             context.Set<T>().RemoveRange(entities);
         }
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression,
-             params string[] includeProperties)
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression, params string[] includeProperties)
         {
             IQueryable<T> query = context.Set<T>().Where(expression);
             if (includeProperties != null)
@@ -94,5 +90,6 @@ namespace CMS_back.GenericRepository
             return await query.ToListAsync();
             //return  context.Set<T>().Where(expression);
         }
+
     }
 }
