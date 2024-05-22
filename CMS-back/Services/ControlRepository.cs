@@ -64,65 +64,65 @@ namespace CMS_back.Services
             var creator = _contextAccessor.HttpContext.User;
             var userCreater = await _usermanager.GetUserAsync(creator);
             if (userCreater == null) return false;
-            var facultiy = _genericRepository.FindFirstAsync(c=>c.FaculityID == Fid);
+            var facultiy =  _genericRepository.FindFirstAsync(c => c.FaculityID == Fid);
             if (facultiy == null) return false;
 
-                Control control = _mapper.Map<Control>(controldto);
-                control.FaculityID = Fid;
+            Control control = _mapper.Map<Control>(controldto);
+            control.FaculityID = Fid;
 
-                ApplicationUser? manager = await _usermanager.FindByIdAsync(controldto.ControlManagerID);
-                if (manager == null) return false;
-                ControlUsers userControl = new ControlUsers()
+            ApplicationUser? manager = await _usermanager.FindByIdAsync(controldto.ControlManagerID);
+            if (manager == null) return false;
+            ControlUsers userControl = new ControlUsers()
+            {
+                ControlID = control.Id,
+                UserID = manager.Id,
+                JobType = JobType.Head
+            };
+            if (manager.Email != null)
+            {
+                var message = new MailMessage(new string[] { manager.Email }, "Control System", "You are Head of new Control");
+                MailingService.SendMail(message);
+            }
+            _context.ControlUsers.Add(userControl);
+
+
+            control.UserCreatorID = userCreater.Id;
+
+
+            foreach (var id in controldto.UsersIds)
+            {
+                ApplicationUser user = _context.Users.FirstOrDefault(u => u.Id == id);
+                if (user == null) return false;
+                ControlUsers memberControl = new ControlUsers()
                 {
                     ControlID = control.Id,
-                    UserID = manager.Id,
-                    JobType = JobType.Head
+                    UserID = user.Id,
+                    JobType = JobType.Member
                 };
-                if (manager.Email != null)
+                if (user.Email != null)
                 {
-                    var message = new MailMessage(new string[] { manager.Email }, "Control System", "You are Head of new Control");
+                    var message = new MailMessage(new string[] { user.Email }, "Control System", "You are Member in new Control");
                     MailingService.SendMail(message);
                 }
-                _context.ControlUsers.Add(userControl);
+                _context.ControlUsers.Add(memberControl);
+            }
 
-                
-                control.UserCreatorID = userCreater.Id;
 
-                
-                foreach (var id in controldto.UsersIds)
-                {
-                    ApplicationUser user = _context.Users.FirstOrDefault(u => u.Id == id);
-                    if (user == null) return false;
-                    ControlUsers memberControl = new ControlUsers()
-                    {
-                        ControlID = control.Id,
-                        UserID = user.Id,
-                        JobType = JobType.Member
-                    };
-                    if (user.Email != null)
-                    {
-                        var message = new MailMessage(new string[] { user.Email }, "Control System", "You are Member in new Control");
-                        MailingService.SendMail(message);
-                    }
-                    _context.ControlUsers.Add(memberControl);
-                }
+            foreach (var id in controldto.SubjectsIds)
+            {
+                Subject subject = _context.Subject.FirstOrDefault(u => u.Id == id);
+                if (subject == null) return false;
+                ControlSubject cs = new ControlSubject();
+                cs.SubjectID = subject.Id;
+                cs.ControlID = control.Id;
+                _context.ControlSubject.Add(cs);
+            }
 
- 
-                foreach (var id in controldto.SubjectsIds)
-                {
-                    Subject subject = _context.Subject.FirstOrDefault(u => u.Id == id);
-                    if (subject == null) return false;
-                    ControlSubject cs = new ControlSubject();
-                    cs.SubjectID = subject.Id;
-                    cs.ControlID = control.Id;
-                    _context.ControlSubject.Add(cs);
-                }
+            _context.Control.Add(control);
 
-                _context.Control.Add(control);
-
-                if (await _context.SaveChangesAsync() > 0)
-                    return true;
-                return false;
+            if (await _context.SaveChangesAsync() > 0)
+                return true;
+            return false;
         }
 
         //public async Task UpdateAsync(ControlDTO controldto, string Cid)
@@ -194,23 +194,6 @@ namespace CMS_back.Services
         //    await _context.SaveChangesAsync();
         //}
 
-        //public async Task<bool> DeleteAsync(string id)
-        //{
-        //    var control = await _dbSet.FindAsync(id);
-
-        //    if (control == null)
-        //    {
-        //        return false;
-        //    }
-
-        //    _genericRepository.Remove(control);
-        //    if (await _context.SaveChangesAsync() > 0)
-        //        return true;
-
-        //    return false;
-        //}
-
-
         public async Task UpdateAsync(ControlDTO controldto, string Cid)
         {
             var userCreator = await _usermanager.GetUserAsync(_contextAccessor.HttpContext.User);
@@ -232,7 +215,7 @@ namespace CMS_back.Services
             foreach (var id in controldto.SubjectsIds)
             {
                 var subject = await _subjectRepository.GetById(id);
-                if (subject != null) 
+                if (subject != null)
                     control.ControlSubjects.Add(new ControlSubject { Subject = subject });
             }
 
@@ -249,6 +232,23 @@ namespace CMS_back.Services
 
             _context.Update(control);
             await _context.SaveChangesAsync();
+        }
+
+
+        public async Task<bool> DeleteAsync(string id)
+        {
+            var control = await _dbSet.FindAsync(id);
+
+            if (control == null)
+            {
+                return false;
+            }
+
+            _genericRepository.Remove(control);
+            if (await _context.SaveChangesAsync() > 0)
+                return true;
+
+            return false;
         }
 
         public async Task<IEnumerable<ControlResultDto>> GetControlsByAcadYearAsync(string AcadYear)
