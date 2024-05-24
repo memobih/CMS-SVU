@@ -4,7 +4,8 @@
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string? FaculityEmployeeID { get; set; }
+        public string? FaculityLeaderID { get; set; }
 
-        public string facultyID { get; set; }
     }
 }

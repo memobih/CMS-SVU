@@ -57,11 +57,11 @@ namespace CMS_back.Services
             if (faculty == null) return null;
             return faculty.Users;
         }
-        public async Task<List<ApplicationUser>>? GetControlUsers(string controlId)
+        public async Task<List<ControlUsers>>? GetControlUsers(string controlId)
         {
-            var controlsUser = await _controlUsersRepository.FindAsync(c => c.ControlID == controlId, ["User"]);
+            var controlsUser = await _controlUsersRepository.FindAsync(c => c.ControlID == controlId, ["User", "Control"]);
             if (controlsUser == null) return null;
-            return controlsUser.Select(c => c.User).ToList();
+            return controlsUser.ToList();
         }
         public async Task<ApplicationUser> GetCurrentUser()
         {
@@ -71,11 +71,11 @@ namespace CMS_back.Services
             return currentUser;
 
         }
-        public async Task<IEnumerable<ControlUsers>>? GetUserOfControl(string userId)
+        public async Task<List<ControlUsers>?> GetUserOfControl(string userId)
         {
-            var control = await _controlUsersRepository.FindAsync(c => c.UserID == userId, ["User","Control"]);
-            if (control == null) return null;
-            return control.ToList();
+            var controlUser = await _controlUsersRepository.FindAsync(c => c.UserID == userId, ["User", "Control"]);
+            if (controlUser == null) return null;
+            return controlUser.ToList();
         }
         public async Task<ApplicationUser?> GetHeadOfControl(string controlId)
         {
