@@ -22,21 +22,19 @@ namespace CMS_back.Controllers
             _repo = repo;
         }
 
-
         [HttpPost("create/{Fid}")]
         [Authorize(Roles = ConstsRoles.AdminFaculty)]
         public async Task<IActionResult> createControl(ControlDTO controldto, string Fid)
         {
             var result = await _repo.AddAsync(controldto, Fid);
-            return result ? Ok(result) : BadRequest("Invalid Control Data");
+            return result ? Ok("Control Added Successfully") : BadRequest("Invalid Control Data");
         }
-
         [HttpPut("edit")]
         [Authorize(Roles = ConstsRoles.AdminFaculty)]
         public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
         {
             var result = await _repo.UpdateAsync(controldto, Cid);
-            return result ? Ok(result) : BadRequest("Invalid Control Data");
+            return result ? Ok("Updated Successfully") : BadRequest("Invalid Control Data");
         }
 
         [HttpGet("allControllers")]
@@ -59,7 +57,7 @@ namespace CMS_back.Controllers
         public async Task<IActionResult> delete(string id)
         {
             var result = await _repo.DeleteAsync(id);
-            return result ? Ok("Deleted Successfuly") : BadRequest("Can Not Delete This Control");
+            return result ? Ok("Deleted Successfully") : BadRequest("Can Not Delete This Control");
         }
 
         [HttpGet("get-by-faculity-id")]
