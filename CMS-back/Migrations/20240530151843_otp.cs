@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CMS_back.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class otp : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -164,6 +164,8 @@ namespace CMS_back.Migrations
                     UserImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ScientificDegree = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OTP = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OTPExpiry = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FaculityEmployeeID = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     FaculityLeaderID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -750,9 +752,9 @@ namespace CMS_back.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0f9dad15-9f18-40b9-a44e-d7531197cd9a", null, "AdminFaculty", "AdminFaculty" },
-                    { "1e7075fb-19af-412c-94f6-bc15cad7d9f7", null, "AdminUniversity", "AdminUniversity" },
-                    { "544c2964-cd33-40e2-bbc1-15ac9f2192da", null, "Staff", "Staff" }
+                    { "44827753-a18b-46cb-9823-a3d42dab2ff8", null, "AdminFaculty", "AdminFaculty" },
+                    { "9fa306af-1675-417d-ae68-3b0598d1b65b", null, "AdminUniversity", "AdminUniversity" },
+                    { "bdec3b41-a936-4b5c-b54e-ed3f6a54c8df", null, "Staff", "Staff" }
                 });
 
             migrationBuilder.CreateIndex(

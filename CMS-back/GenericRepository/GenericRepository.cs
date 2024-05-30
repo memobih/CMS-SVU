@@ -82,5 +82,9 @@ namespace CMS_back.GenericRepository
             //return  context.Set<T>().Where(expression);
         }
 
+        public Task<T> FindFirstAsync(Expression<Func<T, bool>> expression, params string[] includeProperties)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

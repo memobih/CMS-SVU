@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS_back.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    [Migration("20240517211338_init")]
-    partial class init
+    [Migration("20240530151843_otp")]
+    partial class otp
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -80,6 +80,12 @@ namespace CMS_back.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("OTP")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OTPExpiry")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -807,19 +813,19 @@ namespace CMS_back.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1e7075fb-19af-412c-94f6-bc15cad7d9f7",
+                            Id = "9fa306af-1675-417d-ae68-3b0598d1b65b",
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
-                            Id = "0f9dad15-9f18-40b9-a44e-d7531197cd9a",
+                            Id = "44827753-a18b-46cb-9823-a3d42dab2ff8",
                             Name = "AdminFaculty",
                             NormalizedName = "AdminFaculty"
                         },
                         new
                         {
-                            Id = "544c2964-cd33-40e2-bbc1-15ac9f2192da",
+                            Id = "bdec3b41-a936-4b5c-b54e-ed3f6a54c8df",
                             Name = "Staff",
                             NormalizedName = "Staff"
                         });

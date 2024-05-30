@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using CMS_back.Interfaces;
 using CMS_back.Services;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,14 +38,22 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("CMS"),
 builder => builder.EnableRetryOnFailure()));
 
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>().
-    AddEntityFrameworkStores<CMSContext>();
+//builder.Services.AddIdentity<ApplicationUser, IdentityRole>().
+//    AddEntityFrameworkStores<CMSContext>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<CMSContext>()
+    .AddDefaultTokenProviders();
+//reset password
+builder.Services.Configure<DataProtectionTokenProviderOptions>
+    (options => options.TokenLifespan = TimeSpan.FromHours(1));
 builder.Services.AddScoped<IMailingService, MailingService>();
 builder.Services.AddScoped<IControlRepository, ControlRepository>();
 builder.Services.AddScoped<ISubjectRepository,SubjectRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IFaculityRepository, FaculityRepository>();
 builder.Services.AddScoped<IControlNotesRepository, ControlNotesRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); 
 
