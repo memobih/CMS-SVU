@@ -43,6 +43,7 @@ builder.Services.AddScoped<IMailingService, MailingService>();
 builder.Services.AddScoped<IControlRepository, ControlRepository>();
 builder.Services.AddScoped<ISubjectRepository,SubjectRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IControlTaskRepository, ControlTaskRepository>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); 
 
