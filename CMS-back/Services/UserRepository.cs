@@ -19,15 +19,13 @@ namespace CMS_back.Services
         public IHttpContextAccessor contextAccessor { get; }
         public IGenericRepository<Faculity> _facultyRepository { get; }
         public IGenericRepository<ControlUsers> _controlUsersRepository { get; }
-        public IMapper _mapper { get; }
-
+        
         public UserRepository(CMSContext _context, UserManager<ApplicationUser> _userManager,
-            IHttpContextAccessor _contextAccessor,IMapper _mapper)
+            IHttpContextAccessor _contextAccessor)
         {
             context=_context;
             userManager=_userManager;
             contextAccessor=_contextAccessor;
-            this._mapper=_mapper;
             _facultyRepository = new GenericRepository<Faculity>(_context);
             _controlUsersRepository= new GenericRepository<ControlUsers>(_context);
         }
@@ -59,11 +57,11 @@ namespace CMS_back.Services
             if (faculty == null) return null;
             return faculty.Users;
         }
-        public async Task<List<ApplicationUser>>? GetControlUsers(string controlId)
+        public async Task<List<ControlUsers>>? GetControlUsers(string controlId)
         {
-            var controlsUser = await _controlUsersRepository.FindAsync(c => c.ControlID == controlId, ["User"]);
+            var controlsUser = await _controlUsersRepository.FindAsync(c => c.ControlID == controlId, ["User", "Control"]);
             if (controlsUser == null) return null;
-            return controlsUser.Select(c => c.User).ToList();
+            return controlsUser.ToList();
         }
         public async Task<ApplicationUser> GetCurrentUser()
         {
@@ -73,18 +71,19 @@ namespace CMS_back.Services
             return currentUser;
 
         }
-        public async Task<IEnumerable<ControlUsers>>? GetUserOfControl(string userId)
+        public async Task<List<ControlUsers>?> GetUserOfControl(string userId)
         {
-            var control = await _controlUsersRepository.FindAsync(c => c.UserID == userId, ["User","Control"]);
-            if (control == null) return null;
-            return control.ToList();
+            var controlUser = await _controlUsersRepository.FindAsync(c => c.UserID == userId, ["User", "Control"]);
+            if (controlUser == null) return null;
+            return controlUser.ToList();
         }
         public async Task<ApplicationUser?> GetHeadOfControl(string controlId)
         {
-            var controlHead = await _controlUsersRepository.FindFirstAsync((c => c.ControlID == controlId && c.JobType == JobType.Head),
-                ["User"]);
+            var controlHead = await _controlUsersRepository.FindFirstAsync((c => c.ControlID == controlId && c.JobType == JobType.Head),["User"]); 
             if (controlHead == null) return null;
             return controlHead.User;
         }
+
+      
     }
 }

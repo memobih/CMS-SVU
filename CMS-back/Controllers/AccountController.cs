@@ -13,6 +13,7 @@ using CMS_back.Mailing;
 using Microsoft.AspNetCore.Authorization;
 using CMS_back.Services;
 using AutoMapper;
+using CMS_back.Interfaces;
 
 
 namespace CMS_back.Controllers
@@ -24,22 +25,18 @@ namespace CMS_back.Controllers
     {
         private readonly IConfiguration config;
         private readonly IMailingService _mailingService;
-        private readonly UserRepository _repoUser;
+        private readonly IUserRepository _repoUser;
         public CMSContext context { get; }
         public UserManager<ApplicationUser> Usermanager { get; }
         public IHttpContextAccessor ContextAccessor { get; }
         public IMapper Mapper { get; }
 
-        public AccountController(UserManager<ApplicationUser> usermanger, IConfiguration config, CMSContext _context
-            , IMailingService mailingService, IHttpContextAccessor contextAccessor,IMapper mapper)
+        public AccountController(IConfiguration config, IMailingService mailingService, IMapper mapper, IUserRepository repo)
         {
             this.config = config;
-            context=_context;
             _mailingService = mailingService;
-            Usermanager=usermanger;
-            ContextAccessor=contextAccessor;
             Mapper=mapper;
-            _repoUser = new UserRepository(_context,usermanger,contextAccessor,mapper);
+            _repoUser = repo;
         }
 
         [HttpPost("login")]

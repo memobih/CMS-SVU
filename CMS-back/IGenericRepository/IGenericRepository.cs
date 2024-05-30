@@ -12,6 +12,6 @@ namespace CMS_back.IGenericRepository
         void Update(T entity);
         void RemoveRange(IEnumerable<T> entities);
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression, params string[] includeProperties);
-        Task<T> FindFirstAsync(Expression<Func<T, bool>> expression, params string[] includeProperties);
+        Task<T> FindFirstAsync(Expression<Func<T, bool>> expression , params string[] includeProperties);
     }
 }
