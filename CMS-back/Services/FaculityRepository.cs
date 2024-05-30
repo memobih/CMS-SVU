@@ -34,7 +34,7 @@ namespace CMS_back.Services
             //var faculties = await _context.Faculity.Include(f => f.Controls).ThenInclude(c => c.UserCreator).ToListAsync();
 
             var faculities = await _genericRepository.FindAsync(f => true, ["Controls", "Controls.UserCreator"]);
-            var facultiesResult = faculities.Select(faculty => _mapper.Map<FacultyResultDto>(faculty)).ToList();
+            var facultiesResult = faculities.Select(_mapper.Map<FacultyResultDto>).ToList();
             return facultiesResult;
         }
         public async Task<bool> AddAsync(FacultyDTO facultyDTO)
@@ -52,7 +52,7 @@ namespace CMS_back.Services
             faculity.UserLeader = leader;
             faculity.UserLeaderID = leader.Id;
 
-            _context.Faculity.Add(faculity);
+            _genericRepository.Add(faculity);
 
             leader.Type = ConstsRoles.AdminFaculty;
             leader.FaculityLeaderID = faculity.Id;

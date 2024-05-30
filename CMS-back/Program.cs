@@ -44,6 +44,7 @@ builder.Services.AddScoped<IControlRepository, ControlRepository>();
 builder.Services.AddScoped<ISubjectRepository,SubjectRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IFaculityRepository, FaculityRepository>();
+builder.Services.AddScoped<IControlNotesRepository, ControlNotesRepository>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); 
 
