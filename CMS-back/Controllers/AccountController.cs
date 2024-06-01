@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using CMS_back.Services;
 using AutoMapper;
 using CMS_back.Interfaces;
+using CMS_back.Authentication;
 
 
 namespace CMS_back.Controllers
@@ -26,92 +27,93 @@ namespace CMS_back.Controllers
         private readonly IConfiguration config;
         private readonly IMailingService _mailingService;
         private readonly IUserRepository _repoUser;
+        private readonly IAccountRepository _accountRepository;
+
         public CMSContext context { get; }
-        public UserManager<ApplicationUser> Usermanager { get; }
-        public IHttpContextAccessor ContextAccessor { get; }
+        public UserManager<ApplicationUser> _usermanager { get; }
+        public IHttpContextAccessor _contextAccessor { get; }
         public IMapper Mapper { get; }
 
-        public AccountController(IConfiguration config, IMailingService mailingService, IMapper mapper, IUserRepository repo)
+        public AccountController(IConfiguration config, IAccountRepository accountRepository, IMailingService mailingService, IMapper mapper, IUserRepository repo)
         {
             this.config = config;
             _mailingService = mailingService;
-            Mapper=mapper;
+            Mapper = mapper;
             _repoUser = repo;
+            _accountRepository = accountRepository;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> signin(LoginUserDto userDto)
         {
-            if (ModelState.IsValid == true)
-            {
-                var user = await _repoUser.GetUserByUsernameAndPasswordAsync(userDto); 
-                if (user != null)
-                {
-                        //Claims Token
-                        var claims = new List<Claim>();
-                        claims.Add(new Claim(ClaimTypes.Name, user.UserName));
-                        claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
-                        claims.Add(new Claim(ClaimTypes.Role, user.Type));
-
-                        if (user.FaculityLeaderID != null)
-                            claims.Add(new Claim(ClaimTypes.Sid, user.FaculityLeaderID));
-
-                        claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
-
-                        SecurityKey securityKey =
-                           new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT:Secret"]));
-
-                        SigningCredentials signincred =
-                                    new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-                        //Create token
-                        JwtSecurityToken mytoken = new JwtSecurityToken(
-                            issuer: config["JWT:ValidIssuer"],//url web api
-                            audience: config["JWT:ValidAudience"],//url consumer angular
-                            claims: claims,
-                            expires: DateTime.Now.AddDays(1),
-                            signingCredentials: signincred
-                            );
-
-                        return Ok(new
-                        {
-                            token = new JwtSecurityTokenHandler().WriteToken(mytoken),
-                            expiration = mytoken.ValidTo,
-                            roles = user.Type
-                        });
-                }
-                return BadRequest("user not found");
-            }
-            return BadRequest("check to complete all fields");
-
-
+            var result = await _accountRepository.SignInAsync(userDto);
+            return Ok(result);
         }
 
         [HttpPost("register")]//account/register
         public async Task<IActionResult> Registration(RegisterUserDto userDto)
         {
-            if (ModelState.IsValid == true)
-            {
-                var currentUser = await _repoUser.GetCurrentUser();
-                //save
-                ApplicationUser user = Mapper.Map<ApplicationUser>(userDto);
-                user.Type = ConstsRoles.Staff;
-                if(currentUser != null)
-                    user.FaculityEmployeeID = currentUser.FaculityLeaderID;
+            var result = await _accountRepository.RegisterAsync(userDto);
+            return Ok(result);
+        }
 
-                var result = await _repoUser.AddAsync(user, userDto.Password);
-                if (result.Succeeded)
-                {
-                    if (user.Email != null && currentUser != null)
-                    {
-                        var message = new Mailing.MailMessage(new string[] { user.Email }, "Control System", $"User {currentUser.Name} register for you in site.");
-                        _mailingService.SendMail(message);
-                    }
-                    return Ok("User Added");
-                }
-                return BadRequest(result.Errors.FirstOrDefault());
+
+
+
+
+
+
+
+
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePassword changePassword)
+        {
+            var result = await _accountRepository.ChangePasswordAsync(changePassword);
+            if (result.Succeeded)
+                return Ok();
+
+            return BadRequest(result.Errors);
+        }
+
+        [HttpPost("forget-password")]
+        public async Task<IActionResult> ForgetPassword(string email)
+        {
+            var result = await _accountRepository.ForgetPasswordAsync(email);
+            if (result)
+                return Ok();
+
+            return BadRequest("User not found");
+        }
+
+        [HttpPut("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
+        {
+            var result = await _accountRepository.ResetPasswordAsync(resetPassword);
+            if (result.Succeeded)
+                return Ok();
+
+            return BadRequest(result.Errors);
+        }
+
+        [HttpPost("send-otp")]
+        public async Task<IActionResult> SendOTP(string email)
+        {
+            var result = await _accountRepository.SendOTPAsync(email);
+            if (result.Succeeded)
+                return Ok();
+
+            return BadRequest(result.Errors);
+        }
+
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOTPRequest request)
+        {
+            var result = await _accountRepository.VerifyOTPAsync(request);
+            if (result.Succeeded)
+            {
+                return Ok("Email confirmed successfully");
             }
-            return BadRequest(ModelState);
+            return BadRequest(result.Errors);
         }
     }
 }

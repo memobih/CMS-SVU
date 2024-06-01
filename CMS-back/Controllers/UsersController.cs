@@ -18,8 +18,7 @@ namespace CMS_back.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _repoUser;
-
-        public IMapper _mapper { get; }
+        private readonly IMapper _mapper;
 
         public UsersController(IMapper mapper ,IUserRepository repo) {
             _mapper=mapper;

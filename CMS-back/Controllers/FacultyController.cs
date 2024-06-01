@@ -2,9 +2,12 @@
 using CMS_back.Consts;
 using CMS_back.Data;
 using CMS_back.DTO;
+using CMS_back.Interfaces;
 using CMS_back.Models;
+using CMS_back.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,66 +19,38 @@ namespace CMS_back.Controllers
     [Authorize]
     public class FacultyController : ControllerBase
     {
-        public CMSContext context { get; set; }
-        private readonly IMapper _mapper;
-        public FacultyController(CMSContext context, IMapper mappe) 
-        { 
-            this.context = context;
-            _mapper = mappe;
+        public IFaculityRepository _faculityRepository { get; set; }
+        public FacultyController(CMSContext context, IMapper mappe, IFaculityRepository faculityRepository)
+        {
+            _faculityRepository = faculityRepository;
         }
 
         [HttpPost("add")]
         [Authorize(Roles = ConstsRoles.AdminUniversity)]
         public async Task<IActionResult> create(FacultyDTO facultyDTO)
         {
-            var isExict = context.Faculity.FirstOrDefault(f => f.Name == facultyDTO.Name);
-            if (isExict != null) return BadRequest("Faculty is exict");
-            Faculity faculity = new Faculity()
-            {
-                Name = facultyDTO.Name,
-                Code = facultyDTO.Code,
-                Order = facultyDTO.Order,
-            };
-            var leader = context.Users.FirstOrDefault(u => u.Id == facultyDTO.UserLeaderID);
-            if (leader == null) return BadRequest("Must enter Leader Faculty");
-            faculity.UserLeader = leader;
-            faculity.UserLeaderID = leader.Id;
-
-
-            context.Faculity.Add(faculity);
-
-            leader.Type = ConstsRoles.AdminFaculty;
-            leader.FaculityLeaderID = faculity.Id;
-            leader.FaculityLeader = faculity;
-
-
-            await context.SaveChangesAsync();
-
-            return Ok("added faculty");
+            var faculity = await _faculityRepository.AddAsync(facultyDTO);
+            return faculity ? Ok("Faculity Added Successfully") : BadRequest("Invalid Faculity Data");
         }
 
-        [HttpGet("get-all-faculties")]
-        public async Task<IActionResult> GetAllfaculties()
+        [HttpGet("get-all-faculities")]
+        public async Task<IActionResult> GetAllfaculities()
         {
-            var faculties = await context.Faculity.Include(f => f.Controls).ThenInclude(c => c.UserCreator).ToListAsync();
-            var facultiesResult= faculties.Select(faculty => _mapper.Map<FacultyResultDto>(faculty)).ToList();
-            return Ok(facultiesResult);
+            var faculities = await _faculityRepository.GetAllAsync();
+            return Ok(faculities);
         }
 
-        [HttpGet("get-faculty-by-id")]
-        public async Task<IActionResult> getfaculty(string fId)
+        [HttpGet("get-faculity-by-id")]
+        public async Task<IActionResult> getfacuilty(string fId)
         {
-            var faculty = context.Faculity.Include(f => f.Controls).FirstOrDefault(f => f.Id == fId);
-            if (faculty == null) return BadRequest("No found Facluty");
-            var facultyDto = _mapper.Map<FacultyResultDto>(faculty);
-            return Ok(facultyDto);
+            var faculity = await _faculityRepository.GetByIdAsync(fId);
+            return Ok(faculity);
         }
 
         [HttpGet("node/{Fid}")]
-        public IActionResult getfacultynode([FromRoute]string Fid)
+        public async Task<IActionResult> getfacultynode([FromRoute] string Fid)
         {
-            var nodes = context.Faculity_Node.Where(fn => fn.FaculityNodeID == Fid).ToList();
-            var facultyNode = _mapper.Map<List<FacultyNodeDTO>>(nodes);
+            var facultyNode = await _faculityRepository.GetFaculityNode(Fid);
             return Ok(facultyNode);
         }
     }

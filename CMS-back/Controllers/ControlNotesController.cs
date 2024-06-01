@@ -2,7 +2,9 @@
 using CMS_back.Consts;
 using CMS_back.Data;
 using CMS_back.DTO;
+using CMS_back.Interfaces;
 using CMS_back.Models;
+using CMS_back.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -18,88 +20,52 @@ namespace CMS_back.Controllers
     public class ControlNotesController : ControllerBase
     {
 
-        public CMSContext Context { get; }
-        public IHttpContextAccessor ContextAccessor { get; }
-        public UserManager<ApplicationUser> Usermanager { get; }
-        public IMapper Mapper { get; }
+        private readonly IControlNotesRepository _controlNotesRepository;
+        private readonly CMSContext _context;
+        private readonly IMapper Mapper;
 
-        public ControlNotesController(CMSContext _context, IHttpContextAccessor contextAccessor,
-            UserManager<ApplicationUser> usermanager, IMapper mapper)
+        public ControlNotesController(CMSContext context
+            , IMapper mapper, IControlNotesRepository controlNotesRepository)
         {
-            Context=_context;
-            ContextAccessor=contextAccessor;
-            Usermanager=usermanager;
-            Mapper=mapper;
+            _controlNotesRepository = controlNotesRepository;
+            _context = context;
+            Mapper = mapper;
         }
 
-        [HttpPost]
+        [HttpPost("createcontrolnote/{Cid}")]
         public async Task<IActionResult> create(controlNoteDTO controlNoteDTO, string Cid)
         {
-            var creator = ContextAccessor.HttpContext.User;
-            var userCreater = await Usermanager.GetUserAsync(creator);
-            Control_Note control_Note = Mapper.Map<Control_Note>(controlNoteDTO);
-            control_Note.WriteDate = DateTime.Now;
-            control_Note.WriteBy = userCreater;
-            control_Note.Control = Context.Control.FirstOrDefault(c => c.Id == Cid);
-            Context.Control_Note.Add(control_Note);
-            await Context.SaveChangesAsync();
-            return Ok("Notes Created");
+            var controlNote = await _controlNotesRepository.AddAsync(controlNoteDTO, Cid);
+            return controlNote ? Ok("Note Created Successfully") : BadRequest("Invalid Note Data");
         }
 
-        [HttpGet("control/{Cid}")]
-        public IActionResult get(string Cid)
+        [HttpGet("getallcontrolnotes/{Cid}")]
+        public async Task<IActionResult> get(string Cid)
         {
-            var control_notes = Context.Control_Note.Include(c => c.WriteBy).Where(c => c.ControlID == Cid).ToList();
-            var control_notes_result = Mapper.Map<List<ControlNotesResultDTO>>(control_notes);
-            return Ok(control_notes_result);
+            var control_notes = await _controlNotesRepository.GetAllAsync(Cid);
+            return Ok(control_notes);
         }
 
         [HttpGet("notetoheadcontrol/{Cid}")]
-        public IActionResult getNotesTOHeadControl([FromRoute] string Cid)
+
+        public async Task<IActionResult> getNotesToHeadControl([FromRoute] string Cid)
         {
-            var allControlMember = Context.Control_Note.Include(c => c.WriteBy).Where(c => c.ControlID == Cid).ToList();
-            List<ControlNotesResultDTO>? controlNotesResultDTOs = new List<ControlNotesResultDTO>();
-            foreach (var users in allControlMember)
-            {
-                var member = Context.ControlUsers.FirstOrDefault(c => c.UserID == users.WriteByID);
-                if (member == null || member.JobType != JobType.Member) continue;
-                controlNotesResultDTOs.Add(new ControlNotesResultDTO()
-                {
-                    Description = users.Description,
-                    WriteDate = users.WriteDate,
-                    WriteBy = Mapper.Map<UserResultDto>(users.WriteBy),
-                });
-            }
-            return Ok(controlNotesResultDTOs);
+            var control_notes = await _controlNotesRepository.GetNotesToHeadControl(Cid);
+            return Ok(control_notes);
         }
 
         [HttpGet("notetoheadfaculty/{Cid}")]
-        public IActionResult getNotesTOHeadFaculty([FromRoute] string Cid)
+        public async Task<IActionResult> getNotesTOHeadFaculty([FromRoute] string Cid)
         {
-            var allControlMember = Context.Control_Note.Include(c => c.WriteBy).Where(c => c.ControlID == Cid).ToList();
-            List<ControlNotesResultDTO>? controlNotesResultDTOs = new List<ControlNotesResultDTO>();
-            foreach (var users in allControlMember)
-            {
-                var member = Context.ControlUsers.FirstOrDefault(c => c.UserID == users.WriteByID);
-                if (member == null || member.JobType != JobType.Head) continue;
-                controlNotesResultDTOs.Add(new ControlNotesResultDTO()
-                {
-                    Description = users.Description,
-                    WriteDate = users.WriteDate,
-                    WriteBy = Mapper.Map<UserResultDto>(users.WriteBy),
-                });
-            }
-            return Ok(controlNotesResultDTOs);
+            var control_notes = await _controlNotesRepository.GetNotesToHeadFaculty(Cid);
+            return Ok(control_notes);
         }
 
         [HttpGet("notetoheadunivarsity/{Cid}")]
-        public IActionResult getNotesTOHeadUnivarsity([FromRoute] string Cid)
+        public async Task<IActionResult> getNotesTOHeadUnivarsity([FromRoute] string Cid)
         {
-            
-            var control=Context.Control.FirstOrDefault(c=>c.Id == Cid);
-            var notes = Context.Control_Note.Include(c => c.WriteBy).Where(n => n.WriteByID==control.UserCreatorID);
-            var notesResult=notes.Select(note=>Mapper.Map<ControlNotesResultDTO>(note)).ToList();
-            return Ok(notesResult);
+            var control_notes = await _controlNotesRepository.GetNotesToHeadUnivarsity(Cid);
+            return Ok(control_notes);
         }
 
     }
