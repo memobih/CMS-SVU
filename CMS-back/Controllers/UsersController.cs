@@ -49,7 +49,9 @@ namespace CMS_back.Controllers
         {
             var user = await _repoUser.GetCurrentUser();
             if (user == null) return BadRequest("No user Login yet");
-            var userDto=new UserResultDto { Id=user.Id, Name=user.Name, FaculityEmployeeID = user.FaculityEmployeeID, FaculityLeaderID = user.FaculityLeaderID};
+            var userDto=new UserResultDto { Id=user.Id, 
+                Name=user.Name,UserImage = user.UserImage, Email = user.Email,
+                FaculityEmployeeID = user.FaculityEmployeeID, FaculityLeaderID = user.FaculityLeaderID};
             return Ok(userDto);
         }
 
