@@ -9,30 +9,42 @@ namespace CMS_back.GenericRepository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected readonly CMSContext context;
+        protected readonly CMSContext _context;
         public GenericRepository(CMSContext context)
         {
-            this.context = context;
+            _context = context;
         }
+
+        public async Task<T> GetById(string id, params string[] includeProperties)
+        {
+            IQueryable<T> query = _context.Set<T>();
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+            return await query.FirstOrDefaultAsync(e => EF.Property<string>(e, "Id") == id);
+        }
+
         public void Add(T entity)
         {
-            context.Set<T>().Add(entity);
-        }
-        public void AddRange(IEnumerable<T> entities)
-        {
-            context.Set<T>().AddRange(entities);
+            _context.Set<T>().Add(entity);
         }
 
-
-        public async Task<T> FindFirstAsync(Expression<Func<T, bool>> expression)
+        public void Update(T entity)
         {
-            return await context.Set<T>().FirstOrDefaultAsync(expression);
-            
+            _context.Attach(entity);
+            _context.Entry<T>(entity).State = EntityState.Modified;
+
+        }
+
+        public void Remove(T entity)
+        {
+            _context.Set<T>().Remove(entity);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(params string[] includeProperties)
         {
-            IQueryable<T> query = context.Set<T>();
+            IQueryable<T> query = _context.Set<T>();
             if (includeProperties != null)
             {
                 foreach (var includeProperty in includeProperties)
@@ -43,34 +55,16 @@ namespace CMS_back.GenericRepository
             return await query.ToListAsync();
             //return context.Set<T>().ToList();
         }
-        public async Task<T> GetById(string id, params string[] includeProperties)
-        {
-            IQueryable<T> query = context.Set<T>();
-            foreach (var includeProperty in includeProperties)
-            {
-                query = query.Include(includeProperty);
-            }
-            return await query.FirstOrDefaultAsync(e => EF.Property<string>(e, "Id") == id);
-        }
-        public void Update(T entity)
-        {
-            context.Attach(entity);
-            context.Entry<T>(entity).State = EntityState.Modified;
-            
-        }
-        public void Remove(T entity)
-        {
-            context.Set<T>().Remove(entity);
-        }
 
-        public void RemoveRange(IEnumerable<T> entities)
+        public async Task<T> FindFirstAsync(Expression<Func<T, bool>> expression, params string[] includeProperties)
         {
-            context.Set<T>().RemoveRange(entities);
+            return await _context.Set<T>().FirstOrDefaultAsync(expression);
+
         }
 
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression, params string[] includeProperties)
         {
-            IQueryable<T> query = context.Set<T>().Where(expression);
+            IQueryable<T> query = _context.Set<T>().Where(expression);
             if (includeProperties != null)
             {
                 foreach (var includeProperty in includeProperties)
@@ -82,9 +76,5 @@ namespace CMS_back.GenericRepository
             //return  context.Set<T>().Where(expression);
         }
 
-        public Task<T> FindFirstAsync(Expression<Func<T, bool>> expression, params string[] includeProperties)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

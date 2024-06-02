@@ -4,6 +4,7 @@ using CMS_back.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS_back.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    partial class CMSContextModelSnapshot : ModelSnapshot
+    [Migration("20240530151843_otp")]
+    partial class otp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -810,19 +813,19 @@ namespace CMS_back.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5ea1ba4f-93f3-4c1c-b922-d09f2aad3309",
+                            Id = "9fa306af-1675-417d-ae68-3b0598d1b65b",
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
-                            Id = "c3ca1e36-5d2b-4105-ba71-4f1c7584102f",
+                            Id = "44827753-a18b-46cb-9823-a3d42dab2ff8",
                             Name = "AdminFaculty",
                             NormalizedName = "AdminFaculty"
                         },
                         new
                         {
-                            Id = "3d14c421-38ad-4fa6-a8f9-b800dd0a607b",
+                            Id = "bdec3b41-a936-4b5c-b54e-ed3f6a54c8df",
                             Name = "Staff",
                             NormalizedName = "Staff"
                         });

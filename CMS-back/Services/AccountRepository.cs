@@ -146,13 +146,13 @@ namespace CMS_back.Services
 
         public async Task<IdentityResult> ChangePasswordAsync(ChangePassword changePassword)
         {
-            var user = _contextAccessor.HttpContext.User;
+            var user =  _contextAccessor.HttpContext.User;
             var currentUser = await _userManager.GetUserAsync(user);
             if (currentUser == null)
-                return IdentityResult.Failed(new IdentityError { Description = "User not found" });
+                return IdentityResult.Failed(new IdentityError { Description = "User not Found" });
 
             if (currentUser.OTP != changePassword.OTP || currentUser.OTPExpiry < DateTime.UtcNow)
-                return IdentityResult.Failed(new IdentityError { Description = "Invalid or expired OTP" });
+                return IdentityResult.Failed(new IdentityError { Description = "Invalid or Expired OTP" });
 
             currentUser.OTP = null;
             currentUser.OTPExpiry = DateTime.MinValue;
@@ -226,14 +226,13 @@ namespace CMS_back.Services
             return IdentityResult.Success;
         }
 
-
         private string GenerateOTP()
         {
             using (var rng = new RNGCryptoServiceProvider())
             {
                 var byteArray = new byte[6];
                 rng.GetBytes(byteArray);
-
+                
                 var sb = new StringBuilder();
                 foreach (var byteValue in byteArray)
                 {

@@ -42,7 +42,7 @@ namespace CMS_back.Controllers
             if (isHead == null || isHead.JobType != JobType.Head) return BadRequest("Head of control only has access");
 
             var control = Context.Control.FirstOrDefault(c => c.Id == Cid);
-            if (control == null) return BadRequest("Controll not found");
+            if (control == null) return BadRequest("Control Not Found");
             Control_Task control_Task = _mapper.Map<Control_Task>(controlTaskDTO);
             control_Task.CreationDate = DateTime.Now;
             control_Task.CreateBy = currentUser;

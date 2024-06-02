@@ -24,22 +24,11 @@ namespace CMS_back.Controllers
 
     public class AccountController : ControllerBase
     {
-        private readonly IConfiguration config;
-        private readonly IMailingService _mailingService;
-        private readonly IUserRepository _repoUser;
+
         private readonly IAccountRepository _accountRepository;
 
-        public CMSContext context { get; }
-        public UserManager<ApplicationUser> _usermanager { get; }
-        public IHttpContextAccessor _contextAccessor { get; }
-        public IMapper Mapper { get; }
-
-        public AccountController(IConfiguration config, IAccountRepository accountRepository, IMailingService mailingService, IMapper mapper, IUserRepository repo)
+        public AccountController( IAccountRepository accountRepository)
         {
-            this.config = config;
-            _mailingService = mailingService;
-            Mapper = mapper;
-            _repoUser = repo;
             _accountRepository = accountRepository;
         }
 
@@ -56,13 +45,6 @@ namespace CMS_back.Controllers
             var result = await _accountRepository.RegisterAsync(userDto);
             return Ok(result);
         }
-
-
-
-
-
-
-
 
 
         [HttpPut("change-password")]
@@ -106,7 +88,7 @@ namespace CMS_back.Controllers
         }
 
         [HttpPost("verify-otp")]
-        public async Task<IActionResult> VerifyOtp([FromBody] VerifyOTPRequest request)
+        public async Task<IActionResult> VerifyOTP([FromBody] VerifyOTPRequest request)
         {
             var result = await _accountRepository.VerifyOTPAsync(request);
             if (result.Succeeded)
