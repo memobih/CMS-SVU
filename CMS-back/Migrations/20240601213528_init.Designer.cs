@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS_back.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    [Migration("20240530151843_otp")]
-    partial class otp
+    [Migration("20240601213528_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -813,19 +813,19 @@ namespace CMS_back.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9fa306af-1675-417d-ae68-3b0598d1b65b",
+                            Id = "97359b82-2cb7-4a97-9c41-288ef9e17267",
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
-                            Id = "44827753-a18b-46cb-9823-a3d42dab2ff8",
+                            Id = "302dccf2-10aa-4153-9fbd-219a4be45da4",
                             Name = "AdminFaculty",
                             NormalizedName = "AdminFaculty"
                         },
                         new
                         {
-                            Id = "bdec3b41-a936-4b5c-b54e-ed3f6a54c8df",
+                            Id = "34bd0e94-2b0d-4df0-9dd6-fcf486bbc1c9",
                             Name = "Staff",
                             NormalizedName = "Staff"
                         });

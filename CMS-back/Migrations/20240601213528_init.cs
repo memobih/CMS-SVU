@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CMS_back.Migrations
 {
     /// <inheritdoc />
-    public partial class otp : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -752,9 +752,9 @@ namespace CMS_back.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "44827753-a18b-46cb-9823-a3d42dab2ff8", null, "AdminFaculty", "AdminFaculty" },
-                    { "9fa306af-1675-417d-ae68-3b0598d1b65b", null, "AdminUniversity", "AdminUniversity" },
-                    { "bdec3b41-a936-4b5c-b54e-ed3f6a54c8df", null, "Staff", "Staff" }
+                    { "302dccf2-10aa-4153-9fbd-219a4be45da4", null, "AdminFaculty", "AdminFaculty" },
+                    { "34bd0e94-2b0d-4df0-9dd6-fcf486bbc1c9", null, "Staff", "Staff" },
+                    { "97359b82-2cb7-4a97-9c41-288ef9e17267", null, "AdminUniversity", "AdminUniversity" }
                 });
 
             migrationBuilder.CreateIndex(
