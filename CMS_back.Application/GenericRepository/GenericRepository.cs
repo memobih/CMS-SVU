@@ -53,13 +53,19 @@ namespace CMS_back.GenericRepository
                 }
             }
             return await query.ToListAsync();
-            //return context.Set<T>().ToList();
         }
 
         public async Task<T> FindFirstAsync(Expression<Func<T, bool>> expression, params string[] includeProperties)
         {
-            return await _context.Set<T>().FirstOrDefaultAsync(expression);
-
+            IQueryable<T> query = _context.Set<T>().Where(expression);
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> expression, params string[] includeProperties)
@@ -73,7 +79,6 @@ namespace CMS_back.GenericRepository
                 }
             }
             return await query.ToListAsync();
-            //return  context.Set<T>().Where(expression);
         }
 
     }

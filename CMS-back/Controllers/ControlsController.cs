@@ -40,7 +40,7 @@ namespace CMS_back.Controllers
             return Ok(controls);
         }
 
-        [HttpGet("detail/{cid}")]
+        [HttpGet("details/{cid}")]
         public async Task<IActionResult> Detail(string cid)
         {
             var control = await _repo.GetByIdAsync(cid);

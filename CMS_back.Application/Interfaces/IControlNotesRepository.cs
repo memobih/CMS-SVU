@@ -8,6 +8,6 @@ namespace CMS_back.Interfaces
         Task<IEnumerable<ControlNotesResultDTO>> GetAllAsync(string id);
         Task<IEnumerable<ControlNotesResultDTO>> GetNotesToHeadControl(string id);
         Task<IEnumerable<ControlNotesResultDTO>> GetNotesToHeadFaculty(string id);
-        Task<IEnumerable<ControlNotesResultDTO>> GetNotesToHeadUnivarsity(string id);
+        Task<IEnumerable<ControlNotesResultDTO>> GetNotesToHeadUniversity(string id);
     }
 }

@@ -16,48 +16,37 @@ namespace CMS_back.Controllers
     public class ControlTaskController : ControllerBase
     {
 
-        public IMapper _mapper;
-        public IMailingService _mailingService;
-        public readonly IControlTaskRepository _controlTaskRepo;
-        public readonly IUserRepository userRepo;
-        public readonly IGenericRepository<ControlUsers> _controlUserRepo;
-        public readonly IGenericRepository<Control> _controlRepo;
-        public ControlTaskController(IMapper mapper, IMailingService mailingService,
-            IControlTaskRepository repo, IUserRepository userRepo, IGenericRepository<ControlUsers> repo2,
-            IGenericRepository<Control> controlRepo)
+        private readonly IControlTaskRepository _repo;
+        private readonly IMapper _mapper;
+
+        public ControlTaskController(IControlTaskRepository repo, IMapper mapper)
         {
+            _repo = repo;
             _mapper = mapper;
-            _mailingService = mailingService;
-            _controlTaskRepo = repo;
-            _controlUserRepo = repo2;
-            this.userRepo = userRepo;
-            this._controlRepo = controlRepo;
-        }
-        [HttpPost("create-task")]
-        public async Task<IActionResult> create(controlTaskDTO controlTaskDTO, string Cid)
-        {
-            var task = await _controlTaskRepo.Create(_mapper.Map<Control_Task>(controlTaskDTO), controlTaskDTO.UserTaskIds, Cid);
-            if (task == null) return BadRequest("Can't Create Task Try Again later");
-            return Ok("Task Created Successfully");
         }
 
-        [HttpPut("update-task")]
-        public async Task<IActionResult> UpdateTask(controlTaskDTO controlTaskDTO, string Tid)
+        [HttpPost("create-task-/{controlId}")]
+        public async Task<IActionResult> create(controlTaskDTO controlTaskDTO, string controlId)
+        {
+            var task = await _repo.Create(_mapper.Map<Control_Task>(controlTaskDTO), controlTaskDTO.UserTaskIds, controlId);
+            return task ? Ok("Task Created Successfully") :BadRequest("Can't Create Task Try Again later") ;
+        }
+
+        [HttpPut("update-task/{tid}")]
+        public async Task<IActionResult> UpdateTask(controlTaskDTO controlTaskDTO, string tid)
         {
             if (controlTaskDTO == null) return BadRequest("Invalid Task data");
             var temp = _mapper.Map<Control_Task>(controlTaskDTO);
-            temp.Id = Tid;
+            temp.Id = tid;
 
-            var task = await _controlTaskRepo.UpdateTask(temp, controlTaskDTO.UserTaskIds);
-            if (task == null) return BadRequest("Task Not Found");
-
-            return Ok("Task Updated Successfully");
+            var task = await _repo.UpdateTask(temp, controlTaskDTO.UserTaskIds);            
+            return task ? Ok("Task Updated Successfully") : BadRequest("Task Can't Updated");
         }
 
-        [HttpGet("get-tasks-by-control-id")]
-        public async Task<IActionResult> GetTasksByControlId(string Cid)
+        [HttpGet("get-tasks-by-control-id/{cid}")]
+        public async Task<IActionResult> GetTasksByControlId(string cid)
         {
-            var tasks = await _controlTaskRepo.GetTasksOfControl(Cid);
+            var tasks = await _repo.GetTasksOfControl(cid);
             if (tasks == null) return BadRequest("Not Found Tasks");
             return Ok(tasks);
         }
@@ -65,22 +54,22 @@ namespace CMS_back.Controllers
         [HttpGet("user/{userId}/{controlId}")]
         public async Task<IActionResult> GetUserTasks(string controlId, string userId)
         {
-            var tasks = await _controlTaskRepo.GetUserTasks(controlId, userId);
+            var tasks = await _repo.GetUserTasks(controlId, userId);
             if (tasks == null) return BadRequest("Not Found Tasks");
             return Ok(tasks);
         }
 
-        [HttpDelete("delete-task")]
-        public async Task<IActionResult> DeleteTask(string Tid)
+        [HttpDelete("delete-task/{tid}")]
+        public async Task<IActionResult> DeleteTask(string tid)
         {
-            var task = await _controlTaskRepo.DeleteTask(Tid);
+            var task = await _repo.DeleteTask(tid);
             return task ? Ok("Task Deleted Successfully") : BadRequest("Can Not Delete This Task");
         }
 
-        [HttpPut("isDone")]
-        public async Task<IActionResult> isDone(string Tid)
+        [HttpPut("isDone/{tid}")]
+        public async Task<IActionResult> isDone(string tid)
         {
-            var task = await _controlTaskRepo.FinishTask(Tid);
+            var task = await _repo.FinishTask(tid);
             if (task == null) return BadRequest("Not Found Task");
             return Ok("Task Is Done");
         }

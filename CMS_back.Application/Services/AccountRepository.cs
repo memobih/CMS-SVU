@@ -27,7 +27,7 @@ namespace CMS_back.Services
         private readonly IUserHelpers _userHelper;
 
         public AccountRepository(UserManager<ApplicationUser> userManager, IMapper mapper,
-            IMailingService mailingService, IConfiguration config , IUserHelpers userHelpers)
+            IMailingService mailingService, IConfiguration config, IUserHelpers userHelpers)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -35,21 +35,22 @@ namespace CMS_back.Services
             _config = config;
             _userHelper = userHelpers;
         }
+
         public async Task<IdentityResult> RegisterAsync(RegisterUserDto userDto)
         {
-            
             var currentUser = await _userHelper.GetCurrentUserAsync();
-            //save
             ApplicationUser userResult = _mapper.Map<ApplicationUser>(userDto);
             userResult.Type = ConstsRoles.Staff;
             if (currentUser != null)
+            {
                 userResult.FaculityEmployeeID = currentUser.FaculityLeaderID;
-            else return IdentityResult.Failed(new IdentityError { Description = "not allowed to add users" });
+            }
+            else return IdentityResult.Failed(new IdentityError { Description = "Not Allowed To Add Users" });
             var userExist = await _userManager.FindByNameAsync(userDto.UserName);
 
             if (userExist != null)
             {
-                throw new Exception("user already exist");
+                throw new Exception("User Already Exist");
             }
 
             IdentityResult result = await _userManager.CreateAsync(userResult, userDto.Password);
@@ -59,19 +60,15 @@ namespace CMS_back.Services
                 userResult.EmailConfirmed = true;
                 await _userManager.UpdateAsync(userResult);
 
-                    var message = new MailMessage(new string[] { userResult.Email }, "register", $"registered successfully");
-                    _mailingService.SendMail(message);
+                var message = new MailMessage(new string[] { userResult.Email }, "register", $"Hi {userResult.Name}, You have Registered Successfully In CMS(Control Management System)");
+                _mailingService.SendMail(message);
                 return result;
             }
             return IdentityResult.Failed(new IdentityError { Description = "not allowed to add users" });
         }
 
-
-
-
-    public async Task<LoginResult> SignInAsync(LoginUserDto loginUser)
+        public async Task<LoginResult> SignInAsync(LoginUserDto loginUser)
         {
-
             var user = await _userManager.FindByNameAsync(loginUser.UserName);
             if (user == null)
             {
@@ -105,29 +102,29 @@ namespace CMS_back.Services
                 };
             }
             var claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.Name, user.UserName));
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
-                claims.Add(new Claim(ClaimTypes.Role, user.Type));
+            claims.Add(new Claim(ClaimTypes.Name, user.UserName));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
+            claims.Add(new Claim(ClaimTypes.Role, user.Type));
 
-                if (user.FaculityLeaderID != null)
-                    claims.Add(new Claim(ClaimTypes.Sid, user.FaculityLeaderID));
+            if (user.FaculityLeaderID != null)
+                claims.Add(new Claim(ClaimTypes.Sid, user.FaculityLeaderID));
 
-                claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
 
-                SecurityKey securityKey =
-                   new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"]));
+            SecurityKey securityKey =
+               new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Secret"]));
 
-                SigningCredentials signincred =
-                            new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            SigningCredentials signincred =
+                        new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-                //Create token
-                JwtSecurityToken mytoken = new JwtSecurityToken(
-                    issuer: _config["JWT:ValidIssuer"],
-                    audience: _config["JWT:ValidAudience"],
-                    claims: claims,
-                    expires: DateTime.Now.AddDays(1),
-                    signingCredentials: signincred
-                    );
+            //Create token
+            JwtSecurityToken mytoken = new JwtSecurityToken(
+                issuer: _config["JWT:ValidIssuer"],
+                audience: _config["JWT:ValidAudience"],
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: signincred
+                );
 
             return new LoginResult
             {
@@ -135,10 +132,10 @@ namespace CMS_back.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(mytoken),
                 Expiration = mytoken.ValidTo,
                 roles = user.Type,
-                
-                };
+
+            };
         }
-      
+
         public async Task<IdentityResult> ChangePasswordAsync(ChangePassword changePassword)
         {
             var currentUser = await _userHelper.GetCurrentUserAsync();
@@ -146,7 +143,7 @@ namespace CMS_back.Services
                 return IdentityResult.Failed(new IdentityError { Description = "User not Found" });
 
             if (currentUser.OTP != changePassword.OTP || currentUser.OTPExpiry < DateTime.UtcNow)
-                return IdentityResult.Failed(new IdentityError { Description = "Invalid or Expired OTP" });
+                return IdentityResult.Failed(new IdentityError { Description = "Invalid Or Expired OTP" });
 
             currentUser.OTP = null;
             currentUser.OTPExpiry = DateTime.MinValue;
@@ -171,10 +168,10 @@ namespace CMS_back.Services
         {
             var user = await _userManager.FindByEmailAsync(resetPassword.Email);
             if (user == null)
-                return IdentityResult.Failed(new IdentityError { Description = "User not found" });
+                return IdentityResult.Failed(new IdentityError { Description = "User Not Found" });
 
             if (user.OTP != resetPassword.OTP || user.OTPExpiry < DateTime.UtcNow)
-                return IdentityResult.Failed(new IdentityError { Description = "Invalid or expired OTP" });
+                return IdentityResult.Failed(new IdentityError { Description = "Invalid Or Expired OTP" });
 
             user.OTP = null;
             user.OTPExpiry = DateTime.MinValue;
@@ -190,14 +187,14 @@ namespace CMS_back.Services
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-                return IdentityResult.Failed(new IdentityError { Description = "User not found" });
+                return IdentityResult.Failed(new IdentityError { Description = "User Not Found" });
 
             var otp = GenerateOTP();
             user.OTP = otp;
             user.OTPExpiry = DateTime.UtcNow.AddMinutes(15);
             await _userManager.UpdateAsync(user);
 
-            var message = new MailMessage(new[] { user.Email }, "Your OTP", $"Your OTP is: {otp}");
+            var message = new MailMessage(new[] { user.Email }, "Your OTP", $"Your OTP For Change Your Password In CMS is: {otp}");
             _mailingService.SendMail(message);
 
             return IdentityResult.Success;
@@ -207,10 +204,10 @@ namespace CMS_back.Services
         {
             var user = await _userManager.FindByEmailAsync(verifyOTPRequest.Email);
             if (user == null)
-                return IdentityResult.Failed(new IdentityError { Description = "User not found" });
+                return IdentityResult.Failed(new IdentityError { Description = "User Not Found" });
 
             if (user.OTP != verifyOTPRequest.OTP || user.OTPExpiry < DateTime.UtcNow)
-                return IdentityResult.Failed(new IdentityError { Description = "Invalid or expired OTP" });
+                return IdentityResult.Failed(new IdentityError { Description = "Invalid Or Expired OTP" });
 
             user.OTP = string.Empty;
             user.OTPExpiry = DateTime.MinValue;
@@ -226,7 +223,7 @@ namespace CMS_back.Services
             {
                 var byteArray = new byte[6];
                 rng.GetBytes(byteArray);
-                
+
                 var sb = new StringBuilder();
                 foreach (var byteValue in byteArray)
                 {
@@ -235,5 +232,6 @@ namespace CMS_back.Services
                 return sb.ToString();
             }
         }
+
     }
 }

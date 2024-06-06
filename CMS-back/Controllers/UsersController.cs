@@ -13,24 +13,21 @@ namespace CMS_back.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository _repo;
-        private readonly IMapper _mapper;
 
-        public UsersController(IMapper mapper, IUserRepository repo)
+        public UsersController(IUserRepository repo)
         {
-            _mapper = mapper;
             _repo = repo;
         }
 
-
-        [HttpGet("user-for-faculty")]
-        public async Task<IActionResult> GetUserForFaculty(string id)
+        [HttpGet("get-user-for-faculity/{fid}")]
+        public async Task<IActionResult> GetUserForFaculity(string fid)
         {
-            var users = await _repo.GetFacultyUsers(id);
-            if (users == null) return Ok(new List<ApplicationUser>());
+            var users = await _repo.GetFaculityUsers(fid);
+            if (users == null) throw new Exception("No Users are Exist");
             return users != null ? Ok(users) : BadRequest("there is no users");
         }
 
-        [HttpGet("user-for-control")]
+        [HttpGet("get-users-for-control")]
         public async Task<IActionResult> GetUserForControl(string controlId)
         {
             var usersResult = await _repo.GetControlUsers(controlId);
@@ -39,23 +36,25 @@ namespace CMS_back.Controllers
         }
 
         [HttpGet("current-user")]
-        public async Task<IActionResult> GetUser()
+        public async Task<IActionResult> GetCurrentUser()
         {
             var user = await _repo.GetCurrentUser();
+            if (user == null) return BadRequest("Current User Not Found");
             return Ok(user);
         }
 
-        [HttpGet("controls/{Uid}")]
-        public async Task<IActionResult> getUserControlsAndRoles([FromRoute] string Uid)
+        [HttpGet("get-controls-for-user/{uid}")]
+        public async Task<IActionResult> getUserControlsAndRoles([FromRoute] string uid)
         {
-            List<UserWithHisControlDTO>? control_user = await _repo.GetUserOfControl(Uid);
+            List<UserWithHisControlDTO> control_user = await _repo.GetControlsForUser(uid);
+            if (control_user == null) return BadRequest("No ConstrolUsers are Exist");
             return Ok(control_user);
         }
 
-        [HttpGet("headConrol/{Cid}")]
-        public async Task<IActionResult> headOfControl(string Cid)
+        [HttpGet("get-head-of-control/{cid}")]
+        public async Task<IActionResult> headOfControl(string cid)
         {
-            var controlHead = await _repo.GetHeadOfControl(Cid);
+            var controlHead = await _repo.GetHeadOfControl(cid);
             if (controlHead == null) return BadRequest("Not Found Head");
             return Ok(controlHead);
         }

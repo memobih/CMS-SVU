@@ -20,13 +20,27 @@ namespace CMS_back.Controllers
             _faculityRepository = faculityRepository;
         }
 
-        [HttpPost("add")]
+        [HttpPost("add-faculity")]
         [Authorize(Roles = ConstsRoles.AdminUniversity)]
         public async Task<IActionResult> create(FacultyDTO facultyDTO)
         {
             var faculity = await _faculityRepository.AddAsync(facultyDTO);
             return faculity ? Ok("Faculity Added Successfully") : BadRequest("Invalid Faculity Data");
         }
+
+        [HttpGet("get-faculity-by-id/{fid}")]
+        public async Task<IActionResult> getfacuilty(string fid)
+        {
+            var faculity = await _faculityRepository.GetByIdAsync(fid);
+            return Ok(faculity);
+        }
+
+        [HttpGet("faculitynode/{fid}")]
+        public async Task<IActionResult> getfacultynode([FromRoute] string fid)
+        {
+            var facultyNode = await _faculityRepository.GetFaculityNode(fid);
+            return Ok(facultyNode);
+        }   
 
         [HttpGet("get-all-faculities")]
         public async Task<IActionResult> GetAllfaculities()
@@ -35,18 +49,11 @@ namespace CMS_back.Controllers
             return Ok(faculities);
         }
 
-        [HttpGet("get-faculity-by-id")]
-        public async Task<IActionResult> getfacuilty(string fId)
+        [HttpGet("getallacadyears")]
+        public async Task<IActionResult> getAllAcadYears()
         {
-            var faculity = await _faculityRepository.GetByIdAsync(fId);
-            return Ok(faculity);
-        }
-
-        [HttpGet("node/{Fid}")]
-        public async Task<IActionResult> getfacultynode([FromRoute] string Fid)
-        {
-            var facultyNode = await _faculityRepository.GetFaculityNode(Fid);
-            return Ok(facultyNode);
+            var acadYears = await _faculityRepository.GetAllAcadYearAsync();
+            return Ok(acadYears);
         }
     }
 }

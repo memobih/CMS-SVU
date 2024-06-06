@@ -12,52 +12,45 @@ namespace CMS_back.Controllers
     [Authorize]
     public class ControlNotesController : ControllerBase
     {
-
         private readonly IControlNotesRepository _controlNotesRepository;
-        private readonly CMSContext _context;
-        private readonly IMapper Mapper;
 
-        public ControlNotesController(CMSContext context
-            , IMapper mapper, IControlNotesRepository controlNotesRepository)
+        public ControlNotesController(IControlNotesRepository controlNotesRepository)
         {
             _controlNotesRepository = controlNotesRepository;
-            _context = context;
-            Mapper = mapper;
         }
 
-        [HttpPost("createcontrolnote/{Cid}")]
-        public async Task<IActionResult> create(controlNoteDTO controlNoteDTO, string Cid)
+        [HttpPost("createcontrolnote/{cid}")]
+        public async Task<IActionResult> create(controlNoteDTO controlNoteDTO, string cid)
         {
-            var controlNote = await _controlNotesRepository.AddAsync(controlNoteDTO, Cid);
+            var controlNote = await _controlNotesRepository.AddAsync(controlNoteDTO, cid);
             return controlNote ? Ok("Note Created Successfully") : BadRequest("Invalid Note Data");
         }
 
-        [HttpGet("getallcontrolnotes/{Cid}")]
-        public async Task<IActionResult> get(string Cid)
+        [HttpGet("getallcontrolnotes/{cid}")]
+        public async Task<IActionResult> get(string cid)
         {
-            var control_notes = await _controlNotesRepository.GetAllAsync(Cid);
+            var control_notes = await _controlNotesRepository.GetAllAsync(cid);
             return Ok(control_notes);
         }
 
-        [HttpGet("notetoheadcontrol/{Cid}")]
-
-        public async Task<IActionResult> getNotesToHeadControl([FromRoute] string Cid)
+        [HttpGet("notetoheadcontrol/{cid}")]
+        public async Task<IActionResult> getNotesToHeadControl([FromRoute] string cid)
         {
-            var control_notes = await _controlNotesRepository.GetNotesToHeadControl(Cid);
+            var control_notes = await _controlNotesRepository.GetNotesToHeadControl(cid);
             return Ok(control_notes);
         }
 
-        [HttpGet("notetoheadfaculty/{Cid}")]
-        public async Task<IActionResult> getNotesTOHeadFaculty([FromRoute] string Cid)
+        [HttpGet("notetoheadfaculty/{cid}")]
+        public async Task<IActionResult> getNotesTOHeadFaculty([FromRoute] string cid)
         {
-            var control_notes = await _controlNotesRepository.GetNotesToHeadFaculty(Cid);
+            var control_notes = await _controlNotesRepository.GetNotesToHeadFaculty(cid);
             return Ok(control_notes);
         }
 
-        [HttpGet("notetoheadunivarsity/{Cid}")]
-        public async Task<IActionResult> getNotesTOHeadUnivarsity([FromRoute] string Cid)
+        [HttpGet("notetoheadunivarsity/{cid}")]
+        public async Task<IActionResult> getNotesTOHeadUniversity([FromRoute] string cid)
         {
-            var control_notes = await _controlNotesRepository.GetNotesToHeadUnivarsity(Cid);
+            var control_notes = await _controlNotesRepository.GetNotesToHeadUniversity(cid);
             return Ok(control_notes);
         }
 

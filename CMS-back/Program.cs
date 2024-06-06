@@ -13,7 +13,7 @@ using System.Text;
 using CMS_back.Interfaces;
 using CMS_back.Services;
 using CMS_back.Application.Helpers;
-
+ 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -36,14 +36,14 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("CMS"),
 builder => builder.EnableRetryOnFailure()));
 
 
-//builder.Services.AddIdentity<ApplicationUser, IdentityRole>().
-//    AddEntityFrameworkStores<CMSContext>();
+
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<CMSContext>()
     .AddDefaultTokenProviders();
 //reset password
 builder.Services.Configure<DataProtectionTokenProviderOptions>
     (options => options.TokenLifespan = TimeSpan.FromHours(1));
+
 builder.Services.AddScoped<IMailingService, MailingService>();
 builder.Services.AddScoped<IControlRepository, ControlRepository>();
 builder.Services.AddScoped<ISubjectRepository,SubjectRepository>();
@@ -52,7 +52,10 @@ builder.Services.AddScoped<IFaculityRepository, FaculityRepository>();
 builder.Services.AddScoped<IControlNotesRepository, ControlNotesRepository>();
 builder.Services.AddScoped<IControlTaskRepository, ControlTaskRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+
 builder.Services.AddScoped<IUserHelpers,UserHelpers>();
+
+builder.Services.AddScoped<IControlTaskRepository, ControlTaskRepository>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); 
 

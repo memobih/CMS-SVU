@@ -37,37 +37,33 @@ namespace CMS_back.Services
 
     #endregion
 
+
     public class ControlTaskRepository : IControlTaskRepository
     {
         private readonly CMSContext _context;
-        private readonly UserManager<ApplicationUser> _usermanager;
-        private readonly IHttpContextAccessor _contextAccessor;
-        private readonly IUserRepository _userRepo;
+        private readonly IMapper _mapper;
+        private readonly IUserHelpers _userHelpers;
+        private readonly IMailingService _mailingService;
         private readonly IGenericRepository<Control_Task> _controlTaskRepo;
         private readonly IGenericRepository<ControlUsers> _controlUserRepo;
+        private readonly IGenericRepository<Control_UserTasks> _controlUserTasksrepo;
         private readonly IGenericRepository<Control> _controlRepo;
-        private readonly IMailingService _mailingService;
-        private readonly IUserHelpers _userHelpers;
-        private readonly IMapper _mapper;
 
-        public ControlTaskRepository(CMSContext context, IHttpContextAccessor contextAccessor,
-            UserManager<ApplicationUser> usermanager, IUserRepository repo, IGenericRepository<Control_Task> genericRepository
-            , IMailingService mailingService, IGenericRepository<Control> controlRepo, IGenericRepository<ControlUsers> controlUserRepo
-            , IUserHelpers userHelpers, IMapper mapper)
+        public ControlTaskRepository(CMSContext context, IUserHelpers userHelpers, IMapper mapper, IGenericRepository<Control_Task> genericRepository
+            , IMailingService mailingService, IGenericRepository<Control_UserTasks> controlUserTasksrepo
+            , IGenericRepository<Control> controlRepo, IGenericRepository<ControlUsers> controlUserRepo)
         {
             _context = context;
-            _contextAccessor = contextAccessor;
-            _usermanager = usermanager;
-            _userRepo = repo;
             _controlTaskRepo = genericRepository;
             _mailingService = mailingService;
             _controlUserRepo = controlUserRepo;
             _controlRepo = controlRepo;
             _userHelpers = userHelpers;
+            _controlUserTasksrepo = controlUserTasksrepo;
             _mapper = mapper;
         }
 
-        public async Task<Control_Task?> Create(Control_Task task, List<string> usersTasksIds, string controlId)
+        public async Task<bool> Create(Control_Task task, List<string> usersTasksIds, string controlId)
         {
             var currentUser = await _userHelpers.GetCurrentUserAsync();
 
@@ -107,16 +103,20 @@ namespace CMS_back.Services
                 }
             }
             _controlTaskRepo.Add(task);
-            await _context.SaveChangesAsync();
-            return task;
+            if (await _context.SaveChangesAsync() > 0) return true;
+            return false;
         }
 
-        public async Task<Control_Task?> UpdateTask(Control_Task Task, List<string> usersTasksIds)
+        public async Task<bool> UpdateTask(Control_Task taskToUpdate, List<string> usersTasksIds)
         {
-            var task = await _controlTaskRepo.FindFirstAsync(ts => ts.Id == Task.Id, new[] { "Control", "CreateBy", "UserTasks", "UserTasks.UserTask" });
-            if (task == null) return null;
+            var task = await _controlTaskRepo.FindFirstAsync(
+                ts => ts.Id == taskToUpdate.Id,
+                new[] { "Control", "CreateBy", "UserTasks", "UserTasks.UserTask" }
+            );
 
-            task.Description = Task.Description;
+            if (task == null) throw new Exception("ControlTasks Not Found");
+
+            task.Description = taskToUpdate.Description;
             task.CreationDate = DateTime.Now;
             task.CreateBy = await _userHelpers.GetCurrentUserAsync();
 
@@ -124,31 +124,31 @@ namespace CMS_back.Services
             {
                 await _context.Entry(task).Collection(t => t.UserTasks).LoadAsync();
             }
-            task.UserTasks.Clear();
 
             var tasksToRemove = task.UserTasks.Where(ut => !usersTasksIds.Contains(ut.UserTaskID)).ToList();
             foreach (var taskToRemove in tasksToRemove)
             {
                 _context.Remove(taskToRemove);
             }
+
             foreach (var userId in usersTasksIds)
             {
-                var existingUserTask = task.UserTasks.FirstOrDefault(ut => ut.UserTaskID == userId);
-                if (existingUserTask == null)
+                if (!task.UserTasks.Any(ut => ut.UserTaskID == userId))
                 {
-                    Control_UserTasks newUserTask = new Control_UserTasks
+                    var newUserTask = new Control_UserTasks
                     {
                         Control_TaskID = task.Id,
-                        UserTaskID = userId,
+                        UserTaskID = userId
                     };
                     task.UserTasks.Add(newUserTask);
                 }
             }
-            await _context.SaveChangesAsync();
-            return task;
+
+            if (await _context.SaveChangesAsync() > 0) return true;
+            return false;
         }
 
-        public async Task<IEnumerable<ControlTaskResultDTO>?> GetTasksOfControl(string controlId)
+        public async Task<IEnumerable<ControlTaskResultDTO>> GetTasksOfControl(string controlId)
         {
             var currentUser = await _userHelpers.GetCurrentUserAsync();
             if (currentUser == null) throw new Exception("No user Login yet");
@@ -157,7 +157,7 @@ namespace CMS_back.Services
             return results;
         }
 
-        public async Task<IEnumerable<ControlTaskResultDTO>?> GetUserTasks(string controlId, string userId)
+        public async Task<IEnumerable<ControlTaskResultDTO>> GetUserTasks(string controlId, string userId)
         {
             Expression<Func<Control_Task, bool>> condition1 = c => c.ControlID == controlId;
             Expression<Func<Control_Task, bool>> condition2 = c => c.UserTasks.Any(ut => ut.UserTaskID == userId);
@@ -185,25 +185,27 @@ namespace CMS_back.Services
 
         }
 
-        public async Task<Control_Task?> GetTaskByID(string taskId)
+        public async Task<Control_Task> GetTaskByID(string taskId)
         {
-            //var task = await _context.Control_Task
-            //    .Include(controlTask => controlTask.Control)
-            //    .Include(controlTask => controlTask.CreateBy)
-            //    .Include(controlTask => controlTask.UserTasks)
-            //    .ThenInclude(users => users.UserTask)
-            //    .FirstOrDefaultAsync(t => t.Id == taskId);
             var task = await _controlTaskRepo.FindFirstAsync(ts => ts.Id == taskId, ["Control", "CreateBy", "UserTasks", "UserTasks.UserTask"]);
             return task;
         }
 
         public async Task<bool> FinishTask(string taskId)
         {
-            var task = await _controlTaskRepo.FindFirstAsync(ts => ts.Id == taskId, ["Control", "CreateBy"]);
-            if (task == null) throw new Exception("This Task Is Not Found");
-            task.IsDone = Question.Yes;
-            _controlTaskRepo.Update(task);
+            var userTasks = await _controlUserTasksrepo.FindAsync(ts => ts.Control_TaskID == taskId);
+            if (userTasks == null) throw new Exception("This Task Is Not Found");
+
+            foreach (var tempTask in userTasks)
+            {
+                if (tempTask.Control_TaskID == taskId)
+                {
+                    tempTask.IsDone = Question.Yes;
+                }
+                _controlUserTasksrepo.Update(tempTask);
+            }
             if (await _context.SaveChangesAsync() > 0) return true;
+            var task = await _controlTaskRepo.FindFirstAsync(ts => ts.Id == taskId, ["Control", "CreateBy ", "UserTasks"]);
             var head = task.CreateBy;
             var control = task.Control;
             if (head.Email != null)

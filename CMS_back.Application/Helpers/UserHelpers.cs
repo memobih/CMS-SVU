@@ -28,15 +28,13 @@ namespace CMS_back.Application.Helpers
         }
         #endregion
 
-        #region methods
+   
         public async Task<ApplicationUser> GetCurrentUserAsync()
         {
             var currentUser = _contextAccessor.HttpContext.User;
             return await _userManager.GetUserAsync(currentUser);
         }
 
-       
-        #endregion
 
         #region file handling
         public async Task<string> AddFileAsync(IFormFile file, string folderName)
@@ -112,5 +110,6 @@ namespace CMS_back.Application.Helpers
 
         }
         #endregion
+
     }
 }

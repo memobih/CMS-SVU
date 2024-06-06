@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CMS_back.Application.Helpers;
 using CMS_back.Consts;
 using CMS_back.Data;
 using CMS_back.DTO;
@@ -13,28 +14,24 @@ namespace CMS_back.Services
     public class ControlNotesRepository : IControlNotesRepository
     {
         private readonly CMSContext _context;
-        private readonly IHttpContextAccessor _contextAccessor;
-        private readonly UserManager<ApplicationUser> _usermanager;
         private readonly IMapper _mapper;
+        private readonly IUserHelpers _userHelpers;
         private readonly IGenericRepository<Control_Note> _genericRepository;
 
-        public ControlNotesRepository(CMSContext context, IMapper mapper, UserManager<ApplicationUser> usermanager
-            , IGenericRepository<Control_Note> genericRepository, IHttpContextAccessor contextAccessor)
+        public ControlNotesRepository(CMSContext context, IMapper mapper, IGenericRepository<Control_Note> genericRepository, IUserHelpers userHelpers)
         {
             _context = context;
             _mapper = mapper;
             _genericRepository = genericRepository;
-            _contextAccessor = contextAccessor;
-            _usermanager = usermanager;
-
+            _userHelpers = userHelpers;
         }
+
         public async Task<bool> AddAsync(controlNoteDTO controlNoteDto, string Cid)
         {
             var control = _context.Control.FirstOrDefault(c => c.Id == Cid);
             if (control == null) throw new Exception("Invalid Control ID");
 
-            var creator = _contextAccessor.HttpContext.User;
-            var userCreater = await _usermanager.GetUserAsync(creator);
+            var userCreater = await _userHelpers.GetCurrentUserAsync();
             Control_Note control_Note = _mapper.Map<Control_Note>(controlNoteDto);
             control_Note.WriteDate = DateTime.Now;
             control_Note.WriteBy = userCreater;
@@ -59,7 +56,7 @@ namespace CMS_back.Services
             foreach (var note in control_notes)
             {
                 var member = _context.ControlUsers.FirstOrDefault(c => c.UserID == note.WriteByID);
-                if (member == null || member.JobType != JobType.Head) continue; // Member => انا غيرتهم
+                if (member == null || member.JobType != JobType.Head) continue;
                 controlNotesResultDTOs.Add(new ControlNotesResultDTO()
                 {
                     Description = note.Description,
@@ -77,7 +74,7 @@ namespace CMS_back.Services
             foreach (var note in control_notes)
             {
                 var member = _context.ControlUsers.FirstOrDefault(c => c.UserID == note.WriteByID);
-                if (member == null || member.JobType != JobType.Member) continue; //Head => انا غيرتهم
+                if (member == null || member.JobType != JobType.Member) continue;
                 controlNotesResultDTOs.Add(new ControlNotesResultDTO()
                 {
                     Description = note.Description,
@@ -88,9 +85,9 @@ namespace CMS_back.Services
             return controlNotesResultDTOs;
         }
 
-        public async Task<IEnumerable<ControlNotesResultDTO>> GetNotesToHeadUnivarsity(string Cid)
+        public async Task<IEnumerable<ControlNotesResultDTO>> GetNotesToHeadUniversity(string Cid)
         {
-            var control =  _context.Control.FirstOrDefault(c => c.Id == Cid);
+            var control = _context.Control.FirstOrDefault(c => c.Id == Cid);
             var control_notes = await _genericRepository.FindAsync(f => f.WriteByID == control.UserCreatorID, "WriteBy");
             var notesResult = control_notes.Select(note => _mapper.Map<ControlNotesResultDTO>(note)).ToList();
             return notesResult;
