@@ -1,18 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using CMS_back.DTO;
-using CMS_back.Data;
-using CMS_back.Models;
-using CMS_back.Consts;
-using System.Net.Mail;
-using CMS_back.Mailing;
-using Microsoft.AspNetCore.Authorization;
-using CMS_back.Services;
-using AutoMapper;
 using CMS_back.Interfaces;
 using CMS_back.Authentication;
 
@@ -39,7 +26,7 @@ namespace CMS_back.Controllers
             return Ok(result);
         }
 
-        [HttpPost("register")]//account/register
+        [HttpPost("register")]
         public async Task<IActionResult> Registration(RegisterUserDto userDto)
         {
             var result = await _accountRepository.RegisterAsync(userDto);
@@ -51,9 +38,7 @@ namespace CMS_back.Controllers
         public async Task<IActionResult> ChangePassword(ChangePassword changePassword)
         {
             var result = await _accountRepository.ChangePasswordAsync(changePassword);
-            if (result.Succeeded)
-                return Ok();
-
+            if (result.Succeeded) return Ok();
             return BadRequest(result.Errors);
         }
 
@@ -61,9 +46,7 @@ namespace CMS_back.Controllers
         public async Task<IActionResult> ForgetPassword(string email)
         {
             var result = await _accountRepository.ForgetPasswordAsync(email);
-            if (result)
-                return Ok();
-
+            if (result) return Ok();
             return BadRequest("User not found");
         }
 
@@ -71,9 +54,7 @@ namespace CMS_back.Controllers
         public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
         {
             var result = await _accountRepository.ResetPasswordAsync(resetPassword);
-            if (result.Succeeded)
-                return Ok();
-
+            if (result.Succeeded) return Ok();
             return BadRequest(result.Errors);
         }
 
@@ -81,9 +62,7 @@ namespace CMS_back.Controllers
         public async Task<IActionResult> SendOTP(string email)
         {
             var result = await _accountRepository.SendOTPAsync(email);
-            if (result.Succeeded)
-                return Ok();
-
+            if (result.Succeeded) return Ok();
             return BadRequest(result.Errors);
         }
 
@@ -91,10 +70,7 @@ namespace CMS_back.Controllers
         public async Task<IActionResult> VerifyOTP([FromBody] VerifyOTPRequest request)
         {
             var result = await _accountRepository.VerifyOTPAsync(request);
-            if (result.Succeeded)
-            {
-                return Ok("Email confirmed successfully");
-            }
+            if (result.Succeeded) return Ok("Email confirmed successfully");
             return BadRequest(result.Errors);
         }
     }

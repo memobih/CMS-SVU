@@ -12,9 +12,9 @@ namespace CMS_back.Models
 		public string? Order { get; set; }
 		public string? Level { get; set; }
 
-		[ForeignKey("FaculityNode")]
-		public string FaculityNodeID { get; set; }
-		public Faculity FaculityNode { get; set; }
+		[ForeignKey("Faculity")]
+		public string FaculityID { get; set; }
+		public Faculity Faculity { get; set; }
 
 		public string? ParentID { get; set; }
 		public Faculity_Node? Parent { get; set; }

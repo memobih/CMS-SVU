@@ -1,16 +1,9 @@
 ﻿using AutoMapper;
-using CMS_back.Consts;
 using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.Interfaces;
-using CMS_back.Models;
-using CMS_back.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
 
 namespace CMS_back.Controllers
 {

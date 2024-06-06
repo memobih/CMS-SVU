@@ -3,13 +3,8 @@ using CMS_back.Consts;
 using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.Interfaces;
-using CMS_back.Models;
-using CMS_back.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace CMS_back.Controllers
@@ -19,8 +14,8 @@ namespace CMS_back.Controllers
     [Authorize]
     public class FacultyController : ControllerBase
     {
-        public IFaculityRepository _faculityRepository { get; set; }
-        public FacultyController(CMSContext context, IMapper mappe, IFaculityRepository faculityRepository)
+        private readonly IFaculityRepository _faculityRepository;
+        public FacultyController(IFaculityRepository faculityRepository)
         {
             _faculityRepository = faculityRepository;
         }

@@ -1,17 +1,7 @@
-﻿using AutoMapper;
-using CMS_back.Consts;
-using CMS_back.Data;
-using CMS_back.DTO;
+﻿using CMS_back.DTO;
 using CMS_back.Interfaces;
-using CMS_back.Models;
-using CMS_back.Services;
-using CMS_back.IGenericRepository;
-using CMS_back.GenericRepository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace CMS_back.Controllers
 {
@@ -20,67 +10,49 @@ namespace CMS_back.Controllers
     [Authorize]
     public class SubjectController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly ISubjectRepository _subjectRepo;
-        private readonly IUserRepository _userRepo;
-
-        public IGenericRepository<Faculity_Node> facultyNodeRepo { get; }
-
-        public SubjectController(IMapper mappe, ISubjectRepository subjectRepo, IUserRepository userRepo
-            , IGenericRepository<Faculity_Node> repo3) 
+        private readonly ISubjectRepository _repo;
+        public SubjectController(ISubjectRepository repo)
         {
-            _mapper=mappe;
-            _subjectRepo = subjectRepo;
-            _userRepo = userRepo;
-            facultyNodeRepo = repo3;
+            _repo = repo;
         }
-
 
         [HttpGet("faculty/{Fid}")]
         public async Task<IActionResult> GetSubjectForFaculty(string Fid)
         {
-            var subjects = await _subjectRepo.GetFacultySubject(Fid);
+            var subjects = await _repo.GetFacultySubject(Fid);
             if (subjects == null) return BadRequest("Not Found subjects");
-            var subjectsResult = subjects.Select(s => _mapper.Map<subjectResultDTO>(s)).ToList();
-            return Ok(subjectsResult);
+            return Ok(subjects);
         }
 
         [HttpGet("subjects-of-control")]
-        public async Task<IActionResult> GetSubjectForControl(string controld)
+        public async Task<IActionResult> GetSubjectForControl(string Cid)
         {
-
-            var subjects = await _subjectRepo.GetControlSubject(controld);
+            var subjects = await _repo.GetControlSubject(Cid);
             if (subjects == null) return BadRequest("Not found Subjects");
-            var subjectsResult = subjects.Select(subject => _mapper.Map<subjectResultDTO>(subject)).ToList();
-            return Ok(subjectsResult);
+            return Ok(subjects);
         }
 
         [HttpPost("add")]
         public async Task<IActionResult> create(subjectDTO subjectdto)
         {
-            var facultyNode = await facultyNodeRepo.GetById(subjectdto.FaculityNodeID);
-            if (facultyNode == null) return BadRequest("Faculty node not found");
-            Subject subject = _mapper.Map<Subject>(subjectdto);
-            if (await _subjectRepo.AddSubject(subject) == null)
-                return BadRequest("Subject entered before");
-            return Ok("subject Added");
+            var result = await _repo.AddSubject(subjectdto);
+            return result ? Ok("Subject Added Successfully") : BadRequest("Invalid Subject Data");
         }
 
-        [HttpPut("isDone/{Sid}")]
-        public async Task<IActionResult> IsDone(string Sid)
+        [HttpPut("isDone/{Sid}/{Cid}")]
+        public async Task<IActionResult> IsDone(string Cid, string Sid)
         {
-            var currentUser = await _userRepo.GetCurrentUser();
-            if (await _subjectRepo.FinishedSubject(Sid) == null)
-                return BadRequest("Subject not found");
-            return Ok("updated subejct");
+            var subject = await _repo.FinishedSubject(Cid, Sid);
+            if (subject == null) return BadRequest("Subject Not Found");
+            return Ok("Subejct Is Done");
         }
-        [HttpPut("isReview/{Sid}")]
-        public async Task<IActionResult> IsReview(string Sid)
+
+        [HttpPut("isReview/{Sid}/{Cid}")]
+        public async Task<IActionResult> IsReview(string Cid, string Sid)
         {
-            var currentUser = await _userRepo.GetCurrentUser();
-            if (await _subjectRepo.ReviewSubject(Sid) == null) 
-                return BadRequest("Subject not found");
-            return Ok("updated subejct");
+            var subject = await _repo.ReviewSubject(Cid, Sid);
+            if (subject == null) return BadRequest("Subject Not Found");
+            return Ok("Subejct Is Reviewed");
         }
     }
 }

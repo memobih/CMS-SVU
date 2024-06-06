@@ -2,7 +2,12 @@
 
 namespace CMS_back.Models
 {
-	public class ControlSubject
+    public enum Question
+    {
+        No,
+        Yes
+    }
+    public class ControlSubject
 	{
 		[Key]
 		public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -10,6 +15,8 @@ namespace CMS_back.Models
 		public Control Control { get; set; }
 		public string? SubjectID { get; set; }
 		public Subject? Subject { get; set; }
+        public Question? IsDone { get; set; }
+        public Question? IsReview { get; set; }
 
-	}
+    }
 }

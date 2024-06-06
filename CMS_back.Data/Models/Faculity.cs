@@ -15,7 +15,7 @@ namespace CMS_back.Models
 
 		public virtual ICollection<Faculity_Phases>? Phases { get;  } = new List<Faculity_Phases>();
 		public virtual ICollection<Faculity_Semester>? Semesters { get; } = new List<Faculity_Semester>();
-		[InverseProperty("FaculityNode")]
+		[InverseProperty("Faculity")]
 		public virtual ICollection<Faculity_Node>? Nodes { get; } = new List<Faculity_Node>();
 
 		[InverseProperty("FaculityEmployee")]

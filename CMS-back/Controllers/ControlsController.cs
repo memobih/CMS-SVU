@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CMS_back.DTO;
-using CMS_back.Data;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using CMS_back.Models;
-using AutoMapper;
 using CMS_back.Consts;
-using CMS_back.Mailing;
 using CMS_back.Interfaces;
 
 namespace CMS_back.Controllers
@@ -22,55 +17,56 @@ namespace CMS_back.Controllers
             _repo = repo;
         }
 
-        [HttpPost("create/{Fid}")]
+        [HttpPost("create/{fid}")]
         [Authorize(Roles = ConstsRoles.AdminFaculty)]
-        public async Task<IActionResult> createControl(ControlDTO controldto, string Fid)
+        public async Task<IActionResult> createControl(ControlDTO controldto, string fid)
         {
-            var result = await _repo.AddAsync(controldto, Fid);
+            var result = await _repo.AddAsync(controldto, fid);
             return result ? Ok("Control Added Successfully") : BadRequest("Invalid Control Data");
         }
-        [HttpPut("edit")]
+
+        [HttpPut("edit/{cid}")]
         [Authorize(Roles = ConstsRoles.AdminFaculty)]
-        public async Task<IActionResult> EditControl(ControlDTO controldto, string Cid)
+        public async Task<IActionResult> EditControl(ControlDTO controldto, string cid)
         {
-            var result = await _repo.UpdateAsync(controldto, Cid);
+            var result = await _repo.UpdateAsync(controldto, cid);
             return result ? Ok("Updated Successfully") : BadRequest("Invalid Control Data");
         }
 
-        [HttpGet("allControllers")]
-        public async Task<IActionResult> index()
+        [HttpGet("get-all-controls")]
+        public async Task<IActionResult> Index()
         {
             var controls = await _repo.GetAllAsync();
             return Ok(controls);
         }
 
-        [HttpGet("detail")]
-        public async Task<IActionResult> detail(string id)
+        [HttpGet("detail/{cid}")]
+        public async Task<IActionResult> Detail(string cid)
         {
-            var control = await _repo.GetByIdAsync(id);
+            var control = await _repo.GetByIdAsync(cid);
             if (control == null) return BadRequest("Not Found");
             return Ok(control);
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("delete/{cid}")]
         [Authorize(Roles = ConstsRoles.AdminFaculty)]
-        public async Task<IActionResult> delete(string id)
+        public async Task<IActionResult> delete(string cid)
         {
-            var result = await _repo.DeleteAsync(id);
+            var result = await _repo.DeleteAsync(cid);
             return result ? Ok("Deleted Successfully") : BadRequest("Can Not Delete This Control");
         }
 
-        [HttpGet("get-by-faculity-id")]
-        public async Task<IActionResult> get(string Fid)
+        [HttpGet("get-controls-by-faculity-id/{fid}")]
+        public async Task<IActionResult> GetControlsByFaculityId(string fid)
         {
-            var controls = await _repo.GetControlsByFaculityIdAsync(Fid);
+            var controls = await _repo.GetControlsByFaculityIdAsync(fid);
             return Ok(controls);
         }
 
-        [HttpGet("acadmec-year")]
-        public async Task<IActionResult> GetControlsAcademcYear(string AcadYear)
+        [HttpGet("get-controls-by-academic-year")]
+        public async Task<IActionResult> GetControlsByAcademcYear(string acadYear)
         {
-            var controls = await _repo.GetControlsByAcadYearAsync(AcadYear);
+            var controls = await _repo.GetControlsByAcadYearAsync(acadYear);
             return Ok(controls);
         }
     }
