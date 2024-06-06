@@ -30,4 +30,8 @@
 	  <Folder Include="wwwRoot\" />
 	</ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

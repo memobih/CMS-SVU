@@ -20,7 +20,10 @@ namespace Data_Access_Layer.Entities
 		public string? ScientificDegree { get; set; }
 
 		public string Type { get; set; }
+        public string? OTP { get; set; }
+        public DateTime OTPExpiry { get; set; }
 
+        [InverseProperty("UserCreator")]
 		public virtual ICollection<Control>? UserCreatorControls { get; } = new Collection<Control>();
 
 		[ForeignKey("FaculityEmployee")]

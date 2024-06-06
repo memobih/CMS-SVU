@@ -810,19 +810,31 @@ namespace CMS_Back.Data.Migrations
                     b.HasData(
                         new
                         {
+<<<<<<< HEAD:CMS_back.Data/Migrations/CMSContextModelSnapshot.cs
                             Id = "1c490e48-07ab-492a-8287-c5a831b61560",
+=======
+                            Id = "97359b82-2cb7-4a97-9c41-288ef9e17267",
+>>>>>>> 4fbf400ad232ac5db541424e1e03f978a75debd1:CMS-back/Migrations/CMSContextModelSnapshot.cs
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
+<<<<<<< HEAD:CMS_back.Data/Migrations/CMSContextModelSnapshot.cs
                             Id = "39c86721-71a4-4c6a-a952-2baf73f3b424",
+=======
+                            Id = "302dccf2-10aa-4153-9fbd-219a4be45da4",
+>>>>>>> 4fbf400ad232ac5db541424e1e03f978a75debd1:CMS-back/Migrations/CMSContextModelSnapshot.cs
                             Name = "AdminFaculty",
                             NormalizedName = "AdminFaculty"
                         },
                         new
                         {
+<<<<<<< HEAD:CMS_back.Data/Migrations/CMSContextModelSnapshot.cs
                             Id = "b755e362-7c9e-44f4-a1fa-4d97e1c3d6bc",
+=======
+                            Id = "34bd0e94-2b0d-4df0-9dd6-fcf486bbc1c9",
+>>>>>>> 4fbf400ad232ac5db541424e1e03f978a75debd1:CMS-back/Migrations/CMSContextModelSnapshot.cs
                             Name = "Staff",
                             NormalizedName = "Staff"
                         });

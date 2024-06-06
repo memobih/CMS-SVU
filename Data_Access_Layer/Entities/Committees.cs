@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Data_Access_Layer.Entities 
+namespace Data_Access_Layer.Entities
 {
 	public class Committees
 	{
