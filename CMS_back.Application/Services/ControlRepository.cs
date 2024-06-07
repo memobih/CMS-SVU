@@ -55,8 +55,6 @@ namespace CMS_back.Services
         {
             var userCreater = await _userHelpers.GetCurrentUserAsync();
             if (userCreater == null) return false;
-            var controlResult = await _genericRepository.FindFirstAsync(c => c.FaculityID == Fid, ["ControlSubjects", "ControlUsers"]);
-            if (controlResult == null) return false;
             Control control = _mapper.Map<Control>(controldto);
             control.FaculityID = Fid;
             var faculity = await _faculityRepo.GetById(Fid);
