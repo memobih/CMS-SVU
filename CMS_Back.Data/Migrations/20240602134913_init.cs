@@ -753,7 +753,7 @@ namespace CMS_Back.Data.Migrations
                 values: new object[,]
                 {
                     { "1c490e48-07ab-492a-8287-c5a831b61560", null, "AdminUniversity", "AdminUniversity" },
-                    { "39c86721-71a4-4c6a-a952-2baf73f3b424", null, "AdminFaculty", "AdminFaculty" },
+                    { "39c86721-71a4-4c6a-a952-2baf73f3b424", null, "AdminFaculity", "AdminFaculity" },
                     { "b755e362-7c9e-44f4-a1fa-4d97e1c3d6bc", null, "Staff", "Staff" }
                 });
 

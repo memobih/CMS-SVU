@@ -817,8 +817,8 @@ namespace CMS_Back.Data.Migrations
                         new
                         {
                             Id = "39c86721-71a4-4c6a-a952-2baf73f3b424",
-                            Name = "AdminFaculty",
-                            NormalizedName = "AdminFaculty"
+                            Name = "AdminFaculity",
+                            NormalizedName = "AdminFaculity"
                         },
                         new
                         {

@@ -64,10 +64,10 @@ namespace CMS_back.Services
             var faculity = await _faculityRepo.GetById(facultyId, ["Users"]);
             if (faculity == null) throw new Exception("FaculityID Not Found");
             var usersResult = _mapper.Map<IEnumerable<StaffResultDto>>(faculity.Users);
-            foreach(var userResultDto in usersResult)
+            foreach (var userResultDto in usersResult)
             {
                 userResultDto.FaculityName = faculity.Name;
-            }         
+            }
             return usersResult;
         }
 
@@ -87,14 +87,16 @@ namespace CMS_back.Services
             if (currentUser.Type == ConstsRoles.Staff)
             {
                 userResult = _mapper.Map<StaffResultDto>(currentUser);
-                faculity = await _facultyRepo.GetById(currentUser.FaculityEmployeeID);
+                faculity = await _faculityRepo.GetById(currentUser.FaculityEmployeeID);
                 userResult.FaculityName = faculity.Name;
+                userResult.FaculityEmployeeID = currentUser.FaculityEmployeeID;
             }
-            else if (currentUser.Type == ConstsRoles.AdminFaculty)
+            else if (currentUser.Type == ConstsRoles.AdminFaculity)
             {
                 userResult = _mapper.Map<LeaderResultDto>(currentUser);
-                faculity = await _facultyRepo.GetById(currentUser.FaculityLeaderID);
+                faculity = await _faculityRepo.GetById(currentUser.FaculityLeaderID);
                 userResult.FaculityName = faculity.Name;
+                userResult.FaculityLeaderID = currentUser.FaculityLeaderID;
             }
             else
             {

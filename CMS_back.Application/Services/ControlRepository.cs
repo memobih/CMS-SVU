@@ -71,12 +71,10 @@ namespace CMS_back.Services
             };
             if (manager.Email != null)
             {
-                var message = new MailMessage(new string[] { manager.Email },
-"Control System",
-$"<p>Hi {manager.Name},</p>" +
-$"<p>You are a Member in a new Control. This Control is {control.Name} in {faculity.Name} Faculity.</p>" +
-$"<p>Control will start on {control.Start_Date}.</p>"
-);
+                var message = new MailMessage(new string[] { manager.Email }, "Control System",
+                    $"<p>Hi {manager.Name},</p>" +
+                    $"<p>You are a Member in a new Control. This Control is {control.Name} in {faculity.Name} Faculity.</p>" +
+                    $"<p>Control will start on {control.Start_Date}.</p>");
                 _mailingService.SendMail(message);
             }
             _context.ControlUsers.Add(userControl);
@@ -95,14 +93,11 @@ $"<p>Control will start on {control.Start_Date}.</p>"
                 };
                 if (user.Email != null)
                 {
-                    var message = new MailMessage(new string[] { user.Email },
-    "Control System",
-    $"<p>Hi {user.Name},</p>" +
-    $"<p>You are a Member in a new Control. This Control is {control.Name} in {faculity.Name} Faculity.</p>" +
-    $"<p>Control will start on {control.Start_Date}.</p>"
-);
+                    var message = new MailMessage(new string[] { user.Email }, "Control System",
+                        $"<p>Hi {user.Name},</p>" +
+                        $"<p>You are a Member in a new Control. This Control is {control.Name} in {faculity.Name} Faculity.</p>" +
+                        $"<p>Control will start on {control.Start_Date}.</p>");
                     _mailingService.SendMail(message);
-
                 }
                 _context.ControlUsers.Add(memberControl);
             }

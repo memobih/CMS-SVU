@@ -38,6 +38,7 @@ namespace CMS_back.Services
 
         public async Task<IdentityResult> RegisterAsync(RegisterUserDto userDto)
         {
+
             var currentUser = await _userHelper.GetCurrentUserAsync();
             ApplicationUser userResult = _mapper.Map<ApplicationUser>(userDto);
             userResult.Type = ConstsRoles.Staff;
@@ -45,7 +46,6 @@ namespace CMS_back.Services
             {
                 userResult.FaculityEmployeeID = currentUser.FaculityLeaderID;
             }
-            else return IdentityResult.Failed(new IdentityError { Description = "Not Allowed To Add Users" });
             var userExist = await _userManager.FindByNameAsync(userDto.UserName);
 
             if (userExist != null)

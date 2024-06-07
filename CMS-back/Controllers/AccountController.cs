@@ -14,7 +14,7 @@ namespace CMS_back.Controllers
 
         private readonly IAccountRepository _accountRepository;
 
-        public AccountController( IAccountRepository accountRepository)
+        public AccountController(IAccountRepository accountRepository)
         {
             _accountRepository = accountRepository;
         }
@@ -31,7 +31,7 @@ namespace CMS_back.Controllers
         public async Task<IActionResult> Registration(RegisterUserDto userDto)
         {
             var result = await _accountRepository.RegisterAsync(userDto);
-            if (result == null) return BadRequest("There Was a Problem With This Registration. Please Check The Information You Entered and Try Again.");
+            if (!result.Succeeded) return BadRequest("There Was a Problem With This Registration. Please Check The Information You Entered and Try Again.");
             return Ok("Registeration Successfully");
         }
 
@@ -40,7 +40,7 @@ namespace CMS_back.Controllers
         {
             var result = await _accountRepository.ChangePasswordAsync(changePassword);
             if (!result.Succeeded) return BadRequest(result.Errors);
-            return Ok("Your Password Has been Successfully Changed");         
+            return Ok("Your Password Has been Successfully Changed");
         }
 
         [HttpPost("forget-password")]
@@ -54,7 +54,7 @@ namespace CMS_back.Controllers
         public async Task<IActionResult> ResetPassword(ResetPassword resetPassword)
         {
             var result = await _accountRepository.ResetPasswordAsync(resetPassword);
-            if (!result.Succeeded) return BadRequest(result.Errors); 
+            if (!result.Succeeded) return BadRequest(result.Errors);
             return Ok("Your Password Has been Successfully Reset. You Can Now Login Using Your New Password");
         }
 
@@ -71,7 +71,7 @@ namespace CMS_back.Controllers
         {
             var result = await _accountRepository.VerifyOTPAsync(request);
             if (!result.Succeeded) return BadRequest(result.Errors);
-            return Ok("Email Confirmed Successfully");           
+            return Ok("Email Confirmed Successfully");
         }
     }
 }

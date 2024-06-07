@@ -7,6 +7,7 @@ using CMS_back.IGenericRepository;
 using CMS_back.Interfaces;
 using CMS_back.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 
 namespace CMS_back.Services
 {
@@ -16,13 +17,16 @@ namespace CMS_back.Services
         private readonly IMapper _mapper;
         private readonly IGenericRepository<Faculity> _genericRepository;
         private readonly IGenericRepository<ACAD_YEAR> _acadYearRepo;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public FaculityRepository(CMSContext context, IMapper mapper, IGenericRepository<Faculity> genericRepository,IGenericRepository<ACAD_YEAR> acadYearRepo)
+        public FaculityRepository(CMSContext context, IMapper mapper, IGenericRepository<Faculity> genericRepository
+            , IGenericRepository<ACAD_YEAR> acadYearRepo, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _mapper = mapper;
             _acadYearRepo = acadYearRepo;
             _genericRepository = genericRepository;
+            _userManager = userManager;
         }
 
         public async Task<FacultyResultDto> GetByIdAsync(string id)
@@ -58,7 +62,9 @@ namespace CMS_back.Services
 
             _genericRepository.Add(faculity);
 
-            leader.Type = ConstsRoles.AdminFaculty;
+            leader.Type = ConstsRoles.AdminFaculity;
+            await _userManager.RemoveFromRoleAsync(leader, ConstsRoles.Staff);
+            await _userManager.AddToRoleAsync(leader, ConstsRoles.AdminFaculity);
             leader.FaculityLeaderID = faculity.Id;
             leader.FaculityLeader = faculity;
 

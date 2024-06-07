@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CMS_back.Application.Interfaces
+﻿namespace CMS_back.Application.Interfaces
 {
     public interface IUserResult
     {
@@ -13,6 +7,8 @@ namespace CMS_back.Application.Interfaces
         public string? UserImage { get; set; }
         public string? Email { get; set; }
         public string? UserName { get; set; }
+        public string? FaculityLeaderID { get; set; }
+        public string? FaculityEmployeeID { get; set; }
         public string? FaculityName { get; set; }
     }
 }
