@@ -62,9 +62,9 @@ namespace CMS_back.Services
 
             _genericRepository.Add(faculity);
 
-            leader.Type = ConstsRoles.AdminFaculity;
+            leader.Type = ConstsRoles.AdminFaculty;
             await _userManager.RemoveFromRoleAsync(leader, ConstsRoles.Staff);
-            await _userManager.AddToRoleAsync(leader, ConstsRoles.AdminFaculity);
+            await _userManager.AddToRoleAsync(leader, ConstsRoles.AdminFaculty);
             leader.FaculityLeaderID = faculity.Id;
             leader.FaculityLeader = faculity;
 

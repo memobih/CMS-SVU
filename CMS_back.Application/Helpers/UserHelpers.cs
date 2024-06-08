@@ -48,7 +48,7 @@ namespace CMS_back.Application.Helpers
             var user = await GetCurrentUserAsync();
             string userName = user.UserName;
             string profileFolderPath = "";
-            if (folderName == ConstsRoles.AdminFaculity)
+            if (folderName == ConstsRoles.AdminFaculty)
                 profileFolderPath = Path.Combine(rootPath, "AdminFaculity", userName);
             else
                 profileFolderPath = Path.Combine(rootPath, "Images", userName, folderName);
