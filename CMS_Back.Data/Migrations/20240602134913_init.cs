@@ -441,7 +441,7 @@ namespace CMS_Back.Data.Migrations
                         column: x => x.WriteByID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Control_Note_Control_ControlID",
                         column: x => x.ControlID,
@@ -468,7 +468,7 @@ namespace CMS_Back.Data.Migrations
                         column: x => x.CreateByID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Control_Task_Control_ControlID",
                         column: x => x.ControlID,
@@ -907,6 +907,7 @@ namespace CMS_Back.Data.Migrations
                 name: "IX_Faculity_Phase_FaculityID",
                 table: "Faculity_Phase",
                 column: "FaculityID");
+
 
             migrationBuilder.CreateIndex(
                 name: "IX_Faculity_Semester_FaculityID",

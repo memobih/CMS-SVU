@@ -2,12 +2,13 @@
 using CMS_back.Application.Helpers;
 using CMS_back.Authentication;
 using CMS_back.Consts;
+using CMS_back.Data;
 using CMS_back.DTO;
 using CMS_back.Interfaces;
 using CMS_back.Mailing;
 using CMS_back.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -19,7 +20,7 @@ namespace CMS_back.Services
 {
     public class AccountRepository : IAccountRepository
     {
-
+        private readonly CMSContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IMailingService _mailingService;
@@ -27,44 +28,67 @@ namespace CMS_back.Services
         private readonly IUserHelpers _userHelper;
 
         public AccountRepository(UserManager<ApplicationUser> userManager, IMapper mapper,
-            IMailingService mailingService, IConfiguration config, IUserHelpers userHelpers)
+            IMailingService mailingService, IConfiguration config, IUserHelpers userHelpers, CMSContext context)
         {
             _userManager = userManager;
             _mapper = mapper;
             _mailingService = mailingService;
             _config = config;
             _userHelper = userHelpers;
+            _context = context;
         }
 
         public async Task<IdentityResult> RegisterAsync(RegisterUserDto userDto)
         {
+            var strategy = _context.Database.CreateExecutionStrategy();
 
-            var currentUser = await _userHelper.GetCurrentUserAsync();
-            ApplicationUser userResult = _mapper.Map<ApplicationUser>(userDto);
-            userResult.Type = ConstsRoles.Staff;
-            if (currentUser != null)
+            return await strategy.ExecuteAsync(async () =>
             {
-                userResult.FaculityEmployeeID = currentUser.FaculityLeaderID;
-            }
-            var userExist = await _userManager.FindByNameAsync(userDto.UserName);
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var currentUser = await _userHelper.GetCurrentUserAsync();
+                        ApplicationUser userResult = _mapper.Map<ApplicationUser>(userDto);
+                        userResult.Type = ConstsRoles.Staff;
 
-            if (userExist != null)
-            {
-                throw new Exception("User Already Exist");
-            }
+                        if (currentUser != null)
+                        {
+                            userResult.FaculityEmployeeID = currentUser.FaculityLeaderID;
+                        }
 
-            IdentityResult result = await _userManager.CreateAsync(userResult, userDto.Password);
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(userResult, userResult.Type);
-                userResult.EmailConfirmed = true;
-                await _userManager.UpdateAsync(userResult);
+                        var userExist = await _userManager.FindByNameAsync(userDto.UserName);
 
-                var message = new MailMessage(new string[] { userResult.Email }, "register", $"Hi {userResult.Name}, You have Registered Successfully In CMS(Control Management System)");
-                _mailingService.SendMail(message);
-                return result;
-            }
-            return IdentityResult.Failed(new IdentityError { Description = "not allowed to add users" });
+                        if (userExist != null)
+                        {
+                            throw new Exception("User Already Exist");
+                        }
+
+                        IdentityResult result = await _userManager.CreateAsync(userResult, userDto.Password);
+
+                        if (result.Succeeded)
+                        {
+                            await _userManager.AddToRoleAsync(userResult, userResult.Type);
+                            userResult.EmailConfirmed = true;
+                            await _userManager.UpdateAsync(userResult);
+
+                            var message = new MailMessage(new string[] { userResult.Email }, "register", $"Hi {userResult.Name}, You have been Registered Successfully In CMS(Control Management System)");
+                            _mailingService.SendMail(message);
+
+                            await transaction.CommitAsync();
+
+                            return result;
+                        }
+
+                        return IdentityResult.Failed(new IdentityError { Description = "Not Allowed To Add Users" });
+                    }
+                    catch (Exception)
+                    {
+                        await transaction.RollbackAsync();
+                        throw;
+                    }
+                }
+            });
         }
 
         public async Task<LoginResult> SignInAsync(LoginUserDto loginUser)

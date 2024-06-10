@@ -10,8 +10,8 @@ namespace CMS_back.DTO
         public string? Faculity_Phase { get; set; }
         public string? Faculity_Node { get; set; }
         [Required]
-        public DateTime Start_Date { get; set; }
-        public DateTime? End_Date { get; set; }
+        public DateOnly Start_Date { get; set; }
+        public DateOnly? End_Date { get; set; }
         [RegularExpression(pattern: @"^\d{4}\/\d{4}$", ErrorMessage = "Invalid ACAD_YEAR Format. Please use the format 'YYYY/YYYY'.\"")]
         public string ACAD_YEAR { get; set; }
         [Required]

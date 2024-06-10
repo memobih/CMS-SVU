@@ -5,13 +5,14 @@ namespace CMS_back.DTO
 {
     public class FacultyNodeDTO
     {
-        [Required]
-        public string? Name { get; set; }
-        [Required]
-        public string? Code { get; set; }
-        [Required]
-        public string? Order { get; set; }
-        [Required]
-        public string? Level { get; set; }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Code { get; set; }
+
+        public string Order { get; set; }
+
+        public string Level { get; set; }
     }
 }

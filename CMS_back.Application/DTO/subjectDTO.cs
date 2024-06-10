@@ -4,16 +4,12 @@ namespace CMS_back.DTO
 {
     public class subjectDTO
     {
-        [Required]
         public string Name { get; set; }
         
-        [Required]
         public string Code { get; set; }
         
-        [Required]
         public int Credit_Hours { get; set; }
 
-        [Required]
         public string FaculityNodeID { get; set; }
 
     }

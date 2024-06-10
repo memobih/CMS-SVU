@@ -33,7 +33,7 @@ namespace CMS_back.Services
 
             var userCreater = await _userHelpers.GetCurrentUserAsync();
             Control_Note control_Note = _mapper.Map<Control_Note>(controlNoteDto);
-            control_Note.WriteDate = DateTime.Now;
+            control_Note.WriteDate = DateOnly.FromDateTime(DateTime.Now);
             control_Note.WriteBy = userCreater;
             control_Note.Control = _context.Control.FirstOrDefault(c => c.Id == Cid);
             _genericRepository.Add(control_Note);
@@ -56,24 +56,6 @@ namespace CMS_back.Services
             foreach (var note in control_notes)
             {
                 var member = _context.ControlUsers.FirstOrDefault(c => c.UserID == note.WriteByID);
-                if (member == null || member.JobType != JobType.Head) continue;
-                controlNotesResultDTOs.Add(new ControlNotesResultDTO()
-                {
-                    Description = note.Description,
-                    WriteDate = note.WriteDate,
-                    WriteBy = _mapper.Map<LeaderResultDto>(note.WriteBy),
-                });
-            }
-            return controlNotesResultDTOs;
-        }
-
-        public async Task<IEnumerable<ControlNotesResultDTO>> GetNotesToHeadFaculty(string Cid)
-        {
-            var control_notes = await _genericRepository.FindAsync(f => f.ControlID == Cid, "WriteBy");
-            List<ControlNotesResultDTO>? controlNotesResultDTOs = new List<ControlNotesResultDTO>();
-            foreach (var note in control_notes)
-            {
-                var member = _context.ControlUsers.FirstOrDefault(c => c.UserID == note.WriteByID);
                 if (member == null || member.JobType != JobType.Member) continue;
                 controlNotesResultDTOs.Add(new ControlNotesResultDTO()
                 {
@@ -85,7 +67,25 @@ namespace CMS_back.Services
             return controlNotesResultDTOs;
         }
 
-        public async Task<IEnumerable<ControlNotesResultDTO>> GetNotesToHeadUniversity(string Cid)
+        public async Task<IEnumerable<ControlNotesResultDTO>> GetNotesToAdminFaculity(string Cid)
+        {
+            var control_notes = await _genericRepository.FindAsync(f => f.ControlID == Cid, "WriteBy");
+            List<ControlNotesResultDTO>? controlNotesResultDTOs = new List<ControlNotesResultDTO>();
+            foreach (var note in control_notes)
+            {
+                var member = _context.ControlUsers.FirstOrDefault(c => c.UserID == note.WriteByID);
+                if (member == null || member.JobType != JobType.Head) continue;
+                controlNotesResultDTOs.Add(new ControlNotesResultDTO()
+                {
+                    Description = note.Description,
+                    WriteDate = note.WriteDate,
+                    WriteBy = _mapper.Map<LeaderResultDto>(note.WriteBy),
+                });
+            }
+            return controlNotesResultDTOs;
+        }
+
+        public async Task<IEnumerable<ControlNotesResultDTO>> GetNotesToAdminUniversity(string Cid)
         {
             var control = _context.Control.FirstOrDefault(c => c.Id == Cid);
             var control_notes = await _genericRepository.FindAsync(f => f.WriteByID == control.UserCreatorID, "WriteBy");

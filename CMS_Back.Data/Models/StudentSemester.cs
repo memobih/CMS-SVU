@@ -4,7 +4,7 @@ namespace CMS_back.Models
 {
 	public class StudentSemester
 	{
-		[Key]
+		[Key, MaxLength(200)]
 		public string Id { get; set; } = Guid.NewGuid().ToString();
 		public double? GPA { get; set; }
 		public double? TOTAL { get; set; }

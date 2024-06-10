@@ -12,11 +12,11 @@ namespace CMS_back.Services
     {
         private readonly CMSContext _context;
         private readonly IGenericRepository<Faculity_Node> _facultyNodeRepo;
-        private readonly IGenericRepository<ControlSubject> _controlSubjectGeneric;
+        private readonly IGenericRepository<ControlSubjects> _controlSubjectGeneric;
         private readonly IMapper _mapper;
 
         public SubjectRepository(CMSContext context,IGenericRepository<Faculity_Node> facultyNodeRepo,IMapper mapper
-            ,IGenericRepository<ControlSubject> controlSubjectGeneric)
+            ,IGenericRepository<ControlSubjects> controlSubjectGeneric)
         {
             _context = context;      
             _facultyNodeRepo = facultyNodeRepo;
@@ -57,8 +57,8 @@ namespace CMS_back.Services
 
         public async Task<bool> FinishedSubject(string controlId,string subjectId)
         {
-            Expression<Func<ControlSubject, bool>> condition1 = c => c.ControlID == controlId;
-            Expression<Func<ControlSubject, bool>> condition2 = c => c.SubjectID == subjectId;
+            Expression<Func<ControlSubjects, bool>> condition1 = c => c.ControlID == controlId;
+            Expression<Func<ControlSubjects, bool>> condition2 = c => c.SubjectID == subjectId;
             var combinedCondition = condition1.AndAlso(condition2);
 
             var subject = await _controlSubjectGeneric.FindFirstAsync(combinedCondition);
@@ -70,8 +70,8 @@ namespace CMS_back.Services
 
         public async Task<bool> ReviewSubject(string controlId, string subjectId)
         {
-            Expression<Func<ControlSubject, bool>> condition1 = c => c.ControlID == controlId;
-            Expression<Func<ControlSubject, bool>> condition2 = c => c.SubjectID == subjectId;
+            Expression<Func<ControlSubjects, bool>> condition1 = c => c.ControlID == controlId;
+            Expression<Func<ControlSubjects, bool>> condition2 = c => c.SubjectID == subjectId;
             var combinedCondition = condition1.AndAlso(condition2);
 
             var subject = await _controlSubjectGeneric.FindFirstAsync(combinedCondition);

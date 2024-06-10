@@ -71,9 +71,9 @@ namespace CMS_back.Services
             if (control == null) throw new Exception("Control Not Found");
 
             var isHead = await _controlUserRepo.FindFirstAsync(controlUser => controlUser.UserID == currentUser.Id && controlUser.ControlID == control.Id);
-            if (isHead == null || isHead.JobType != JobType.Head) throw new Exception("Head of Control Only Has access");
+            if (isHead == null || isHead.JobType != JobType.Head) throw new Exception("Head of Control Only Has Access");
 
-            task.CreationDate = DateTime.Now;
+            task.CreationDate = DateOnly.FromDateTime(DateTime.Now);
             task.CreateBy = currentUser;
             task.ControlID = controlId;
             task.UserTasks = new List<Control_UserTasks>();
@@ -117,7 +117,7 @@ namespace CMS_back.Services
             if (task == null) throw new Exception("ControlTasks Not Found");
 
             task.Description = taskToUpdate.Description;
-            task.CreationDate = DateTime.Now;
+            task.CreationDate = DateOnly.FromDateTime(DateTime.Now);
             task.CreateBy = await _userHelpers.GetCurrentUserAsync();
 
             if (task.UserTasks == null)
@@ -204,14 +204,17 @@ namespace CMS_back.Services
                 }
                 _controlUserTasksrepo.Update(tempTask);
             }
-            if (await _context.SaveChangesAsync() > 0) return true;
-            var task = await _controlTaskRepo.FindFirstAsync(ts => ts.Id == taskId, ["Control", "CreateBy ", "UserTasks"]);
-            var head = task.CreateBy;
-            var control = task.Control;
-            if (head.Email != null)
-            {
-                var message = new MailMessage(new string[] { head.Email }, "Control System", $"Control {control.Name}:\n Task {task.Description} Is Done");
-                _mailingService.SendMail(message);
+            if (await _context.SaveChangesAsync() > 0)
+            { 
+            var task = await _controlTaskRepo.FindFirstAsync(ts => ts.Id == taskId, ["Control", "CreateBy", "UserTasks"]);
+                var head = task.CreateBy;
+                var control = task.Control;
+                if (head.Email != null)
+                {
+                    var message = new MailMessage(new string[] { head.Email }, "Control System", $"Control {control.Name}:\n Task {task.Description} Is Done");
+                    _mailingService.SendMail(message);
+                }
+                return true;
             }
             return false;
         }

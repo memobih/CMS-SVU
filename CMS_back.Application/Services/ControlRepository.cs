@@ -104,10 +104,10 @@ namespace CMS_back.Services
             {
                 Subject subject = _context.Subject.FirstOrDefault(u => u.Id == id);
                 if (subject == null) return false;
-                ControlSubject cs = new ControlSubject();
+                ControlSubjects cs = new ControlSubjects();
                 cs.SubjectID = subject.Id;
                 cs.ControlID = control.Id;
-                _context.ControlSubject.Add(cs);
+                _context.ControlSubjects.Add(cs);
             }
 
             _context.Control.Add(control);
@@ -126,7 +126,7 @@ namespace CMS_back.Services
 
             if (userCreator.Id != control.UserCreatorID) throw new InvalidOperationException("Unauthorized operation: creator ID missmatch.");
 
-            control.ControlSubjects ??= new List<ControlSubject>();
+            control.ControlSubjects ??= new List<ControlSubjects>();
             control.ControlUsers ??= new List<ControlUsers>();
 
             control.ControlSubjects.Clear();
@@ -137,7 +137,7 @@ namespace CMS_back.Services
             foreach (var id in controldto.SubjectsIds)
             {
                 var subject = await _context.Subject.FirstOrDefaultAsync(c => c.Id == id);
-                if (subject != null) control.ControlSubjects.Add(new ControlSubject { Subject = subject });
+                if (subject != null) control.ControlSubjects.Add(new ControlSubjects { Subject = subject });
             }
 
             foreach (var id in controldto.UsersIds)

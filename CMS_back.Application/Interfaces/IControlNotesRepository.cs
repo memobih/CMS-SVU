@@ -7,7 +7,7 @@ namespace CMS_back.Interfaces
         Task<bool> AddAsync(controlNoteDTO entity, string Cid);
         Task<IEnumerable<ControlNotesResultDTO>> GetAllAsync(string id);
         Task<IEnumerable<ControlNotesResultDTO>> GetNotesToHeadControl(string id);
-        Task<IEnumerable<ControlNotesResultDTO>> GetNotesToHeadFaculty(string id);
-        Task<IEnumerable<ControlNotesResultDTO>> GetNotesToHeadUniversity(string id);
+        Task<IEnumerable<ControlNotesResultDTO>> GetNotesToAdminFaculity(string id);
+        Task<IEnumerable<ControlNotesResultDTO>> GetNotesToAdminUniversity(string id);
     }
 }

@@ -4,6 +4,7 @@ using CMS_back.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS_Back.Data.Migrations
 {
     [DbContext(typeof(CMSContext))]
-    partial class CMSContextModelSnapshot : ModelSnapshot
+    [Migration("20240610005922_22")]
+    partial class _22
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -147,7 +150,6 @@ namespace CMS_Back.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FaculityID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
@@ -195,8 +197,8 @@ namespace CMS_Back.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("End_Date")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("End_Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("FaculityID")
                         .IsRequired()
@@ -215,8 +217,8 @@ namespace CMS_Back.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("Start_Date")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("Start_Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserCreatorID")
                         .IsRequired()
@@ -231,12 +233,13 @@ namespace CMS_Back.Data.Migrations
                     b.ToTable("Control");
                 });
 
-            modelBuilder.Entity("CMS_back.Models.ControlSubjects", b =>
+            modelBuilder.Entity("CMS_back.Models.ControlSubject", b =>
                 {
-                    b.Property<string>("SubjectID")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ControlID")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("IsDone")
@@ -245,45 +248,61 @@ namespace CMS_Back.Data.Migrations
                     b.Property<int?>("IsReview")
                         .HasColumnType("int");
 
-                    b.HasKey("SubjectID", "ControlID");
+                    b.Property<string>("SubjectID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ControlID");
 
-                    b.ToTable("ControlSubjects");
+                    b.HasIndex("SubjectID");
+
+                    b.ToTable("ControlSubject");
                 });
 
             modelBuilder.Entity("CMS_back.Models.ControlUsers", b =>
                 {
-                    b.Property<string>("UserID")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ControlID")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("JobType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserID", "ControlID");
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("ControlID");
+
+                    b.HasIndex("UserID");
 
                     b.ToTable("ControlUsers");
                 });
 
             modelBuilder.Entity("CMS_back.Models.Control_Addresses", b =>
                 {
-                    b.Property<string>("Address")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ControlID")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Address", "ControlID");
+                    b.HasKey("Id");
 
                     b.HasIndex("ControlID");
 
-                    b.ToTable("Control_Address");
+                    b.ToTable("conrol_Addresse");
                 });
 
             modelBuilder.Entity("CMS_back.Models.Control_Note", b =>
@@ -292,7 +311,6 @@ namespace CMS_Back.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ControlID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Description")
@@ -303,8 +321,8 @@ namespace CMS_Back.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateOnly?>("WriteDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("WriteDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -321,15 +339,14 @@ namespace CMS_Back.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ControlID")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CreateByID")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateOnly?>("CreationDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("CreationDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -346,7 +363,7 @@ namespace CMS_Back.Data.Migrations
 
             modelBuilder.Entity("CMS_back.Models.Control_UserTasks", b =>
                 {
-                    b.Property<string>("UserTaskID")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Control_TaskID")
@@ -355,9 +372,14 @@ namespace CMS_Back.Data.Migrations
                     b.Property<int>("IsDone")
                         .HasColumnType("int");
 
-                    b.HasKey("UserTaskID", "Control_TaskID");
+                    b.Property<string>("UserTaskID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("Control_TaskID");
+
+                    b.HasIndex("UserTaskID");
 
                     b.ToTable("Control_UserTasks");
                 });
@@ -649,10 +671,7 @@ namespace CMS_Back.Data.Migrations
 
             modelBuilder.Entity("CMS_back.Models.Student_SemesterSubjects", b =>
                 {
-                    b.Property<string>("SubjectID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("StudentSemesterID")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<double?>("Degree")
@@ -661,9 +680,17 @@ namespace CMS_Back.Data.Migrations
                     b.Property<int?>("IsPass")
                         .HasColumnType("int");
 
-                    b.HasKey("SubjectID", "StudentSemesterID");
+                    b.Property<string>("StudentSemesterID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SubjectID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("StudentSemesterID");
+
+                    b.HasIndex("SubjectID");
 
                     b.ToTable("Student_SemesterSubjects");
                 });
@@ -713,7 +740,7 @@ namespace CMS_Back.Data.Migrations
 
             modelBuilder.Entity("CMS_back.Models.Subject_Assess", b =>
                 {
-                    b.Property<string>("SubjectID")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AssessID")
@@ -725,26 +752,36 @@ namespace CMS_Back.Data.Migrations
                     b.Property<double?>("MIN_Degree")
                         .HasColumnType("float");
 
-                    b.HasKey("SubjectID", "AssessID");
+                    b.Property<string>("SubjectID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("AssessID");
 
-                    b.ToTable("SubjectAssess");
+                    b.HasIndex("SubjectID");
+
+                    b.ToTable("SubjectAssesse");
                 });
 
             modelBuilder.Entity("CMS_back.Models.Subject_Committees", b =>
                 {
-                    b.Property<string>("SubjectID")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CommitteeID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("SubjectID", "CommitteeID");
+                    b.Property<string>("SubjectID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("CommitteeID");
 
-                    b.ToTable("Subject_Committees");
+                    b.HasIndex("SubjectID");
+
+                    b.ToTable("Subject_Committee");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -776,19 +813,19 @@ namespace CMS_Back.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c964ad85-2b2d-41c3-a191-0406c6363435",
+                            Id = "c0ff1e9c-f2f9-4020-8fb6-ab0f8321b2fe",
                             Name = "AdminUniversity",
                             NormalizedName = "AdminUniversity"
                         },
                         new
                         {
-                            Id = "0cef7fe4-0365-44ac-a22d-41fcecced6b6",
+                            Id = "adad47be-7ba4-46ad-a984-a2bf9864578e",
                             Name = "AdminFaculity",
                             NormalizedName = "AdminFaculity"
                         },
                         new
                         {
-                            Id = "6444a70d-13a5-4bf3-a65d-6b98281d3ff0",
+                            Id = "dc037ece-22af-4be4-af37-d54bc5b34013",
                             Name = "Staff",
                             NormalizedName = "Staff"
                         });
@@ -913,9 +950,7 @@ namespace CMS_Back.Data.Migrations
                 {
                     b.HasOne("CMS_back.Models.Faculity", "Faculity")
                         .WithMany()
-                        .HasForeignKey("FaculityID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FaculityID");
 
                     b.HasOne("CMS_back.Models.Study_Method", "StudyMethod")
                         .WithMany()
@@ -954,7 +989,7 @@ namespace CMS_Back.Data.Migrations
                     b.Navigation("UserCreator");
                 });
 
-            modelBuilder.Entity("CMS_back.Models.ControlSubjects", b =>
+            modelBuilder.Entity("CMS_back.Models.ControlSubject", b =>
                 {
                     b.HasOne("CMS_back.Models.Control", "Control")
                         .WithMany("ControlSubjects")
@@ -964,9 +999,7 @@ namespace CMS_Back.Data.Migrations
 
                     b.HasOne("CMS_back.Models.Subject", "Subject")
                         .WithMany("ControlSubjects")
-                        .HasForeignKey("SubjectID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectID");
 
                     b.Navigation("Control");
 
@@ -983,9 +1016,7 @@ namespace CMS_Back.Data.Migrations
 
                     b.HasOne("CMS_back.Models.ApplicationUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserID");
 
                     b.Navigation("Control");
 
@@ -1006,10 +1037,8 @@ namespace CMS_Back.Data.Migrations
             modelBuilder.Entity("CMS_back.Models.Control_Note", b =>
                 {
                     b.HasOne("CMS_back.Models.Control", "Control")
-                        .WithMany("Control_Notes")
-                        .HasForeignKey("ControlID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("ControlID");
 
                     b.HasOne("CMS_back.Models.ApplicationUser", "WriteBy")
                         .WithMany()
@@ -1026,9 +1055,7 @@ namespace CMS_Back.Data.Migrations
                 {
                     b.HasOne("CMS_back.Models.Control", "Control")
                         .WithMany()
-                        .HasForeignKey("ControlID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ControlID");
 
                     b.HasOne("CMS_back.Models.ApplicationUser", "CreateBy")
                         .WithMany()
@@ -1046,14 +1073,11 @@ namespace CMS_Back.Data.Migrations
                     b.HasOne("CMS_back.Models.Control_Task", "Control_Task")
                         .WithMany("UserTasks")
                         .HasForeignKey("Control_TaskID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CMS_back.Models.ApplicationUser", "UserTask")
                         .WithMany()
-                        .HasForeignKey("UserTaskID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserTaskID");
 
                     b.Navigation("Control_Task");
 
@@ -1186,15 +1210,11 @@ namespace CMS_Back.Data.Migrations
                 {
                     b.HasOne("CMS_back.Models.StudentSemester", "StudentSemester")
                         .WithMany()
-                        .HasForeignKey("StudentSemesterID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StudentSemesterID");
 
                     b.HasOne("CMS_back.Models.Subject", "Subject")
                         .WithMany()
-                        .HasForeignKey("SubjectID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectID");
 
                     b.Navigation("StudentSemester");
 
@@ -1222,15 +1242,11 @@ namespace CMS_Back.Data.Migrations
                 {
                     b.HasOne("CMS_back.Models.Assess", "Assess")
                         .WithMany("Subject_Assesss")
-                        .HasForeignKey("AssessID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AssessID");
 
                     b.HasOne("CMS_back.Models.Subject", "Subject")
                         .WithMany("subject_Assesses")
-                        .HasForeignKey("SubjectID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectID");
 
                     b.Navigation("Assess");
 
@@ -1241,15 +1257,11 @@ namespace CMS_Back.Data.Migrations
                 {
                     b.HasOne("CMS_back.Models.Committees", "Committee")
                         .WithMany()
-                        .HasForeignKey("CommitteeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CommitteeID");
 
                     b.HasOne("CMS_back.Models.Subject", "Subject")
                         .WithMany("Subject_Committees")
-                        .HasForeignKey("SubjectID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectID");
 
                     b.Navigation("Committee");
 
@@ -1329,8 +1341,6 @@ namespace CMS_Back.Data.Migrations
                     b.Navigation("ControlSubjects");
 
                     b.Navigation("ControlUsers");
-
-                    b.Navigation("Control_Notes");
 
                     b.Navigation("conrol_Addresses");
                 });

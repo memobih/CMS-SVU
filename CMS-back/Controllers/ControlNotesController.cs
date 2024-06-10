@@ -43,14 +43,14 @@ namespace CMS_back.Controllers
         [HttpGet("notetoheadfaculty/{cid}")]
         public async Task<IActionResult> getNotesTOHeadFaculty([FromRoute] string cid)
         {
-            var control_notes = await _controlNotesRepository.GetNotesToHeadFaculty(cid);
+            var control_notes = await _controlNotesRepository.GetNotesToAdminFaculity(cid);
             return Ok(control_notes);
         }
 
         [HttpGet("notetoheadunivarsity/{cid}")]
         public async Task<IActionResult> getNotesTOHeadUniversity([FromRoute] string cid)
         {
-            var control_notes = await _controlNotesRepository.GetNotesToHeadUniversity(cid);
+            var control_notes = await _controlNotesRepository.GetNotesToAdminUniversity(cid);
             return Ok(control_notes);
         }
 

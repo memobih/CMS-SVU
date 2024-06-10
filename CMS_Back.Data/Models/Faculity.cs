@@ -5,7 +5,7 @@ namespace CMS_back.Models
 {
 	public class Faculity
 	{
-		[Key]
+		[Key, MaxLength(200)]
 		public string Id { get; set; } = Guid.NewGuid().ToString();
 		public string? Name { get; set; }
 		public string? Code { get; set; }

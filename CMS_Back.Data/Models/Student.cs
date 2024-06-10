@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMS_back.Models
 {
@@ -10,10 +11,12 @@ namespace CMS_back.Models
 
 	public class Student
 	{
-		[Key]
+		[Key, MaxLength(200)]		
 		public string Id { get; set; } = Guid.NewGuid().ToString();
 		public string? Name { get; set; }
-		public DateOnly? DateOfBirth { get; set; }
+
+        //[Column(TypeName = "Date")]
+        public DateOnly? DateOfBirth { get; set; }
 		public string? Email { get; set; }
 		public string? PhoneNumber { get; set; }
 		public string? Address { get; set; }
