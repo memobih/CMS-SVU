@@ -18,7 +18,7 @@ namespace CMS_back.Controllers
         }
 
         [HttpPost("create/{fid}")]
-        [Authorize(Roles = ConstsRoles.AdminFaculty)]
+        [Authorize(Roles = ConstsRoles.AdminFaculity)]
         public async Task<IActionResult> createControl(ControlDTO controldto, string fid)
         {
             var result = await _repo.AddAsync(controldto, fid);
@@ -26,7 +26,7 @@ namespace CMS_back.Controllers
         }
 
         [HttpPut("edit/{cid}")]
-        [Authorize(Roles = ConstsRoles.AdminFaculty)]
+        [Authorize(Roles = ConstsRoles.AdminFaculity)]
         public async Task<IActionResult> EditControl(ControlDTO controldto, string cid)
         {
             var result = await _repo.UpdateAsync(controldto, cid);
@@ -49,7 +49,7 @@ namespace CMS_back.Controllers
         }
 
         [HttpDelete("delete/{cid}")]
-        [Authorize(Roles = ConstsRoles.AdminFaculty)]
+        [Authorize(Roles = ConstsRoles.AdminFaculity)]
         public async Task<IActionResult> delete(string cid)
         {
             var result = await _repo.DeleteAsync(cid);
