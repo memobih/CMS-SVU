@@ -89,7 +89,7 @@ namespace CMS_back.Data
             modelBuilder.Entity<IdentityRole>().HasData
                 (
                   new IdentityRole() { Name = ConstsRoles.AdminUniversity, NormalizedName = ConstsRoles.AdminUniversity },
-                  new IdentityRole() { Name = ConstsRoles.AdminFaculity, NormalizedName = ConstsRoles.AdminFaculity },
+                  new IdentityRole() { Name = ConstsRoles.AdminFaculty, NormalizedName = ConstsRoles.AdminFaculty },
                   new IdentityRole() { Name = ConstsRoles.Staff, NormalizedName = ConstsRoles.Staff }
                 );
 

@@ -91,7 +91,7 @@ namespace CMS_back.Services
                 userResult.FaculityName = faculity.Name;
                 userResult.FaculityEmployeeID = currentUser.FaculityEmployeeID;
             }
-            else if (currentUser.Type == ConstsRoles.AdminFaculity)
+            else if (currentUser.Type == ConstsRoles.AdminFaculty)
             {
                 userResult = _mapper.Map<LeaderResultDto>(currentUser);
                 faculity = await _faculityRepo.GetById(currentUser.FaculityLeaderID);
